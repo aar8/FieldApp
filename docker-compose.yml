@@ -4,23 +4,23 @@ services:
   sqlite:
     image: keinos/sqlite3:latest
     container_name: fieldprime-sqlite
-    user: "1000:1000"                     # non-root user with fixed UID:GID
+    user: "sqlite"
+    group_add:
+      - sqlite
     environment:
       - DB_FILE=/data/fieldprime.db
     volumes:
-      - sqlite-data:/data
-      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./sqlite-data:/data 
     command:
       - /bin/sh
       - -c
       - |
-        if [ ! -f "$DB_FILE" ]; then
-          echo "Initializing database..."
-          mkdir -p /data
-          sqlite3 "$DB_FILE" < /docker-entrypoint-initdb.d/init.sql
-        else
-          echo "Database already exists."
+        echo "🧱 SQLite ready at $$DB_FILE"
+        if [ ! -f "$$DB_FILE" ]; then
+          echo "❌ Database missing. Please run ./scripts/init_db.sh first."
+          exit 1
         fi
+        sqlite3 "$$DB_FILE" ".tables"
         exec tail -f /dev/null
     restart: unless-stopped
 
@@ -65,4 +65,5 @@ services:
     restart: unless-stopped
 
 volumes:
+  server-node-modules:
   sqlite-data:

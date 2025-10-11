@@ -1,188 +1,184 @@
-PRAGMA foreign_keys = ON;
+-- =============================================================
+-- 🧩 DESIGN NOTE: JSON1-BASED FLEXIBLE SCHEMA STRATEGY
+-- =============================================================
+-- We use SQLite’s built-in JSON1 extension to store entity
+-- attributes (layout definitions, job payloads, customer data,
+-- etc.) as structured JSON blobs rather than rigid columns.
+--
+-- This gives several advantages:
+--   • Schema agility — new fields can be added client-side and
+--     stored immediately without requiring a migration.
+--   • Versioned decoding — server code can interpret legacy
+--     records safely while newer app builds use richer schemas.
+--   • Cross-tenant isolation — each tenant can have unique
+--     layout definitions or object models that evolve separately.
+--   • Simplified sync — JSON1 allows direct filtering,
+--     projection, and partial updates via `json_extract` and
+--     `json_set`, reducing translation overhead.
+--
+-- Example:
+--   SELECT json_extract(schema, '$.settings.theme') FROM tenants;
+--
+-- Each table uses:
+--   - `schema` JSON column for the entity body
+--   - `version` INTEGER for optimistic concurrency control
+--   - `created_by` TEXT for audit trails
+--   - `created_at` TEXT with `datetime('now')` default
+--   - Optional `tenant_id` TEXT FK to `tenants`
+--
+-- This approach keeps the data model future-proof while allowing
+-- fast iteration on layouts and field definitions.
+-- =============================================================
 
-CREATE TABLE IF NOT EXISTS users (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
-  display_name TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'field-tech',
-  object_type TEXT NOT NULL DEFAULT 'users',
-  status TEXT NOT NULL DEFAULT 'active',
-  version INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id)
-);
+-- =============================================================
+-- UNIFIED ENTITY MODEL USING JSON1
+-- =============================================================
+-- All entities share this pattern:
+--   id TEXT PRIMARY KEY
+--   tenant_id TEXT NOT NULL REFERENCES tenants(id)
+--   object_type TEXT NOT NULL                 -- logical type (e.g. "job", "customer")
+--   status TEXT DEFAULT 'active'              -- domain state
+--   data JSON NOT NULL                        -- entity payload (flexible JSON1)
+--   version INTEGER NOT NULL DEFAULT 0        -- optimistic concurrency
+--   created_by TEXT                           -- user id who created it
+--   modified_by TEXT                          -- user id who last modified it
+--   created_at TEXT NOT NULL DEFAULT (datetime('now'))
+--   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+-- =============================================================
 
-CREATE TABLE IF NOT EXISTS customers (
+CREATE TABLE IF NOT EXISTS tenants (
   id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  name TEXT NOT NULL,
-  contact_email TEXT,
-  phone TEXT,
-  location TEXT,
-  object_type TEXT NOT NULL DEFAULT 'customers',
-  status TEXT NOT NULL DEFAULT 'active',
+  schema JSON NOT NULL,   -- { "name": "Cool HVAC LLC", "plan": "pro", "settings": { ... } }
   version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id)
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS jobs (
   id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  customer_id TEXT NOT NULL,
-  assigned_to TEXT,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  object_type TEXT NOT NULL DEFAULT 'job',
   status TEXT NOT NULL DEFAULT 'scheduled',
-  scheduled_start TEXT,
-  scheduled_end TEXT,
-  notes TEXT,
-  object_type TEXT NOT NULL DEFAULT 'jobs',
+  data JSON NOT NULL, -- { "customer_id": "...", "assigned_to": "...", "notes": "...", "custom_fields": {...} }
   version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, id) ON DELETE CASCADE,
-  FOREIGN KEY (tenant_id, assigned_to) REFERENCES users(tenant_id, id)
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE IF NOT EXISTS job_events (
+CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  job_id TEXT NOT NULL,
-  event_type TEXT NOT NULL,
-  payload TEXT,
-  object_type TEXT NOT NULL DEFAULT 'job_events',
-  status TEXT NOT NULL DEFAULT 'active',
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  object_type TEXT NOT NULL DEFAULT 'user',
+  status TEXT DEFAULT 'active',
+  data JSON NOT NULL,      -- { "email": "...", "display_name": "...", "role": "tech|admin" }
   version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, id) ON DELETE CASCADE
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS customers (
+  id TEXT PRIMARY KEY,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  object_type TEXT NOT NULL DEFAULT 'customer',
+  status TEXT DEFAULT 'active',
+  data JSON NOT NULL,      -- { "name": "...", "contact": { "email": "...", "phone": "..." }, "address": {...} }
+  version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 
 CREATE TABLE IF NOT EXISTS attachments (
   id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  job_id TEXT,
-  customer_id TEXT,
-  file_name TEXT NOT NULL,
-  file_type TEXT NOT NULL,
-  file_size INTEGER NOT NULL,
-  checksum TEXT,
-  object_type TEXT NOT NULL DEFAULT 'attachments',
-  status TEXT NOT NULL DEFAULT 'active',
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  object_type TEXT NOT NULL DEFAULT 'attachment',
+  status TEXT DEFAULT 'stored',
+  data JSON NOT NULL,      -- { "linked_id": "...", "file_name": "...", "file_type": "...", "size": 12345 }
   version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, job_id) REFERENCES jobs(tenant_id, id) ON DELETE SET NULL,
-  FOREIGN KEY (tenant_id, customer_id) REFERENCES customers(tenant_id, id) ON DELETE SET NULL
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE IF NOT EXISTS object_metadata (
+CREATE TABLE IF NOT EXISTS devices (
   id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  api_name TEXT NOT NULL,
-  label TEXT NOT NULL,
-  plural_label TEXT NOT NULL,
-  description TEXT,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  object_type TEXT NOT NULL DEFAULT 'device',
+  status TEXT DEFAULT 'active',
+  data JSON NOT NULL,      -- { "user_id": "...", "platform": "ios|android|web", "app_version": "1.0.2", "last_seen": "...", "revoked": false }
+  version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT,
+  modified_by TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  UNIQUE (tenant_id, api_name)
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE IF NOT EXISTS layouts (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  object_type TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'active',
-  name TEXT NOT NULL,
-  version INTEGER NOT NULL DEFAULT 1,
-  is_default INTEGER NOT NULL DEFAULT 0,
-  description TEXT,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, object_type) REFERENCES object_metadata(tenant_id, api_name) ON DELETE CASCADE
-);
+-- =============================================================
+-- INDEXES
+-- =============================================================
 
-CREATE TABLE IF NOT EXISTS layout_sections (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  layout_id TEXT NOT NULL,
-  name TEXT NOT NULL,
-  order_index INTEGER NOT NULL,
-  collapsible INTEGER NOT NULL DEFAULT 0,
-  visibility_rule TEXT,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, layout_id) REFERENCES layouts(tenant_id, id) ON DELETE CASCADE
-);
+-- Index on tenant name for fast lookups
+CREATE INDEX IF NOT EXISTS idx_tenants_name ON tenants(json_extract(schema, '$.name'));
 
-CREATE TABLE IF NOT EXISTS layout_fields (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  section_id TEXT NOT NULL,
-  field_api_name TEXT NOT NULL,
-  label_override TEXT,
-  component TEXT NOT NULL DEFAULT 'text',
-  order_index INTEGER NOT NULL,
-  required INTEGER NOT NULL DEFAULT 0,
-  readonly INTEGER NOT NULL DEFAULT 0,
-  visible INTEGER NOT NULL DEFAULT 1,
-  width_ratio REAL DEFAULT 1.0,
-  default_value TEXT,
-  validation_rule TEXT,
-  help_text TEXT,
-  show_if_rule TEXT,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, section_id) REFERENCES layout_sections(tenant_id, id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS layout_assignments (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  layout_id TEXT NOT NULL,
-  role TEXT NOT NULL,
-  is_active INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id),
-  FOREIGN KEY (tenant_id, layout_id) REFERENCES layouts(tenant_id, id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS sync_events (
-  id TEXT PRIMARY KEY,
-  tenant_id TEXT NOT NULL,
-  object_type TEXT NOT NULL,
-  record_id TEXT NOT NULL,
-  event_type TEXT NOT NULL,
-  payload TEXT,
-  created_at TEXT NOT NULL DEFAULT (datetime('now')),
-  UNIQUE (tenant_id, id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_users_tenant_id ON users(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_customers_tenant_id ON customers(tenant_id);
+-- Indexes for jobs
 CREATE INDEX IF NOT EXISTS idx_jobs_tenant_id ON jobs(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_job_events_tenant_id ON job_events(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_attachments_tenant_id ON attachments(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_object_metadata_tenant_id ON object_metadata(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_layouts_tenant_id ON layouts(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_layout_sections_tenant_id ON layout_sections(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_layout_fields_tenant_id ON layout_fields(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_layout_assignments_tenant_id ON layout_assignments(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_sync_events_tenant_id ON sync_events(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
+CREATE INDEX IF NOT EXISTS idx_jobs_created_at ON jobs(created_at);
 
-CREATE INDEX IF NOT EXISTS idx_jobs_customer_id ON jobs(customer_id);
-CREATE INDEX IF NOT EXISTS idx_jobs_assigned_to ON jobs(assigned_to);
-CREATE INDEX IF NOT EXISTS idx_job_events_job_id ON job_events(job_id);
-CREATE INDEX IF NOT EXISTS idx_attachments_job_id ON attachments(job_id);
-CREATE INDEX IF NOT EXISTS idx_attachments_customer_id ON attachments(customer_id);
-CREATE INDEX IF NOT EXISTS idx_layouts_object_type_status ON layouts(object_type, status);
-CREATE INDEX IF NOT EXISTS idx_sections_layout_id ON layout_sections(layout_id);
-CREATE INDEX IF NOT EXISTS idx_fields_section_id ON layout_fields(section_id);
-CREATE INDEX IF NOT EXISTS idx_layout_assignments_role ON layout_assignments(role);
+-- Indexes for users
+CREATE INDEX IF NOT EXISTS idx_users_tenant_id ON users(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+
+-- Indexes for customers
+CREATE INDEX IF NOT EXISTS idx_customers_tenant_id ON customers(tenant_id);
+
+-- Indexes for attachments
+CREATE INDEX IF NOT EXISTS idx_attachments_tenant_id ON attachments(tenant_id);
+
+-- Indexes for devices
+CREATE INDEX IF NOT EXISTS idx_devices_tenant_id ON devices(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_devices_status ON devices(status);
+
+
+-- =============================================================
+-- TRIGGERS FOR AUTOMATICALLY UPDATING `updated_at`
+-- =============================================================
+
+CREATE TRIGGER IF NOT EXISTS set_tenants_updated_at
+AFTER UPDATE ON tenants FOR EACH ROW BEGIN
+  UPDATE tenants SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS set_jobs_updated_at
+AFTER UPDATE ON jobs FOR EACH ROW BEGIN
+  UPDATE jobs SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS set_users_updated_at
+AFTER UPDATE ON users FOR EACH ROW BEGIN
+  UPDATE users SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS set_customers_updated_at
+AFTER UPDATE ON customers FOR EACH ROW BEGIN
+  UPDATE customers SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS set_attachments_updated_at
+AFTER UPDATE ON attachments FOR EACH ROW BEGIN
+  UPDATE attachments SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS set_devices_updated_at
+AFTER UPDATE ON devices FOR EACH ROW BEGIN
+  UPDATE devices SET updated_at = datetime('now') WHERE id = OLD.id;
+END;
