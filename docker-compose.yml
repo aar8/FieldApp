@@ -30,13 +30,10 @@ services:
       dockerfile: Dockerfile
     container_name: fieldprime-server
     environment:
-      - NODE_ENV=development
       - PORT=8080
       - SQLITE_PATH=/app/data/fieldprime.db
       - JWT_SECRET=changeme
     volumes:
-      - ./server:/app
-      - server-node-modules:/app/node_modules
       - sqlite-data:/app/data
     ports:
       - "8080:8080"
@@ -68,5 +65,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  server-node-modules:
   sqlite-data:
