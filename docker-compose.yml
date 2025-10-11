@@ -42,7 +42,6 @@ services:
       - "8080:8080"
     depends_on:
       - sqlite
-    command: ["sh", "-c", "npm install && npm run dev"]
     restart: unless-stopped
 
   web:
