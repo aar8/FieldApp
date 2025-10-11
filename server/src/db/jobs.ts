@@ -1,4 +1,6 @@
 import type { Database } from "better-sqlite3";
+import type { DbError } from "../types/errors.js";
+import { err, ok, type Result } from "../types/result.js";
 
 export interface Job {
   readonly id: string;
@@ -88,87 +90,106 @@ export const listJobs = (db: Database, tenantId: string): Job[] => {
   return rows.map(rowToJob);
 };
 
-export const getJob = (db: Database, tenantId: string, id: string): Job | undefined => {
-  const row = db
-    .prepare(
-      `SELECT
-         jobs.id,
-         jobs.tenant_id AS tenantId,
-         jobs.customer_id AS customerId,
-         jobs.assigned_to AS assignedTo,
-         jobs.status,
-         jobs.scheduled_start AS scheduledStart,
-         jobs.scheduled_end AS scheduledEnd,
-         jobs.notes AS notes,
-         jobs.object_type AS objectType,
-         jobs.version AS version,
-         jobs.created_at AS createdAt,
-         jobs.updated_at AS updatedAt,
-         customers.name AS customerName
-       FROM jobs
-       LEFT JOIN customers
-         ON customers.tenant_id = jobs.tenant_id
-        AND customers.id = jobs.customer_id
-       WHERE jobs.tenant_id = ? AND jobs.id = ?`
-    )
-    .get(tenantId, id);
+export const getJob = (db: Database, tenantId: string, id: string): Result<Job, DbError> => {
+  try {
+    const row = db
+      .prepare(
+        `SELECT
+           jobs.id,
+           jobs.tenant_id AS tenantId,
+           jobs.customer_id AS customerId,
+           jobs.assigned_to AS assignedTo,
+           jobs.status,
+           jobs.scheduled_start AS scheduledStart,
+           jobs.scheduled_end AS scheduledEnd,
+           jobs.notes AS notes,
+           jobs.object_type AS objectType,
+           jobs.version AS version,
+           jobs.created_at AS createdAt,
+           jobs.updated_at AS updatedAt,
+           customers.name AS customerName
+         FROM jobs
+         LEFT JOIN customers
+           ON customers.tenant_id = jobs.tenant_id
+          AND customers.id = jobs.customer_id
+         WHERE jobs.tenant_id = ? AND jobs.id = ?`
+      )
+      .get(tenantId, id);
 
-  return row ? rowToJob(row) : undefined;
+    if (!row) {
+      return err({ code: "get_job_not_found", context: { tenantId, id } });
+    }
+
+    return ok(rowToJob(row));
+  } catch (error) {
+    if (error instanceof Error) {
+      return err({ code: "get_job_exception", context: { tenantId, id, error: error.message } });
+    }
+    return err({ code: "get_job_unknown_error", context: { tenantId, id } });
+  }
 };
 
-export const createJob = (db: Database, input: JobCreateInput): Job => {
-  const statement = db.prepare(
-    `INSERT INTO jobs (
-       id,
-       tenant_id,
-       customer_id,
-       assigned_to,
-       status,
-       scheduled_start,
-       scheduled_end,
-       notes,
-       object_type,
-       version,
-       created_at,
-       updated_at
-     )
-     VALUES (
-       @id,
-       @tenant_id,
-       @customer_id,
-       @assigned_to,
-       COALESCE(@status, 'scheduled'),
-       @scheduled_start,
-       @scheduled_end,
-       @notes,
-       COALESCE(@object_type, 'jobs'),
-       COALESCE(@version, 0),
-       COALESCE(@created_at, datetime('now')),
-       COALESCE(@updated_at, datetime('now'))
-     )`
-  );
+export const createJob = (db: Database, input: JobCreateInput): Result<Job, DbError> => {
+  try {
+    const statement = db.prepare(
+      `INSERT INTO jobs (
+         id,
+         tenant_id,
+         customer_id,
+         assigned_to,
+         status,
+         scheduled_start,
+         scheduled_end,
+         notes,
+         object_type,
+         version,
+         created_at,
+         updated_at
+       )
+       VALUES (
+         @id,
+         @tenant_id,
+         @customer_id,
+         @assigned_to,
+         COALESCE(@status, 'scheduled'),
+         @scheduled_start,
+         @scheduled_end,
+         @notes,
+         COALESCE(@object_type, 'jobs'),
+         COALESCE(@version, 0),
+         COALESCE(@created_at, datetime('now')),
+         COALESCE(@updated_at, datetime('now'))
+       )`
+    );
 
-  statement.run({
-    id: input.id,
-    tenant_id: input.tenantId,
-    customer_id: input.customerId,
-    assigned_to: input.assignedTo ?? null,
-    status: input.status ?? null,
-    scheduled_start: input.scheduledStart ?? null,
-    scheduled_end: input.scheduledEnd ?? null,
-    notes: input.notes ?? null,
-    object_type: input.objectType ?? null,
-    version: input.version ?? null,
-    created_at: input.createdAt ?? null,
-    updated_at: input.updatedAt ?? null,
-  });
+    statement.run({
+      id: input.id,
+      tenant_id: input.tenantId,
+      customer_id: input.customerId,
+      assigned_to: input.assignedTo ?? null,
+      status: input.status ?? null,
+      scheduled_start: input.scheduledStart ?? null,
+      scheduled_end: input.scheduledEnd ?? null,
+      notes: input.notes ?? null,
+      object_type: input.objectType ?? null,
+      version: input.version ?? null,
+      created_at: input.createdAt ?? null,
+      updated_at: input.updatedAt ?? null,
+    });
 
-  const created = getJob(db, input.tenantId, input.id);
-  if (!created) {
-    throw new Error(`Failed to load job after insert: ${input.id}`);
+    return getJob(db, input.tenantId, input.id);
+  } catch (error) {
+    if (error instanceof Error) {
+      return err({
+        code: "create_job_exception",
+        context: { input, error: error.message }
+      });
+    }
+    return err({
+      code: "create_job_unknown_error",
+      context: { input }
+    });
   }
-
-  return created;
 };
 
 export const updateJob = (
@@ -176,7 +197,7 @@ export const updateJob = (
   tenantId: string,
   id: string,
   input: JobUpdateInput
-): Job | undefined => {
+): Result<Job, DbError> => {
   const updates: Record<string, unknown> = {};
 
   if (input.customerId !== undefined) updates["customer_id"] = input.customerId;
@@ -190,19 +211,54 @@ export const updateJob = (
   updates.updated_at = input.updatedAt ?? new Date().toISOString();
 
   const keys = Object.keys(updates);
-  if (keys.length > 0) {
+  if (keys.length === 0) {
+    return getJob(db, tenantId, id);
+  }
+
+  try {
     const assignments = keys.map((key) => `${key} = @${key}`).join(", ");
-    db.prepare(`UPDATE jobs SET ${assignments} WHERE tenant_id = @tenant_id AND id = @id`).run({
+    const result = db.prepare(`UPDATE jobs SET ${assignments} WHERE tenant_id = @tenant_id AND id = @id`).run({
       ...updates,
       tenant_id: tenantId,
       id,
     });
-  }
 
-  return getJob(db, tenantId, id);
+    if (result.changes === 0) {
+      return err({
+        code: "update_job_not_found_or_no_changes",
+        context: { tenantId, id, input }
+      });
+    }
+
+    return getJob(db, tenantId, id);
+  } catch (error) {
+    if (error instanceof Error) {
+      return err({
+        code: "update_job_exception",
+        context: { tenantId, id, input, error: error.message }
+      });
+    }
+    return err({
+      code: "update_job_unknown_error",
+      context: { tenantId, id, input }
+    });
+  }
 };
 
-export const deleteJob = (db: Database, tenantId: string, id: string): boolean => {
-  const result = db.prepare(`DELETE FROM jobs WHERE tenant_id = ? AND id = ?`).run(tenantId, id);
-  return result.changes > 0;
+export const deleteJob = (db: Database, tenantId: string, id: string): Result<boolean, DbError> => {
+  try {
+    const result = db.prepare(`DELETE FROM jobs WHERE tenant_id = ? AND id = ?`).run(tenantId, id);
+    return ok(result.changes > 0);
+  } catch (error) {
+    if (error instanceof Error) {
+      return err({
+        code: "delete_job_exception",
+        context: { tenantId, id, error: error.message }
+      });
+    }
+    return err({
+      code: "delete_job_unknown_error",
+      context: { tenantId, id }
+    });
+  }
 };

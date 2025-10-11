@@ -1,5 +1,6 @@
 import type { Database, RunResult } from "better-sqlite3";
-import { TypedError } from "../types/errors.js";
+import { TypedError, type ErrorCode } from "../types/errors.js";
+import { err, ok, type Result } from "../types/result.js";
 import { withDatabase } from "../utils/database.js";
 import { uuidv4 } from "../utils/uuid.js";
 
@@ -23,10 +24,25 @@ export interface BatchResult {
   readonly deleted?: true;
 }
 
+export interface BatchError {
+  readonly code: ErrorCode;
+  readonly message: string;
+  readonly id?: string;
+  readonly client_id?: string;
+}
+
 interface TableAdapter {
   readonly tableName: string;
-  readonly insert: (db: Database, tenantId: string, record: Record<string, unknown>) => void;
-  readonly get: (db: Database, tenantId: string, id: string) => Record<string, unknown> | undefined;
+  readonly insert: (
+    db: Database,
+    tenantId: string,
+    record: Record<string, unknown>
+  ) => Result<void, BatchError>;
+  readonly get: (
+    db: Database,
+    tenantId: string,
+    id: string
+  ) => Record<string, unknown> | undefined;
   readonly delete: (db: Database, tenantId: string, id: string) => RunResult;
 }
 
@@ -73,18 +89,18 @@ export const updateBatch = async (
   objectType: string,
   tenantId: string,
   changes: ReadonlyArray<BatchChange>
-): Promise<BatchResult[]> => {
+): Promise<Result<Result<BatchResult, BatchError>[], BatchError>> => {
   if (!isSupportedObject(objectType)) {
-    throw new TypedError(`Unsupported object type: ${objectType}`, {
-      status: 400,
+    return err({
       code: "validation_error",
+      message: `Unsupported object type: ${objectType}`,
     });
   }
 
   if (!Array.isArray(changes)) {
-    throw new TypedError("Changes payload must be an array", {
-      status: 400,
+    return err({
       code: "validation_error",
+      message: "Changes payload must be an array",
     });
   }
 
@@ -93,100 +109,145 @@ export const updateBatch = async (
     ensureSyncEventsTable(db);
 
     const adapter = TABLE_REGISTRY[objectType];
-    const results: BatchResult[] = [];
+    const results: Result<BatchResult, BatchError>[] = [];
 
-    const transactional = db.transaction((items: ReadonlyArray<BatchChange>) => {
-      for (const rawChange of items) {
-        const change = { ...rawChange };
-        const changeId = typeof change.id === "string" ? change.id.trim() : undefined;
+    const transactional = db.transaction(
+      (items: ReadonlyArray<BatchChange>) => {
+        for (const rawChange of items) {
+          const change = { ...rawChange };
+          const changeId =
+            typeof change.id === "string" ? change.id.trim() : undefined;
 
-        if (!changeId && !change.deleted) {
-          throw new TypedError("Missing change id", {
-            status: 400,
-            code: "validation_error",
-          });
-        }
+          if (!changeId && !change.deleted) {
+            results.push(
+              err({
+                id: changeId,
+                client_id: change.client_id,
+                code: "validation_error",
+                message: "Missing change id",
+              })
+            );
+            continue;
+          }
 
-        if (change.deleted === true) {
+          if (change.deleted === true) {
+            if (!changeId) {
+              results.push(
+                err({
+                  id: changeId,
+                  client_id: change.client_id,
+                  code: "validation_error",
+                  message: "Missing id for delete operation",
+                })
+              );
+              continue;
+            }
+
+            const deletion = adapter.delete(db, tenantId, changeId);
+            if (deletion.changes === 0) {
+              recordConflict(
+                db,
+                tenantId,
+                objectType,
+                changeId,
+                "delete_conflict",
+                change
+              );
+              results.push(ok({ id: changeId, status: "conflict" }));
+            } else {
+              results.push(
+                ok({ id: changeId, status: "deleted", deleted: true })
+              );
+            }
+            continue;
+          }
+
           if (!changeId) {
-            throw new TypedError("Missing id for delete operation", {
-              status: 400,
-              code: "validation_error",
-            });
+            results.push(
+              err({
+                id: changeId,
+                client_id: change.client_id,
+                code: "validation_error",
+                message: "Change id must be provided",
+              })
+            );
+            continue;
           }
 
-          const deletion = adapter.delete(db, tenantId, changeId);
-          if (deletion.changes === 0) {
-            recordConflict(db, tenantId, objectType, changeId, "delete_conflict", change);
-            results.push({
-              id: changeId,
-              status: "conflict",
-            });
-          } else {
-            results.push({
-              id: changeId,
-              status: "deleted",
-              deleted: true,
-            });
+          if (isClientId(changeId)) {
+            const serverId = uuidv4();
+            const now = new Date().toISOString();
+            const record = buildInsertRecord(
+              objectType,
+              tenantId,
+              change,
+              now,
+              serverId
+            );
+
+            const insertResult = adapter.insert(db, tenantId, record);
+            if (!insertResult.ok) {
+              results.push(err({ ...insertResult.error, id: serverId, client_id: changeId }));
+              continue;
+            }
+
+            const persisted = adapter.get(db, tenantId, serverId) ?? record;
+            results.push(
+              ok({
+                id: serverId,
+                client_id: changeId,
+                status: "inserted",
+                record: persisted,
+              })
+            );
+            continue;
           }
-          continue;
+
+          const updatePayload = sanitizeChange(changeId, change, objectType);
+          const timestamp = new Date().toISOString();
+          const { sql, parameters } = buildUpdateStatement(
+            adapter.tableName,
+            tenantId,
+            updatePayload,
+            timestamp
+          );
+          const outcome = db.prepare(sql).run(parameters);
+
+          if (outcome.changes === 0) {
+            recordConflict(
+              db,
+              tenantId,
+              objectType,
+              changeId,
+              "update_conflict",
+              change
+            );
+            results.push(ok({ id: changeId, status: "conflict" }));
+            continue;
+          }
+
+          const persisted = adapter.get(db, tenantId, changeId);
+          results.push(
+            ok({
+              id: changeId,
+              status: "updated",
+              record: persisted ?? { ...updatePayload, tenant_id: tenantId },
+            })
+          );
         }
-
-        if (!changeId) {
-          throw new TypedError("Change id must be provided", {
-            status: 400,
-            code: "validation_error",
-          });
-        }
-
-        if (isClientId(changeId)) {
-          const serverId = uuidv4();
-          const now = new Date().toISOString();
-          const record = buildInsertRecord(objectType, tenantId, change, now, serverId);
-
-          adapter.insert(db, tenantId, record);
-
-          const persisted = adapter.get(db, tenantId, serverId) ?? record;
-          results.push({
-            id: serverId,
-            client_id: changeId,
-            status: "inserted",
-            record: persisted,
-          });
-          continue;
-        }
-
-        const updatePayload = sanitizeChange(changeId, change, objectType);
-        const timestamp = new Date().toISOString();
-        const { sql, parameters } = buildUpdateStatement(
-          adapter.tableName,
-          tenantId,
-          updatePayload,
-          timestamp
-        );
-        const outcome = db.prepare(sql).run(parameters);
-
-        if (outcome.changes === 0) {
-          recordConflict(db, tenantId, objectType, changeId, "update_conflict", change);
-          results.push({
-            id: changeId,
-            status: "conflict",
-          });
-          continue;
-        }
-
-        const persisted = adapter.get(db, tenantId, changeId);
-        results.push({
-          id: changeId,
-          status: "updated",
-          record: persisted ?? { ...updatePayload, tenant_id: tenantId },
-        });
       }
-    });
+    );
 
-    transactional(changes);
-
-    return results;
+    try {
+      transactional(changes);
+      return ok(results);
+    } catch (error) {
+      if (error instanceof TypedError) {
+        return err({ code: error.code, message: error.message });
+      }
+      // Rethrow unexpected errors
+      throw error;
+    }
   });
 };
 
@@ -203,7 +264,8 @@ const buildInsertRecord = (
 
   record.id = serverId;
   record.tenant_id = tenantId;
-  record.object_type = typeof change.object_type === "string" ? change.object_type : objectType;
+  record.object_type =
+    typeof change.object_type === "string" ? change.object_type : objectType;
   record.status = typeof change.status === "string" ? change.status : "active";
   record.version = typeof change.version === "number" ? change.version : 0;
   record.created_at = timestamp;
@@ -235,10 +297,18 @@ export const buildUpdateStatement = (
   payload: Record<string, unknown>,
   updatedAt: string
 ): UpdateStatement => {
-  const exclude = new Set(["id", "tenant_id", "created_at", "updated_at", "version"]);
+  const exclude = new Set([
+    "id",
+    "tenant_id",
+    "created_at",
+    "updated_at",
+    "version",
+  ]);
   const keys = Object.keys(payload).filter((key) => !exclude.has(key));
 
-  const assignments: string[] = keys.map((key) => `${key} = COALESCE(@${key}, ${key})`);
+  const assignments: string[] = keys.map(
+    (key) => `${key} = COALESCE(@${key}, ${key})`
+  );
   assignments.push("version = version + 1");
   assignments.push("updated_at = @updated_at");
 
@@ -252,7 +322,9 @@ export const buildUpdateStatement = (
     parameters[key] = payload[key];
   }
 
-  const sql = `UPDATE ${tableName} SET ${assignments.join(", ")} WHERE tenant_id = @tenant_id AND id = @id`;
+  const sql = `UPDATE ${tableName} SET ${assignments.join(
+    ", "
+  )} WHERE tenant_id = @tenant_id AND id = @id`;
   return { sql, parameters };
 };
 
@@ -279,20 +351,36 @@ const recordConflict = (
   });
 };
 
-const createTableAdapter = (tableName: SupportedObjectType): TableAdapter => {
-  const insert = (db: Database, tenantId: string, record: Record<string, unknown>): void => {
+const createTableAdapter = (
+  tableName: SupportedObjectType
+): TableAdapter => {
+  const insert = (
+    db: Database,
+    tenantId: string,
+    record: Record<string, unknown>
+  ): Result<void, BatchError> => {
     const payload = { ...record, tenant_id: tenantId };
     const columns = Object.keys(payload);
     if (columns.length === 0) {
-      throw new TypedError(`Insert payload for ${tableName} is empty`, {
-        status: 400,
+      return err({
         code: "validation_error",
+        message: `Insert payload for ${tableName} is empty`,
       });
     }
 
-    const placeholders = columns.map((column) => `@${column}`);
-    const sql = `INSERT INTO ${tableName} (${columns.join(", ")}) VALUES (${placeholders.join(", ")})`;
-    db.prepare(sql).run(payload);
+    try {
+      const placeholders = columns.map((column) => `@${column}`);
+      const sql = `INSERT INTO ${tableName} (${columns.join(
+        ", "
+      )}) VALUES (${placeholders.join(", ")})`;
+      db.prepare(sql).run(payload);
+      return ok(undefined);
+    } catch (e) {
+      if (e instanceof Error) {
+        return err({ code: "internal_error", message: e.message });
+      }
+      throw e;
+    }
   };
 
   const get = (
@@ -307,7 +395,9 @@ const createTableAdapter = (tableName: SupportedObjectType): TableAdapter => {
   };
 
   const remove = (db: Database, tenantId: string, id: string): RunResult => {
-    return db.prepare(`DELETE FROM ${tableName} WHERE tenant_id = ? AND id = ?`).run(tenantId, id);
+    return db
+      .prepare(`DELETE FROM ${tableName} WHERE tenant_id = ? AND id = ?`)
+      .run(tenantId, id);
   };
 
   return {
@@ -319,7 +409,12 @@ const createTableAdapter = (tableName: SupportedObjectType): TableAdapter => {
 };
 
 const isSupportedObject = (value: string): value is SupportedObjectType => {
-  return value === "customers" || value === "jobs" || value === "job_events" || value === "attachments";
+  return (
+    value === "customers" ||
+    value === "jobs" ||
+    value === "job_events" ||
+    value === "attachments"
+  );
 };
 
 const isClientId = (value: string): boolean => value.startsWith("client-");

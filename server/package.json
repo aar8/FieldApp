@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "dev": "nodemon",
     "start": "node dist/index.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0"
   },
@@ -26,6 +26,7 @@
     "eslint-plugin-import": "^2.29.1",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.15.7",
     "typescript": "^5.4.5"
   }
 }

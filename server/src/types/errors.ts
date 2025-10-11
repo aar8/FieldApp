@@ -1,14 +1,14 @@
-export type ErrorCode =
-  | "internal_error"
-  | "not_found"
-  | "validation_error"
-  | "unauthorized"
-  | "conflict";
+export type ErrorCode = string;
 
 export interface TypedErrorOptions {
   readonly status: number;
   readonly code: ErrorCode;
   readonly details?: unknown;
+}
+
+export interface DbError {
+  readonly code: ErrorCode;
+  readonly context?: Record<string, unknown>;
 }
 
 export class TypedError extends Error {
