@@ -1,0 +1,39 @@
+{
+  "$id": "https://fieldprime.app/sync-contract",
+  "version": "0.1.0",
+  "request": {
+    "deviceId": "string",
+    "checkpoint": "string|null",
+    "changes": [
+      {
+        "table": "users|customers|jobs|job_events|attachments",
+        "action": "insert|update|delete",
+        "primaryKey": "string",
+        "version": "number",
+        "data": {
+          "$comment": "Arbitrary JSON payload aligned with shared/schema.json"
+        }
+      }
+    ]
+  },
+  "response": {
+    "summary": {
+      "appliedChanges": "number",
+      "pendingChanges": "number",
+      "lastSyncedAt": "iso8601"
+    },
+    "conflicts": [
+      {
+        "entity": "string",
+        "entityId": "string",
+        "reason": "string"
+      }
+    ]
+  },
+  "errors": {
+    "sync_failed": {
+      "message": "string",
+      "detail": "any"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "$id": "https://fieldprime.app/schema",
+  "version": "0.1.0",
+  "entities": {
+    "users": {
+      "primaryKey": "id",
+      "fields": {
+        "id": "string",
+        "email": "string",
+        "displayName": "string",
+        "role": "string",
+        "version": "number",
+        "createdAt": "iso8601"
+      }
+    },
+    "customers": {
+      "primaryKey": "id",
+      "fields": {
+        "id": "string",
+        "name": "string",
+        "contactEmail": "string?",
+        "phone": "string?",
+        "location": "string?",
+        "version": "number",
+        "createdAt": "iso8601"
+      }
+    },
+    "jobs": {
+      "primaryKey": "id",
+      "fields": {
+        "id": "string",
+        "customerId": "string",
+        "assignedTo": "string?",
+        "status": "string",
+        "scheduledStart": "iso8601?",
+        "scheduledEnd": "iso8601?",
+        "notes": "string?",
+        "version": "number",
+        "createdAt": "iso8601"
+      },
+      "relations": {
+        "customer": {
+          "type": "belongsTo",
+          "target": "customers",
+          "foreignKey": "customerId"
+        },
+        "assignee": {
+          "type": "belongsTo",
+          "target": "users",
+          "foreignKey": "assignedTo"
+        }
+      }
+    },
+    "job_events": {
+      "primaryKey": "id",
+      "fields": {
+        "id": "string",
+        "jobId": "string",
+        "eventType": "string",
+        "payload": "json?",
+        "version": "number",
+        "createdAt": "iso8601"
+      }
+    },
+    "attachments": {
+      "primaryKey": "id",
+      "fields": {
+        "id": "string",
+        "jobId": "string?",
+        "customerId": "string?",
+        "fileName": "string",
+        "fileType": "string",
+        "fileSize": "number",
+        "checksum": "string?",
+        "version": "number",
+        "createdAt": "iso8601"
+      }
+    }
+  }
+}

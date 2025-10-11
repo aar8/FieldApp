@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FieldPrime</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <main class="max-w-5xl mx-auto py-16 px-6">
+      <h1 class="text-3xl font-semibold mb-6">FieldPrime Job Board</h1>
+      <section x-data="jobBoard()" x-init="refresh()" class="space-y-4">
+        <div class="flex items-center gap-3">
+          <button
+            x-on:click="refresh()"
+            class="px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+          >
+            Refresh
+          </button>
+          <span x-text="status"></span>
+        </div>
+        <template x-if="error">
+          <div class="p-4 bg-red-100 text-red-800 rounded-md" x-text="error"></div>
+        </template>
+        <ul class="space-y-3">
+          <template x-for="job in jobs" :key="job.id">
+            <li class="p-4 rounded-md bg-white shadow">
+              <h2 class="text-xl font-medium" x-text="job.customerName"></h2>
+              <p class="text-sm mt-1">
+                <span x-text="job.status"></span> •
+                <span x-text="job.scheduledStart ?? 'Unscheduled'"></span>
+              </p>
+              <p class="text-xs mt-2 text-slate-500" x-text="`Job ID: ${job.id}`"></p>
+            </li>
+          </template>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

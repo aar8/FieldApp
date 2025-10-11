@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  sqlite:
+    image: keinos/sqlite3:latest
+    container_name: fieldprime-sqlite
+    volumes:
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - sqlite-data:/data
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sqlite3 /data/fieldprime.db < /docker-entrypoint-initdb.d/init.sql
+        tail -f /dev/null
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: fieldprime-server
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - SQLITE_PATH=/app/data/fieldprime.db
+      - JWT_SECRET=changeme
+    volumes:
+      - ./server:/app
+      - server-node-modules:/app/node_modules
+      - sqlite-data:/app/data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlite
+    command: ["sh", "-c", "npm install && npm run dev"]
+    restart: unless-stopped
+
+  web:
+    image: node:20-alpine
+    container_name: fieldprime-web
+    working_dir: /app
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./web:/app
+    depends_on:
+      - server
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: fieldprime-nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+      - web
+    restart: unless-stopped
+
+volumes:
+  server-node-modules:
+  sqlite-data:
