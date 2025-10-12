@@ -10,6 +10,7 @@ use std::sync::{Arc, Mutex};
 
 mod routes;
 use routes::sync::{sync_handler, AppState};
+use routes::seed::{seed_handler};
 
 #[tokio::main]
 async fn main() {
@@ -23,6 +24,7 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/sync", get(sync_handler))
+        .route("/seed", get(seed_handler))
         .with_state(state);
 
     // Start server
@@ -50,6 +52,6 @@ async fn health() -> impl IntoResponse {
 
 fn check_db() -> Result<bool, rusqlite::Error> {
     let conn = Connection::open("/app/data/fieldprime.db")?;
-    let _: i64 = conn.query_row("SELECT 1", [], |row| row.get(0))?;
+    let _: i64 = conn.query_row("select count(*) from tenants;", [], |row| row.get(0))?;
     Ok(true)
 }

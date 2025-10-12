@@ -162,12 +162,20 @@ pub struct SyncMeta {
 
 #[derive(Serialize, Default)]
 pub struct SyncData {
-    pub tenants: Vec<serde_json::Value>,
     pub object_metadata: Vec<serde_json::Value>,
     pub layouts: Vec<serde_json::Value>,
     pub customers: Vec<serde_json::Value>,
     pub jobs: Vec<serde_json::Value>,
+    pub users: Vec<serde_json::Value>,
     pub devices: Vec<serde_json::Value>,
+    pub attachments: Vec<serde_json::Value>,
+    pub checklist_templates: Vec<serde_json::Value>,
+    pub job_checklists: Vec<serde_json::Value>,
+    pub calendar_events: Vec<serde_json::Value>,
+    pub pricebooks: Vec<serde_json::Value>,
+    pub services: Vec<serde_json::Value>,
+    pub equipment_types: Vec<serde_json::Value>,
+    pub customer_equipment: Vec<serde_json::Value>,
 }
 
 #[derive(Serialize)]
@@ -208,12 +216,20 @@ pub async fn sync_handler(
     });
 
     let data = SyncData {
-        tenants: vec![],
         object_metadata: vec![],
         layouts: vec![],
         customers: vec![mock_customer],
         jobs: vec![mock_job],
+        users: vec![],
         devices: vec![],
+        attachments: vec![],
+        checklist_templates: vec![],
+        job_checklists: vec![],
+        calendar_events: vec![],
+        pricebooks: vec![],
+        services: vec![],
+        equipment_types: vec![],
+        customer_equipment: vec![],
     };
 
     let response = SyncResponse {
