@@ -138,7 +138,8 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use chrono::Utc;
-use rusqlite::Connection;
+use rusqlite::{Connection, params};
+use serde_json::Value;
 
 // Shared state (same as in main.rs)
 #[derive(Clone)]
@@ -186,50 +187,63 @@ pub struct SyncResponse {
 
 // Main handler for GET /sync
 pub async fn sync_handler(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Query(params): Query<SyncParams>,
 ) -> impl IntoResponse {
     let now = Utc::now().to_rfc3339();
     let since = params.since.unwrap_or_else(|| "1970-01-01T00:00:00Z".to_string());
 
-    // Mock payload for now
-    let mock_job = serde_json::json!({
-        "id": "job-001",
-        "tenant_id": params.tenant_id,
-        "object_type": "job",
-        "status": "scheduled",
-        "data": { "title": "Fix HVAC Unit", "priority": "High" },
-        "version": 1,
-        "created_at": now,
-        "updated_at": now
-    });
+    // Lock the DB once for all reads
+    let conn = state.db.lock().unwrap();
 
-    let mock_customer = serde_json::json!({
-        "id": "cust-001",
-        "tenant_id": params.tenant_id,
-        "object_type": "customer",
-        "status": "active",
-        "data": { "name": "ACME Corp", "contact": "John Doe" },
-        "version": 2,
-        "created_at": now,
-        "updated_at": now
-    });
+    fn fetch_table(conn: &Connection, table: &str, tenant_id: &str, since: &str) -> Vec<Value> {
+        let cols = match table {
+            "object_metadata" | "layout_definitions" =>
+                "id, tenant_id, object_type, data, version, created_by, modified_by, created_at, updated_at",
+            _ =>
+                "id, tenant_id, object_type, status, data, version, created_by, modified_by, created_at, updated_at",
+        };
+        let sql: String = format!("SELECT {} FROM {} WHERE tenant_id=?1 AND updated_at>?2 ORDER BY updated_at ASC", cols, table);
+
+        let mut stmt = conn
+            .prepare(&sql)
+            .unwrap();
+
+        let rows = stmt
+            .query_map(params![tenant_id, since], |row| {
+                Ok(serde_json::json!({
+                    "id": row.get::<_, String>(0)?,
+                    "tenant_id": row.get::<_, String>(1)?,
+                    "object_type": row.get::<_, String>(2)?,
+                    "status": row.get::<_, String>(3)?,
+                    "data": serde_json::from_str::<Value>(&row.get::<_, String>(4)?).unwrap_or(Value::Null),
+                    "version": row.get::<_, i64>(5)?,
+                    "created_by": row.get::<_, Option<String>>(6)?,
+                    "modified_by": row.get::<_, Option<String>>(7)?,
+                    "created_at": row.get::<_, String>(8)?,
+                    "updated_at": row.get::<_, String>(9)?,
+                }))
+            })
+            .unwrap();
+
+        rows.filter_map(Result::ok).collect()
+    }
 
     let data = SyncData {
-        object_metadata: vec![],
-        layouts: vec![],
-        customers: vec![mock_customer],
-        jobs: vec![mock_job],
-        users: vec![],
-        devices: vec![],
-        attachments: vec![],
-        checklist_templates: vec![],
-        job_checklists: vec![],
-        calendar_events: vec![],
-        pricebooks: vec![],
-        services: vec![],
-        equipment_types: vec![],
-        customer_equipment: vec![],
+        object_metadata: fetch_table(&conn, "object_metadata", &params.tenant_id, &since),
+        layouts: fetch_table(&conn, "layout_definitions", &params.tenant_id, &since),
+        customers: fetch_table(&conn, "customers", &params.tenant_id, &since),
+        jobs: fetch_table(&conn, "jobs", &params.tenant_id, &since),
+        users: fetch_table(&conn, "users", &params.tenant_id, &since),
+        devices: fetch_table(&conn, "devices", &params.tenant_id, &since),
+        attachments: fetch_table(&conn, "attachments", &params.tenant_id, &since),
+        checklist_templates: fetch_table(&conn, "checklist_templates", &params.tenant_id, &since),
+        job_checklists: fetch_table(&conn, "job_checklists", &params.tenant_id, &since),
+        calendar_events: fetch_table(&conn, "calendar_events", &params.tenant_id, &since),
+        pricebooks: fetch_table(&conn, "pricebooks", &params.tenant_id, &since),
+        services: fetch_table(&conn, "services", &params.tenant_id, &since),
+        equipment_types: fetch_table(&conn, "equipment_types", &params.tenant_id, &since),
+        customer_equipment: fetch_table(&conn, "customer_equipment", &params.tenant_id, &since),
     };
 
     let response = SyncResponse {

@@ -1,0 +1,4214 @@
+{
+  "meta": {
+    "server_time": "2025-10-12T05:21:09.923148304+00:00",
+    "since": "2025-10-11T04:22:35Z"
+  },
+  "data": {
+    "object_metadata": [],
+    "layouts": [],
+    "customers": [
+      {
+        "created_at": "2025-10-12T03:22:35.674140719+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "bernardo@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Kathlyn Little"
+        },
+        "id": "cus_a919750e31424c06bf6c6e33644a5573",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674140719+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674153011+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "orpha@example.org",
+            "phone": "555-123-4567"
+          },
+          "name": "Earnestine Mertz"
+        },
+        "id": "cus_e89577a566a1467ca13185eec0a6a902",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674153011+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674158886+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "addison@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Lesly Wilderman"
+        },
+        "id": "cus_e8c06bc6fc70481c9cc09beea07368e0",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674158886+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674296803+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "noel@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Trudie Stroman"
+        },
+        "id": "cus_17a9b09c1c6a4c64a03224a78486524b",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674296803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674504261+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "regan@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Ransom Schultz"
+        },
+        "id": "cus_320e36724fce44b9b5694941cd24590c",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674504261+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674591469+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "johathan@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Donavon Bechtelar"
+        },
+        "id": "cus_5171432e1d4649e6ab9f106a805bf2db",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674591469+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674615594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "hubert@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Audreanne Bogisich"
+        },
+        "id": "cus_d33924427d70459ab7820cb246410344",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674615594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674805303+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "heather@example.org",
+            "phone": "555-123-4567"
+          },
+          "name": "Bernie Schneider"
+        },
+        "id": "cus_7a17edbde71b46c7bde4f6c02268ddff",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674805303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:35.674821594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "vince@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Lulu Grant"
+        },
+        "id": "cus_ed8339ec22fc4f2d9dafd5c62b45a3cf",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.674821594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674134594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "vicente@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Antone Hermann"
+        },
+        "id": "cus_0c742ad678ba4ccfa1a7494e7e90cc01",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674134594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674187844+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "blaze@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Dominique Stoltenberg"
+        },
+        "id": "cus_03064256732642d591f089f8b7cbefd2",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674187844+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674291219+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "carrie@example.org",
+            "phone": "555-123-4567"
+          },
+          "name": "Art Wyman"
+        },
+        "id": "cus_b055a4fbb63246a794063701d7b357dd",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674291219+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674382594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "scotty@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Jeromy Bode"
+        },
+        "id": "cus_95f7927f93b14e14a7c1f3060d4fef9d",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674382594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674394261+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "addie@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Corrine Harber"
+        },
+        "id": "cus_2f83278d4beb4fbfbfd482cf9d3f9141",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674394261+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674467553+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "fausto@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Tyra Sporer"
+        },
+        "id": "cus_0f3c95eeddfb4711a30c67d37da29fc0",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674467553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674492969+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "lennie@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Cecile Runolfsdottir"
+        },
+        "id": "cus_6c1c6333aa334434b4955cccaac34eeb",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674492969+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674498636+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "herta@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Verda Tromp"
+        },
+        "id": "cus_81af5cd9612846dc8c7ee45322a6a3aa",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674498636+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674510219+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "barbara@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Eleanora Gulgowski"
+        },
+        "id": "cus_a6ce8a60039747f6a5160d17a077d992",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674510219+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674516594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "marie@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Roscoe Schmitt"
+        },
+        "id": "cus_73d42d7a650b4ba0803459f3e08472ca",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674516594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674597636+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "emilie@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Trent Kemmer"
+        },
+        "id": "cus_5986da77f40b4b36949b20d7236e9e3b",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674597636+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674736761+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "cesar@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Annette Block"
+        },
+        "id": "cus_e20933cb815f406dab9c4e024a55ff6f",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674736761+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.674925594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "junius@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Christy Roob"
+        },
+        "id": "cus_c02f1424f5594887b29aecaae985bb8a",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.674925594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.675140594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "georgiana@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Caesar Monahan"
+        },
+        "id": "cus_5ac65c0a999a4ae6ae3d5091d9aa8dd9",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.675140594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.675167594+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "jose@example.net",
+            "phone": "555-123-4567"
+          },
+          "name": "Oscar Feeney"
+        },
+        "id": "cus_9326b763a2184685a3949b14f38cd549",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.675167594+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.675173261+00:00",
+        "created_by": null,
+        "data": {
+          "address": {
+            "city": "Anytown",
+            "state": "CA",
+            "street": "123 Main St",
+            "zip": "12345"
+          },
+          "contact": {
+            "email": "freida@example.com",
+            "phone": "555-123-4567"
+          },
+          "name": "Rafael Lockman"
+        },
+        "id": "cus_92b366583940441ba29ebea73fa08702",
+        "modified_by": null,
+        "object_type": "customer",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.675173261+00:00",
+        "version": 0
+      }
+    ],
+    "jobs": [
+      {
+        "created_at": "2025-10-11T04:22:37.205858762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_17a9b09c1c6a4c64a03224a78486524b",
+          "notes": "Multi-layered secondary access"
+        },
+        "id": "job_bd7a78182dc84443909fba8906b6fe29",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.205858762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.205964512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_73d42d7a650b4ba0803459f3e08472ca",
+          "notes": "Business-focused optimizing local area network"
+        },
+        "id": "job_ea07c39af1d246ec8c838e434818eaed",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.205964512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.206440512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_acefb4e28ad7416cb74c84d4c0aef8cf",
+          "notes": "Profound bandwidth-monitored knowledge user"
+        },
+        "id": "job_703dac57809440f8b3ba4e799eb92be7",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.206440512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.206565053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c90d464181ec453da4175c325c4882de",
+          "notes": "Progressive actuating migration"
+        },
+        "id": "job_40aa4249b7924c00a6ba64e3f387571a",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.206565053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.206881595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_0c742ad678ba4ccfa1a7494e7e90cc01",
+          "notes": "Advanced directional utilisation"
+        },
+        "id": "job_b50441d7d9ed498db2e6f945b9f18565",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.206881595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.207407845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c4f7a3e2c6c9406e9d630ce3b0f8718e",
+          "notes": "Profound non-volatile customer loyalty"
+        },
+        "id": "job_53f123b6cc7b4848b97c12ec4023c7e9",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.207407845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.207428178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_cd13ebeb224f49ce9ef82717a3bfb1ef",
+          "notes": "Programmable bandwidth-monitored ability"
+        },
+        "id": "job_237977fb53334b29bebb233a939e2e46",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.207428178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.207518720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_7a17edbde71b46c7bde4f6c02268ddff",
+          "notes": "Intuitive fault-tolerant knowledge user"
+        },
+        "id": "job_d671e68d374d4191a9752a270c58a9a2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.207518720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.207848387+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e8c06bc6fc70481c9cc09beea07368e0",
+          "notes": "Multi-layered background protocol"
+        },
+        "id": "job_97c388a5b7dc4a459c1fb78d97ab9759",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.207848387+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208002970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f100548e1eeb4ecd851f1065cf7f9158",
+          "notes": "Organic actuating circuit"
+        },
+        "id": "job_fa1238dd988940b9b32e34550f29a15b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208002970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208263595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a64d018c656c4a429010f8d870912ccb",
+          "notes": "Right-sized cohesive intranet"
+        },
+        "id": "job_f8ecc338c0b040fab4e25e43fb672d91",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208263595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208397637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9326b763a2184685a3949b14f38cd549",
+          "notes": "Ergonomic needs-based service-desk"
+        },
+        "id": "job_debee652235b4eb094a96630f22d081b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208397637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208481637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_424006e534e944baa114959619f202b9",
+          "notes": "Seamless demand-driven process improvement"
+        },
+        "id": "job_43ce6cb5705949dea2e25cb1bfabef65",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208481637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208596928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_74ceb1056bb2467ab10d7c5cc988d22e",
+          "notes": "Team-oriented leading edge algorithm"
+        },
+        "id": "job_34624a04338740e6b32e0f5a9aab4b92",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208596928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208716428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c4f7a3e2c6c9406e9d630ce3b0f8718e",
+          "notes": "Switchable context-sensitive Graphical User Interface"
+        },
+        "id": "job_7d8fe5e65429436caa3dce5a0cbfe960",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208716428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208725303+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ff2a76ad72ae485ba140aa3b70226408",
+          "notes": "Cross-group bifurcated benchmark"
+        },
+        "id": "job_b190441137e94d92b69e62d117104f75",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208725303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.208995428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_74ceb1056bb2467ab10d7c5cc988d22e",
+          "notes": "Open-architected bifurcated interface"
+        },
+        "id": "job_10b2609fc40d48aaae03635e8fc2dd72",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.208995428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.209442637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f5f6fb5a6f8e43739dc184f1a947508f",
+          "notes": "Realigned reciprocal installation"
+        },
+        "id": "job_e48c1b4f2fa74e0aab3c9b1a870b5f15",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.209442637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.209470553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e89577a566a1467ca13185eec0a6a902",
+          "notes": "Ergonomic client-driven software"
+        },
+        "id": "job_f6ac43279ba340dd821f4185829d8cf3",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.209470553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.209582345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b4e3cf3cd85b42f4b98f8f4957d5a957",
+          "notes": "Automated cohesive success"
+        },
+        "id": "job_0e5fbf068d344bcab6210bdba2fdadb6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.209582345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210060262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9b0d5086815c464cb65b0c166a9055f6",
+          "notes": "Synergistic tertiary encryption"
+        },
+        "id": "job_fe3dd61a5ec4497a80b60af9179cc296",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210060262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210473262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_182ee57e30ae40d38b14d43e4a9430b1",
+          "notes": "Secured attitude-oriented contingency"
+        },
+        "id": "job_bdaba3397cb04ca3a027fcb4a15c9ed9",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210473262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210664137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_de283a17ce894b4fbbc835eca7d81d84",
+          "notes": "Mandatory responsive standardization"
+        },
+        "id": "job_e95fe1145b73499fb6b0313222b7617c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210664137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210729303+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_95f7927f93b14e14a7c1f3060d4fef9d",
+          "notes": "Realigned multi-state groupware"
+        },
+        "id": "job_3cbcc1e3de8d42729af92a2455b22f86",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210729303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210743595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_73d42d7a650b4ba0803459f3e08472ca",
+          "notes": "Multi-lateral static paradigm"
+        },
+        "id": "job_72fa4e32bf024075afda3b1a9a35889c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210743595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.210832053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2e959cdbe4044a578b3d7258cc3b4529",
+          "notes": "Sharable tangible collaboration"
+        },
+        "id": "job_71244d7327ed4db3946b3cf317536dbc",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.210832053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.211390220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_81af5cd9612846dc8c7ee45322a6a3aa",
+          "notes": "Seamless mission-critical toolset"
+        },
+        "id": "job_cb32a8f030904b0da5e09c37f7b101a7",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.211390220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.211591553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_acefb4e28ad7416cb74c84d4c0aef8cf",
+          "notes": "Adaptive eco-centric leverage"
+        },
+        "id": "job_8cbb56485e5d4aa19e00b86bc8e2b238",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.211591553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.211695762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2f83278d4beb4fbfbfd482cf9d3f9141",
+          "notes": "Down-sized 3rd generation protocol"
+        },
+        "id": "job_1aa7e48274bf4c76b2362ae85bccd97c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.211695762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.211997303+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_cbef69bacd514631b1cc83b804c4358b",
+          "notes": "Organic zero administration hardware"
+        },
+        "id": "job_6fec4485080b49f2a329d93cf5eb3f22",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.211997303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.212055053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a64d018c656c4a429010f8d870912ccb",
+          "notes": "Compatible foreground analyzer"
+        },
+        "id": "job_273cc61887994597b91084aec7fb43ec",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.212055053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.212229428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_92b366583940441ba29ebea73fa08702",
+          "notes": "Virtual responsive architecture"
+        },
+        "id": "job_deaff0457bed483ab0c97f1d091e4837",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.212229428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213045262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_0f3c95eeddfb4711a30c67d37da29fc0",
+          "notes": "Vision-oriented heuristic conglomeration"
+        },
+        "id": "job_7a623592866545728199c40b4d9ea6da",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213045262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213146678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Reverse-engineered zero tolerance conglomeration"
+        },
+        "id": "job_a5337f06b0d84cf4bfd6908181e2e052",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213146678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213278220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_7ebf8fcac3d24dca959d445a16d6a948",
+          "notes": "Ergonomic intermediate ability"
+        },
+        "id": "job_bdf0db337f084a74afd84fa8bb73537f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213278220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213394803+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_182ee57e30ae40d38b14d43e4a9430b1",
+          "notes": "Total full-range budgetary management"
+        },
+        "id": "job_7459e74677514ff5b0ffcaf19b659392",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213394803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213525345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_92b366583940441ba29ebea73fa08702",
+          "notes": "Function-based intangible circuit"
+        },
+        "id": "job_7fcea60849894d0284fdd2c1794bc802",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213525345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213618220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a18607bffbaf4edabfd105df37214c79",
+          "notes": "Enhanced clear-thinking hub"
+        },
+        "id": "job_7b28d16095b842d28f70d80bc51f3c67",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213618220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213805595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_dde596fc6a0c4d63aeb3c13ff6e93aab",
+          "notes": "Vision-oriented client-server attitude"
+        },
+        "id": "job_3040a22d00fe4759861b05953914eb5d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213805595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.213973178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_cd13ebeb224f49ce9ef82717a3bfb1ef",
+          "notes": "Fully-configurable client-driven architecture"
+        },
+        "id": "job_ded9af9b27a64ea99b23ae44c1a00280",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.213973178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.214022012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_0c742ad678ba4ccfa1a7494e7e90cc01",
+          "notes": "Future-proofed next generation superstructure"
+        },
+        "id": "job_333b45e7e1d34c14bb950c99bcc634a5",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.214022012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.214526387+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a919750e31424c06bf6c6e33644a5573",
+          "notes": "Progressive fresh-thinking infrastructure"
+        },
+        "id": "job_8fb9292fa95f4963b0e1660b78f270c8",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.214526387+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.214831137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b49ef0cb685b49b18124e06156ff656a",
+          "notes": "Synchronised coherent instruction set"
+        },
+        "id": "job_7b2abfb139e94b21a02060a4aee5fcec",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.214831137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.214898345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_eea7cf2d7221464ca7cdd6d0c8f2a7f9",
+          "notes": "Self-enabling interactive capability"
+        },
+        "id": "job_e3eebcac7c754b0d90487fd55966265f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.214898345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.215380970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2f83278d4beb4fbfbfd482cf9d3f9141",
+          "notes": "Customizable attitude-oriented toolset"
+        },
+        "id": "job_21d84be376784390bb0d31d76b515eee",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.215380970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.215518553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6b5229dfbd584f25967d1a904d3c8891",
+          "notes": "Proactive next generation projection"
+        },
+        "id": "job_abab0f5f6d454b7388c0ff1608f7f932",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.215518553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.215716095+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_53b4b371c25643b588c8fdccd2593ba1",
+          "notes": "Diverse regional open system"
+        },
+        "id": "job_240c3e097bf84fe094bc258b441602b0",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.215716095+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:37.216290053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_66051d949cfe4fdd9a670860ba8e105f",
+          "notes": "Down-sized 24 hour concept"
+        },
+        "id": "job_6bc8220282b54feea96ddaf939c36ac0",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:37.216290053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.205893845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Exclusive well-modulated parallelism"
+        },
+        "id": "job_6097279b81ff42f9bb4033f2f827d6dc",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.205893845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.205902970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ed8339ec22fc4f2d9dafd5c62b45a3cf",
+          "notes": "Virtual object-oriented task-force"
+        },
+        "id": "job_6d5c26c368a3493aae9d419eddf2f69c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.205902970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206040178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_8b6b19b1dfd34f9b88e59df9d70545d3",
+          "notes": "Configurable bi-directional installation"
+        },
+        "id": "job_18174f6af46944dabbb0497fca71da18",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206040178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206294762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Implemented homogeneous framework"
+        },
+        "id": "job_7862b8844ee4412d9892f55da95a4459",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206294762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206385553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_61ac619b77af4a4d93221bf7c62a4cfb",
+          "notes": "Stand-alone maximized model"
+        },
+        "id": "job_1792ce57f14c4f86bee104a15c6c2a3f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206385553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206498012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_acefb4e28ad7416cb74c84d4c0aef8cf",
+          "notes": "Reactive bandwidth-monitored architecture"
+        },
+        "id": "job_4ecb0051c94b4e75ba9066c20c58f4ef",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206498012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206828262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_81af5cd9612846dc8c7ee45322a6a3aa",
+          "notes": "Robust background conglomeration"
+        },
+        "id": "job_fe51e98a6a09407da4c386228ad868fb",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206828262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.206955928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_0f3c95eeddfb4711a30c67d37da29fc0",
+          "notes": "Profit-focused client-driven model"
+        },
+        "id": "job_bfe0e96d117a43bba18bdc33d6fcb884",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.206955928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207020970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_267f245d4fe3404b9b2669c2d41f40d6",
+          "notes": "Multi-channelled impactful model"
+        },
+        "id": "job_52971afcdad546e7bc2ce6e49e816ba3",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207020970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207109803+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_88b3410fe6e640b39d614de7f32b89f0",
+          "notes": "Expanded actuating leverage"
+        },
+        "id": "job_77a1c47ce4ad45a084e786dd9b26cca0",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207109803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207237595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d6bdcd34af8844d69de108f9081b3a52",
+          "notes": "Adaptive regional time-frame"
+        },
+        "id": "job_b045a9aa29d64b4d9f78b42c97f66e9d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207237595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207435678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_17a9b09c1c6a4c64a03224a78486524b",
+          "notes": "Balanced needs-based function"
+        },
+        "id": "job_23dd91e225654821a0c3e1588058d1a8",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207435678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207657220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_7a17edbde71b46c7bde4f6c02268ddff",
+          "notes": "Triple-buffered optimizing matrix"
+        },
+        "id": "job_ae22e849caac49d7a0d9ebb852534652",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207657220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207891220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a3af78b486db4d53b01cd8ab429c1de5",
+          "notes": "Robust high-level data-warehouse"
+        },
+        "id": "job_25cb0bc6c1b3469bb1c3b1c5f7b1acf3",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207891220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.207961178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_cbef69bacd514631b1cc83b804c4358b",
+          "notes": "Robust well-modulated product"
+        },
+        "id": "job_8011a987e01b4a1fa4830f601d52f57f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.207961178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.208494012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_489244778ee84382b405e5e13a3b24e8",
+          "notes": "Visionary content-based pricing structure"
+        },
+        "id": "job_b791baa65efa455796dc3e991d428db2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.208494012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.209304095+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a18607bffbaf4edabfd105df37214c79",
+          "notes": "Sharable disintermediate hardware"
+        },
+        "id": "job_df0a1f72f3e34ddab216ac4ad46f9222",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.209304095+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.209387220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_45a35ad437e14443af872fd620c618c0",
+          "notes": "Multi-channelled zero tolerance leverage"
+        },
+        "id": "job_982a2bf8bc1d484195ad4b3a56505778",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.209387220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.209637678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6ed02b74b6fa4b4b9e6def6daa1405b6",
+          "notes": "Optimized heuristic policy"
+        },
+        "id": "job_49f2dde4e742446b83cd4de636ef8351",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.209637678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.209899928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d53c222a879749ae8a3e729a141e2419",
+          "notes": "Synergistic full-range interface"
+        },
+        "id": "job_98c9ce07c78b4a749d67531f16ad8733",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.209899928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.209987637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d53c222a879749ae8a3e729a141e2419",
+          "notes": "Function-based real-time methodology"
+        },
+        "id": "job_2fa89e46853740989ab8721933685a68",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.209987637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210521970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_62d8e67efb20485984813543bfeea6c0",
+          "notes": "Down-sized global array"
+        },
+        "id": "job_1213a0f0ff4e467ab70a77ab23343707",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210521970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210620428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9cb7a01aab62497487792b1395b4acc9",
+          "notes": "Organic bi-directional algorithm"
+        },
+        "id": "job_c56ddbd37d7e4fc09f0eeee73e1c7836",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210620428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210673678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_05a2fc9fa630438bbafb0b3d3cad5668",
+          "notes": "Inverse well-modulated frame"
+        },
+        "id": "job_36fe57785926432785493bfb02c22be6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210673678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210680803+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_88b3410fe6e640b39d614de7f32b89f0",
+          "notes": "Synergized well-modulated productivity"
+        },
+        "id": "job_8d3bd0af17e24dd2ab50fd40b3d94723",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210680803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210776928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Optimized real-time time-frame"
+        },
+        "id": "job_7ce03561476142ecb3fe2ca9d11d3353",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210776928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210867678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d6bdcd34af8844d69de108f9081b3a52",
+          "notes": "User-centric discrete function"
+        },
+        "id": "job_cbc7cc39202147479664f752860da6f3",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210867678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210890928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2e959cdbe4044a578b3d7258cc3b4529",
+          "notes": "Persevering dynamic ability"
+        },
+        "id": "job_4dc3287a8ec04ba797d921c224017296",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210890928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.210951095+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_53b4b371c25643b588c8fdccd2593ba1",
+          "notes": "Front-line value-added software"
+        },
+        "id": "job_7be49a47ba0e435199b71d5898b2052f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.210951095+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.211180178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b3fa9f1433a6420ea873d5362692efa0",
+          "notes": "Realigned mission-critical support"
+        },
+        "id": "job_e906ca5284d24ce28f9f376f3bdabd1e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.211180178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.211376887+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_17700b133a134de78871e4877328a276",
+          "notes": "Re-engineered context-sensitive approach"
+        },
+        "id": "job_7318cdd67d854faf991eb89c2e634b41",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.211376887+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.211643137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a919750e31424c06bf6c6e33644a5573",
+          "notes": "Decentralized background portal"
+        },
+        "id": "job_080ae18a32324344816db1e523253bf4",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.211643137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.211907845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e8c06bc6fc70481c9cc09beea07368e0",
+          "notes": "Implemented motivating algorithm"
+        },
+        "id": "job_9835d3d4cf2342f58af1fc06c0ff5017",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.211907845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.211987887+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a3af78b486db4d53b01cd8ab429c1de5",
+          "notes": "Managed methodical matrices"
+        },
+        "id": "job_723cf1fcd6de43af9a0493442d67852f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.211987887+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212095720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_5171432e1d4649e6ab9f106a805bf2db",
+          "notes": "Programmable even-keeled project"
+        },
+        "id": "job_bca90dd58e814eec9e13eaaa5661feae",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212095720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212148720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c02f1424f5594887b29aecaae985bb8a",
+          "notes": "Persistent even-keeled migration"
+        },
+        "id": "job_83330d33644b423bb70ef37568e2b767",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212148720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212526845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b1e1cb319d424751ab62e44b348cefa7",
+          "notes": "Progressive homogeneous system engine"
+        },
+        "id": "job_1c40073141694c049b35736256dd1e6b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212526845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212631387+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e37a24e300f740dab034faa04de093c3",
+          "notes": "Extended uniform flexibility"
+        },
+        "id": "job_f6b003ebbe654cb8861e99c66de7b047",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212631387+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212688970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_88b3410fe6e640b39d614de7f32b89f0",
+          "notes": "Self-enabling uniform workforce"
+        },
+        "id": "job_536a268dd678423c9cdcc6e806637b84",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212688970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.212903637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Public-key homogeneous capability"
+        },
+        "id": "job_b9a1523f5cc44da5bfd499d4dda1b17a",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.212903637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213101470+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_944f6049d5114fefa93b55ee5401f39b",
+          "notes": "Profit-focused tertiary toolset"
+        },
+        "id": "job_885555560e9643689781ed950c0ce547",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213101470+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213476720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_8c8d9add12514a6882dc2c4f9611c0ab",
+          "notes": "Up-sized clear-thinking encoding"
+        },
+        "id": "job_2b939955a1104e6fa590b84f622bea1b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213476720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213483428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a919750e31424c06bf6c6e33644a5573",
+          "notes": "Reactive background orchestration"
+        },
+        "id": "job_6463925febb64d01b8ed91a7bf6e7b2b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213483428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213534845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_acefb4e28ad7416cb74c84d4c0aef8cf",
+          "notes": "Diverse bottom-line orchestration"
+        },
+        "id": "job_5b7e7feeae4a4152a8c1ebd3c73eadb4",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213534845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213670595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_8c9dc1da988f4302a9713d5f6aad7839",
+          "notes": "Multi-lateral actuating analyzer"
+        },
+        "id": "job_60028182c5384238af0d777bf300665a",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213670595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213761762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f5f6fb5a6f8e43739dc184f1a947508f",
+          "notes": "Quality-focused disintermediate task-force"
+        },
+        "id": "job_b62bc506fe494e7a969996b12165407f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213761762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.213930845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_be4107e2ea944c3fb2814592c9b9de3f",
+          "notes": "Multi-channelled explicit parallelism"
+        },
+        "id": "job_f94cf765d91a4f7f80033714b3a86af0",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.213930845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.214159012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_dde596fc6a0c4d63aeb3c13ff6e93aab",
+          "notes": "Persistent grid-enabled success"
+        },
+        "id": "job_c4cbea56062e461bb85f8fb70e726098",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.214159012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.214653512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_74ceb1056bb2467ab10d7c5cc988d22e",
+          "notes": "Compatible directional knowledge user"
+        },
+        "id": "job_5d6f907f35b245d5b39303af8f39f70e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.214653512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.214841303+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ab60a7bd72ed4cc591b02198e524d0e2",
+          "notes": "Polarised leading edge leverage"
+        },
+        "id": "job_51be25e999cc40ff9be53c9e4261b1f8",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.214841303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215106345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_280c387de21e429a8c7efb39da9abb36",
+          "notes": "Right-sized well-modulated strategy"
+        },
+        "id": "job_1bc74d20e53442f7992ba564b8f99491",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215106345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215140178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_93fa15cf6c25427e97aee551f92a9606",
+          "notes": "Pre-emptive global local area network"
+        },
+        "id": "job_bfc0973a5ad94d4ba385a26f53e48784",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215140178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215429053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_62efaeb943ce46ecb4ce6a34aafdeaac",
+          "notes": "Profound 24/7 middleware"
+        },
+        "id": "job_926b4a2927274142a7ffaeb97d7e3329",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215429053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215568137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_62d8e67efb20485984813543bfeea6c0",
+          "notes": "User-friendly homogeneous standardization"
+        },
+        "id": "job_1b3d825b1b0146489930453b9229c8af",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215568137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215637803+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_92b366583940441ba29ebea73fa08702",
+          "notes": "Face to face bifurcated installation"
+        },
+        "id": "job_c428c80cd11744c7814a006d3e57f9b1",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215637803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215709345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e8c06bc6fc70481c9cc09beea07368e0",
+          "notes": "Sharable tertiary concept"
+        },
+        "id": "job_ba164c59de0947849a7d71faafe65f92",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215709345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.215953553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_7ebf8fcac3d24dca959d445a16d6a948",
+          "notes": "Ergonomic homogeneous initiative"
+        },
+        "id": "job_500a70d1db904f1aafd69b37cd7104bf",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.215953553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.216203428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6b5229dfbd584f25967d1a904d3c8891",
+          "notes": "Progressive solution-oriented website"
+        },
+        "id": "job_8dab0149c955427692930cc6e1643658",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.216203428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.216340720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_be4107e2ea944c3fb2814592c9b9de3f",
+          "notes": "Ergonomic didactic service-desk"
+        },
+        "id": "job_63be2bbf59c44a3aa9ac8fe3e74c7316",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.216340720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.216402845+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d6bdcd34af8844d69de108f9081b3a52",
+          "notes": "Customizable methodical productivity"
+        },
+        "id": "job_ddb034fd1f8e4c2f94415a27c288aa9e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.216402845+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:37.216463512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_5986da77f40b4b36949b20d7236e9e3b",
+          "notes": "Open-architected non-volatile open architecture"
+        },
+        "id": "job_260c9084c7694b63a793d531b41589f6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:37.216463512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.205931970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_8c8d9add12514a6882dc2c4f9611c0ab",
+          "notes": "Grass-roots mission-critical analyzer"
+        },
+        "id": "job_6c4944b5a84b4c979a689d583b6e482d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.205931970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206119553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_74ceb1056bb2467ab10d7c5cc988d22e",
+          "notes": "Assimilated neutral initiative"
+        },
+        "id": "job_4cd3e0b828df47a7bc013487295e53d1",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206119553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206180887+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b055a4fbb63246a794063701d7b357dd",
+          "notes": "Business-focused cohesive software"
+        },
+        "id": "job_7faeaa9a871d48249d5017d621c948ee",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206180887+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206240178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ab60a7bd72ed4cc591b02198e524d0e2",
+          "notes": "Horizontal scalable concept"
+        },
+        "id": "job_43377fab842b4d3c952d8818d033a76f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206240178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206555970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c02f1424f5594887b29aecaae985bb8a",
+          "notes": "Polarised exuding pricing structure"
+        },
+        "id": "job_bbe87510553c4230a6ccbf23da6561a8",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206555970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206726762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_92b366583940441ba29ebea73fa08702",
+          "notes": "Up-sized fresh-thinking emulation"
+        },
+        "id": "job_97e17950aed24c9a88af0e0de8506ee4",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206726762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.206784512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_62d8e67efb20485984813543bfeea6c0",
+          "notes": "Reduced discrete challenge"
+        },
+        "id": "job_948decc677d44f6284da93302c40dda2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.206784512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207316220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ff2a76ad72ae485ba140aa3b70226408",
+          "notes": "Centralized local standardization"
+        },
+        "id": "job_57ff3e24d2054faf95d4016ce6d4f2cf",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207316220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207326345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_26ddc674f73640e38aae040f550dea13",
+          "notes": "Profit-focused dedicated throughput"
+        },
+        "id": "job_0379168c6edb4c4cb54686a2832efdc2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207326345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207675928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a919750e31424c06bf6c6e33644a5573",
+          "notes": "Profit-focused well-modulated definition"
+        },
+        "id": "job_af413ea5ae874fd8809313eb59006a12",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207675928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207693512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b1e1cb319d424751ab62e44b348cefa7",
+          "notes": "Organized encompassing implementation"
+        },
+        "id": "job_ae94e03ee55c486097a951c5d6e30247",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207693512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207748137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b4e3cf3cd85b42f4b98f8f4957d5a957",
+          "notes": "Future-proofed intermediate emulation"
+        },
+        "id": "job_ab87d2d777f14691b6213ae68c5c04d8",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207748137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207900178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9cb7a01aab62497487792b1395b4acc9",
+          "notes": "Multi-channelled demand-driven contingency"
+        },
+        "id": "job_2b8898f751cd448e9b1492c01484280f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207900178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.207968262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2feb0cb4870840f6ad9655578ad006bd",
+          "notes": "Stand-alone solution-oriented secured line"
+        },
+        "id": "job_51eb4b26028245f497f7292ae34895a3",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.207968262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208194887+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_bed698b0cb824214ba8322997854b2cf",
+          "notes": "Operative incremental website"
+        },
+        "id": "job_d35872adc7f941b78df9a9e37e2ad71e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208194887+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208228387+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_5171432e1d4649e6ab9f106a805bf2db",
+          "notes": "Virtual zero defect support"
+        },
+        "id": "job_cc14d405b8fa4c7d95f4709c10f37d5f",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208228387+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208245803+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_17700b133a134de78871e4877328a276",
+          "notes": "Universal client-server approach"
+        },
+        "id": "job_05fc92db657744ccba71be3ed708ee35",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208245803+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208386512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_182ee57e30ae40d38b14d43e4a9430b1",
+          "notes": "Ameliorated context-sensitive emulation"
+        },
+        "id": "job_29c2177d1ac442f89275cc855e128229",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208386512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208787762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_88b3410fe6e640b39d614de7f32b89f0",
+          "notes": "Intuitive intermediate structure"
+        },
+        "id": "job_eb305441d47b44039b8e947f391080c4",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208787762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208851595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9b0d5086815c464cb65b0c166a9055f6",
+          "notes": "Up-sized didactic open architecture"
+        },
+        "id": "job_56f137d16c3a4b219bc10517ddb0131a",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208851595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.208959345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ff2a76ad72ae485ba140aa3b70226408",
+          "notes": "De-engineered client-driven emulation"
+        },
+        "id": "job_2776f1621edc47fe8efe7ae0cb5969bb",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.208959345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.209086970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_dd78a64f89ba400bb13ef0044eca6378",
+          "notes": "Organized well-modulated structure"
+        },
+        "id": "job_2021015a0409459d98acfb507c2b1404",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.209086970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.209151262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_267f245d4fe3404b9b2669c2d41f40d6",
+          "notes": "Networked bottom-line installation"
+        },
+        "id": "job_8c2f76818c074c7da3e6f048eac064cc",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.209151262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.209575595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_41a8330023054d67b34e24fb2568948c",
+          "notes": "Future-proofed client-driven array"
+        },
+        "id": "job_7d3d695fcccb4017abf44810858490d1",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.209575595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.209673762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c21a23b8a64c47179515d8c47453a964",
+          "notes": "Triple-buffered intermediate customer loyalty"
+        },
+        "id": "job_3366b30c187b4af68307109e3de7cf3a",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.209673762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.209719345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_4f4358bd59d04ef6afb4c5ff4d6ef330",
+          "notes": "De-engineered value-added solution"
+        },
+        "id": "job_4960bad471014bb7a15d2b09ac710c94",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.209719345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.210038220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6c1c6333aa334434b4955cccaac34eeb",
+          "notes": "Streamlined directional migration"
+        },
+        "id": "job_a69b60575214475fbc6ff0a0fd8d0e48",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.210038220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.210381678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_93fa15cf6c25427e97aee551f92a9606",
+          "notes": "Horizontal background middleware"
+        },
+        "id": "job_f1bbd5a596094621adf6d2f12d154dc6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.210381678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.210720928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_1126034f125b478e953f4738aa798c36",
+          "notes": "Vision-oriented leading edge instruction set"
+        },
+        "id": "job_dc6b9f38002547f6a7536b2bd67e4ae4",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.210720928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.210842762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9b0d5086815c464cb65b0c166a9055f6",
+          "notes": "User-friendly maximized array"
+        },
+        "id": "job_f0614308e8b64fe5834f8cc524e2830c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.210842762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.210897553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_be4107e2ea944c3fb2814592c9b9de3f",
+          "notes": "Multi-tiered multi-state customer loyalty"
+        },
+        "id": "job_180e60bb7cb34c918cacea982930199d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.210897553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.211172012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_eea7cf2d7221464ca7cdd6d0c8f2a7f9",
+          "notes": "Synergistic multimedia concept"
+        },
+        "id": "job_a641f6eb51a34c99b99f7017c1d385cd",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.211172012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.211229012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ff2a76ad72ae485ba140aa3b70226408",
+          "notes": "Universal solution-oriented data-warehouse"
+        },
+        "id": "job_9e974cdc90c043d1b3bb604572715447",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.211229012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.211262428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b3fa9f1433a6420ea873d5362692efa0",
+          "notes": "Function-based impactful benchmark"
+        },
+        "id": "job_a4e64afb14244051905ca72b03786d13",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.211262428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.211288428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_8b6b19b1dfd34f9b88e59df9d70545d3",
+          "notes": "Team-oriented neutral parallelism"
+        },
+        "id": "job_7fc3269a378345e3a7b77c4c330f3b0e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.211288428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.212043762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_5986da77f40b4b36949b20d7236e9e3b",
+          "notes": "Up-sized stable alliance"
+        },
+        "id": "job_241e7d03b24c4173a9c4ae8a9097bd61",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.212043762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.212568512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_5ac65c0a999a4ae6ae3d5091d9aa8dd9",
+          "notes": "Up-sized encompassing superstructure"
+        },
+        "id": "job_2f8457dde6444153937cc7e34ecba7cd",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.212568512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.212575428+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6b5229dfbd584f25967d1a904d3c8891",
+          "notes": "Advanced optimizing adapter"
+        },
+        "id": "job_72cf8f423a0d4fc79d1da457815e3f9d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.212575428+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.212640303+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_9cb7a01aab62497487792b1395b4acc9",
+          "notes": "Vision-oriented upward-trending portal"
+        },
+        "id": "job_a7e82f7507324cd9b65771f0c7857819",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.212640303+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.212756720+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a6ce8a60039747f6a5160d17a077d992",
+          "notes": "Streamlined object-oriented application"
+        },
+        "id": "job_4a3d9a6135c742838b93a13e4058a12c",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.212756720+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213087762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_76e3ad5759ac48b9a3ab05bad68e4430",
+          "notes": "Streamlined non-volatile secured line"
+        },
+        "id": "job_6216f167e5e64c0f9364ebf487909682",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213087762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213094678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_6b5229dfbd584f25967d1a904d3c8891",
+          "notes": "Cloned non-volatile algorithm"
+        },
+        "id": "job_b982f2b0ecee4040a74863899cc54a56",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213094678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213190178+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_53b4b371c25643b588c8fdccd2593ba1",
+          "notes": "Re-engineered non-volatile website"
+        },
+        "id": "job_6db3129b1a944b54ab0cd772c0d9aabc",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213190178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213212387+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_714a34d27365475d98f802b8645d18d2",
+          "notes": "Centralized human-resource database"
+        },
+        "id": "job_1d0799eeafb84f81b3fa1396c15f6196",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213212387+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213319095+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_93fa15cf6c25427e97aee551f92a9606",
+          "notes": "Compatible bandwidth-monitored collaboration"
+        },
+        "id": "job_43dd6505a5694115a2bf19d244742be2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213319095+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213335637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_e20933cb815f406dab9c4e024a55ff6f",
+          "notes": "Persevering dedicated service-desk"
+        },
+        "id": "job_53d7ea19243d4ae9a526604386bda691",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213335637+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213490970+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ab60a7bd72ed4cc591b02198e524d0e2",
+          "notes": "Managed executive focus group"
+        },
+        "id": "job_16cec0f56629459b8f3b9e16e2839ff6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213490970+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213797137+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_a919750e31424c06bf6c6e33644a5573",
+          "notes": "Versatile bi-directional concept"
+        },
+        "id": "job_6c730777bca84d74a56a583e0afb4b21",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213797137+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213914678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_53b4b371c25643b588c8fdccd2593ba1",
+          "notes": "De-engineered 6th generation throughput"
+        },
+        "id": "job_c86bac2b325e42ac89def01f01bc1fd1",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213914678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.213991220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_93fa15cf6c25427e97aee551f92a9606",
+          "notes": "Decentralized mission-critical adapter"
+        },
+        "id": "job_bd9159c3aa6d4342aaf3c3516caae72b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.213991220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214005887+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2feb0cb4870840f6ad9655578ad006bd",
+          "notes": "Profound disintermediate array"
+        },
+        "id": "job_7067664147874387a75098ac39cc98ea",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214005887+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214012762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ebeb0a4ece324f888f1bc8380a1b990e",
+          "notes": "Function-based real-time attitude"
+        },
+        "id": "job_d6a6514c9b724096aedb00c7ebffefba",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214012762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214118678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_18116e225031428db3702cc1eb9d83f5",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_442cfdbffe574967b71dd1c59119d81d",
+          "notes": "Self-enabling zero defect firmware"
+        },
+        "id": "job_cc3d24b56aed418a92fdb1df68f15d48",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214118678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214150470+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_44794b844f9a431e8a8c7e905446da54",
+          "notes": "Devolved multimedia adapter"
+        },
+        "id": "job_b699545cd9e34e22beaff50bacc15adf",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214150470+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214284345+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_d20aecd73725467d9ac86392e40f1dc4",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_987c6a931713450e9f9377bead8c3a9c",
+          "notes": "Business-focused motivating focus group"
+        },
+        "id": "job_ed168ba7f9c24d64bf152e1a81f4c3db",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214284345+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214361470+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_26ddc674f73640e38aae040f550dea13",
+          "notes": "Cross-group heuristic methodology"
+        },
+        "id": "job_cd9bc6535af947cbb9fc466ed5c93803",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214361470+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214426512+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_4f8c9b8b3ba04cb88c4245e1ede1698e",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_489244778ee84382b405e5e13a3b24e8",
+          "notes": "Self-enabling multi-state data-warehouse"
+        },
+        "id": "job_760fc790b50d4de6b1dd964b9fdf8542",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214426512+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214486470+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_81af5cd9612846dc8c7ee45322a6a3aa",
+          "notes": "Team-oriented global hierarchy"
+        },
+        "id": "job_ea2eba36844e46e5af4de34150d941d2",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214486470+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214639678+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_d33924427d70459ab7820cb246410344",
+          "notes": "Up-sized motivating complexity"
+        },
+        "id": "job_6700155679f44ea2a2d133901bd16d38",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214639678+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214878012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_ac611a2e04a04a1db33bfdad5093581c",
+          "notes": "Grass-roots real-time Graphical User Interface"
+        },
+        "id": "job_f0b8b3dd6d384610afa94062e2a3c918",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214878012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.214982928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f47ff1ffe92345e0bcd6b11929390a2e",
+          "notes": "Compatible exuding superstructure"
+        },
+        "id": "job_24509252b52544ac8230129ba19eecd5",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.214982928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215001095+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_280c387de21e429a8c7efb39da9abb36",
+          "notes": "Customizable multi-tasking synergy"
+        },
+        "id": "job_6075823dc01d4bd59b801f6517c9e11b",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215001095+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215009053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_44794b844f9a431e8a8c7e905446da54",
+          "notes": "Networked value-added budgetary management"
+        },
+        "id": "job_f27bc0e1ddb34be9ad871ed50d0432f7",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215009053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215064553+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_8df45f2f41034d208f783537bd3c3570",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_81af5cd9612846dc8c7ee45322a6a3aa",
+          "notes": "Intuitive local secured line"
+        },
+        "id": "job_9b59416b73e44e7292d65bd32eeac8f6",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215064553+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215323928+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_ecfa8652ee00412aa2b75d5d4ad0594d",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_b4e3cf3cd85b42f4b98f8f4957d5a957",
+          "notes": "Expanded stable secured line"
+        },
+        "id": "job_d4fef8e5ecdc420ca2db962320d80b6e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215323928+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215649220+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_acefb4e28ad7416cb74c84d4c0aef8cf",
+          "notes": "Reduced even-keeled success"
+        },
+        "id": "job_ce4a981ed37246bbb10598016edabe98",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "cancelled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215649220+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215665053+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_7a17edbde71b46c7bde4f6c02268ddff",
+          "notes": "Inverse solution-oriented flexibility"
+        },
+        "id": "job_455a055739eb4f058fa450d8e2162efb",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215665053+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215723762+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_182ee57e30ae40d38b14d43e4a9430b1",
+          "notes": "Open-source real-time methodology"
+        },
+        "id": "job_f035a8d09ffa4c7491dc7bf968f92c31",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "scheduled",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215723762+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.215738595+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_914fc1d3f44a4797b264376e2b146a6c",
+          "notes": "Expanded local complexity"
+        },
+        "id": "job_3b1971eb9dc542638a26843ce5bf8eff",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.215738595+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.216179012+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_3cfc80fcd3454531896ba90a8e57ea3c",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_f5f6fb5a6f8e43739dc184f1a947508f",
+          "notes": "Networked even-keeled knowledge base"
+        },
+        "id": "job_642bd4b11d4f44c8bd9c8033a7c513cf",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "completed",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.216179012+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.216381262+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_0e3e10cb23a34ee8b8103fdc28c1d610",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_c98fe26bc62b42939bfe00b1716b25e3",
+          "notes": "Business-focused value-added extranet"
+        },
+        "id": "job_46051eeb332b4bf4ba3dd39e6e79d88d",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.216381262+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:37.216470637+00:00",
+        "created_by": null,
+        "data": {
+          "assigned_to": "usr_507636dbbbe94f1e80da352336f012d2",
+          "custom_fields": {
+            "priority": "high"
+          },
+          "customer_id": "cus_2e959cdbe4044a578b3d7258cc3b4529",
+          "notes": "User-centric grid-enabled success"
+        },
+        "id": "job_cf7f9892f9be49af94c99e17f52ae25e",
+        "modified_by": null,
+        "object_type": "job",
+        "status": "in_progress",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:37.216470637+00:00",
+        "version": 0
+      }
+    ],
+    "users": [
+      {
+        "created_at": "2025-10-12T03:22:35.545315178+00:00",
+        "created_by": null,
+        "data": {
+          "email": "elissa@example.com",
+          "name": "Rafael Treutel",
+          "role": "tech"
+        },
+        "id": "usr_acb5f96f3fb44865ad420bfe30ebfccb",
+        "modified_by": null,
+        "object_type": "user",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:35.545315178+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.545303261+00:00",
+        "created_by": null,
+        "data": {
+          "email": "bradford@example.org",
+          "name": "Justen Gerhold",
+          "role": "tech"
+        },
+        "id": "usr_6b6c46b5cf5547fe9c136a32bec29df1",
+        "modified_by": null,
+        "object_type": "user",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.545303261+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:35.545321303+00:00",
+        "created_by": null,
+        "data": {
+          "email": "delpha@example.com",
+          "name": "Vergie King",
+          "role": "tech"
+        },
+        "id": "usr_8df45f2f41034d208f783537bd3c3570",
+        "modified_by": null,
+        "object_type": "user",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:35.545321303+00:00",
+        "version": 0
+      }
+    ],
+    "devices": [
+      {
+        "created_at": "2025-10-12T03:22:46.964231460+00:00",
+        "created_by": null,
+        "data": {
+          "app_version": "1.2.3",
+          "last_seen": "2025-10-26T10:00:00Z",
+          "platform": "web",
+          "revoked": false,
+          "user_id": "usr_361318d9870d4324823c07c90d699477"
+        },
+        "id": "dev_905b110d2dfb450f8b451d96914336cf",
+        "modified_by": null,
+        "object_type": "device",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:46.964231460+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T04:22:46.972930919+00:00",
+        "created_by": null,
+        "data": {
+          "app_version": "1.2.3",
+          "last_seen": "2025-10-26T10:00:00Z",
+          "platform": "android",
+          "revoked": false,
+          "user_id": "usr_203f1a69077e40dd802fac5602575daa"
+        },
+        "id": "dev_ddffeb6deaeb4bdbbb68143607979551",
+        "modified_by": null,
+        "object_type": "device",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T04:22:46.972930919+00:00",
+        "version": 0
+      }
+    ],
+    "attachments": [],
+    "checklist_templates": [],
+    "job_checklists": [],
+    "calendar_events": [],
+    "pricebooks": [],
+    "services": [
+      {
+        "created_at": "2025-10-11T04:22:46.899527252+00:00",
+        "created_by": null,
+        "data": {
+          "category": "General",
+          "cost": 170.46887171432246,
+          "name": "aggregate seamless eyeballs"
+        },
+        "id": "svc_74a6ab01495d43ff833b4a34ae949910",
+        "modified_by": null,
+        "object_type": "service",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:46.899527252+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:46.908146877+00:00",
+        "created_by": null,
+        "data": {
+          "category": "General",
+          "cost": 147.76242892742107,
+          "name": "reintermediate mission-critical ROI"
+        },
+        "id": "svc_af0f881cf03c4efd84d020057d7f58a8",
+        "modified_by": null,
+        "object_type": "service",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:46.908146877+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-11T04:22:46.923349377+00:00",
+        "created_by": null,
+        "data": {
+          "category": "General",
+          "cost": 410.0487316924177,
+          "name": "transform B2C solutions"
+        },
+        "id": "svc_b0082bc174504ebbb54ed68a52a6fe69",
+        "modified_by": null,
+        "object_type": "service",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-11T04:22:46.923349377+00:00",
+        "version": 0
+      },
+      {
+        "created_at": "2025-10-12T03:22:46.910926585+00:00",
+        "created_by": null,
+        "data": {
+          "category": "General",
+          "cost": 178.09740294899933,
+          "name": "brand B2C initiatives"
+        },
+        "id": "svc_e042467a3f214d8fa4eb4e831d71693f",
+        "modified_by": null,
+        "object_type": "service",
+        "status": "active",
+        "tenant_id": "tnt_03415b146f244c0e806971a6c58a455a",
+        "updated_at": "2025-10-12T03:22:46.910926585+00:00",
+        "version": 0
+      }
+    ],
+    "equipment_types": [],
+    "customer_equipment": []
+  }
+}

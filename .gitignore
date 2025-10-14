@@ -1,2 +1,5 @@
 web/node_modules/
 server/target
+
+# Xcode
+xcuserdata/
