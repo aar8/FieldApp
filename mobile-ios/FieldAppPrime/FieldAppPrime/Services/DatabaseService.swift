@@ -79,3 +79,26 @@ class DefaultDatabaseService: DatabaseService {
         }
     }
 }
+
+// MARK: - Mock Service for UI Previews and Testing
+
+class MockDatabaseService: DatabaseService {
+    
+    func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError> {
+        // Check if the fetch request is for Jobs.
+        if T.self == Job.self {
+            let sampleJobs = [
+                Job(id: UUID(), title: "Install new HVAC unit", status: "Scheduled"),
+                Job(id: UUID(), title: "Repair leaking pipe", status: "In Progress"),
+                Job(id: UUID(), title: "Quarterly generator maintenance", status: "Completed"),
+                Job(id: UUID(), title: "Fix faulty wiring", status: "Scheduled")
+            ] as! [T] // Force cast to the generic type T
+
+            // Return a producer that immediately sends the sample jobs and completes.
+            return SignalProducer(value: sampleJobs)
+        }
+        
+        // For any other type, return an empty array.
+        return SignalProducer(value: [])
+    }
+}
