@@ -1,31 +1,21 @@
-/// `SyncCoordinator` manages the complex process of synchronizing local data with a remote server.
+
+/// ## Post-MVP Enhancements
 ///
-/// ## Architecture
+/// 1.  **Interruptible State and Event Queue:** To solve race conditions (e.g., a foreground event
+///     arriving during a database write), events should not be processed immediately. Instead, they
+///     should be added to a queue. The state machine will consume from this queue only when its
+///     current state is "interruptible". The reducer logic will be enhanced to check `canConsume(event)`
+///     based on the current state, preventing dangerous interruptions. The queue can also be debounced
+///     to avoid redundant work from rapid, consecutive events.
 ///
-/// This component is implemented as a **Finite State Machine (FSM)** that transitions between various `SyncState`s
-/// (e.g., `resync`, `webSocketConnected`, `disabled`).
-///
-/// It uses a "Functional Core, Imperative Shell" pattern to isolate decision-making from side-effects:
-///
-/// - **Functional Core (`SyncCoordinator`)**: The coordinator itself is the "brain". The `send(event:)` method acts as a
-///   pure "reducer" function. It takes the current state and an incoming `SyncEvent`, and deterministically calculates
-///   the next state and the next `SyncEffect` to run. It does not perform any networking or database calls itself.
-///
-/// - **Imperative Shell (`SyncEffectHandler`)**: An external object conforming to the `SyncEffectHandler`
-///   protocol is the "muscle". It is responsible for executing the `SyncEffect`s (like making network calls,
-///   sleeping, or accessing the database) and reporting the result back to the coordinator via an event.
-///
-/// ## Flow
-///
-/// 1. An event (`SyncEvent`) is sent to the `send(event:)` method.
-/// 2. The reducer calculates a new state and a new effect.
-/// 3. The coordinator's state is updated.
-/// 4. The new effect is passed to the `SyncEffectHandler` to be executed.
-/// 5. The `SyncEffectHandler` completes the effect and posts its result back as a `SyncEvent`, repeating the cycle.
+/// 2.  **Server Health Heuristic (Circuit Breaker):** A "server health" score will be added to the
+///     coordinator's state. Successful syncs and pings will increase the score, while failures
+///     will decrease it. The reducers will use this score to dynamically adjust behavior, such as
+///     increasing the delay between sync attempts when server health is low, thus acting as a
+///     client-side circuit breaker.
 /// 
 import Foundation
 import ReactiveSwift
-
 
 enum SyncEffectError: Error {
     case readLastModifiedFailed
@@ -63,22 +53,7 @@ enum SyncEvent {
     case effectResult(Result<SyncEffectResult, SyncEffectError>)
 }
 
-protocol SyncEffectHandler {
-    func runEffect(syncEffect: SyncEffect)
-    
-    func effectCompleted(callback: (Result<SyncEffectResult, SyncEffectError>)->())
-}
-
-//  Transitions:
-//
-//   disconnected --> resync(syncInterval + 5)
-//   resync -> (
-//       initializeWebSocket.        // Side effect syncInterval = 0      || 
-//       disconnected(syncFailed)    // Side effect syncInterval += 5
-//   )
-//   initializeWebSocket --> (webSocketConnected | disconnected(webSocketConnectFailed))
-//   webSocketConnected -> disconnected(missedPing)
-enum DisconectedReason {
+enum DisconnectedReason {
     case missedPing
     case initializing
     case webSocketConnectFailed
@@ -86,7 +61,7 @@ enum DisconectedReason {
 }
 
 enum SyncState {
-    case disconnected(DisconectedReason)        
+    case disconnected(DisconnectedReason)
     case resync(wait: Int)
     case initializeWebSocket
     case webSocketConnected
@@ -98,21 +73,16 @@ class SyncCoordinator {
     // This state will persist across SyncState changes.
     var currentState: SyncState = .disconnected(.initializing)
     let effectHandler: SyncEffectHandler
+
     init(effectHandler: SyncEffectHandler) {
-//        var syncState: SyncState = .disconnected(.initializing)
         self.effectHandler = effectHandler
         effectHandler.effectCompleted { result in
-            /*let (newState, newEffect) = */send(event: .effectResult(result))
-            
-//            currentState = newState
-//            effectHandler.runEffect(syncEffect: newEffect)
+            self.send(event: .effectResult(result))
         }
     }
 
     func foreground() {
         send(event: .foreground)
-
-//        effectHandler.runEffect(updateState(.resync(0)));
     }
 
     func background() {
@@ -124,7 +94,7 @@ class SyncCoordinator {
         let (newState, newEffect) =
         switch (event) {
         case .effectResult(let result):
-            effectCompleted(syncState, result)
+            Self.reduceEffect(syncState, result)
         case .foreground:
             // TODO: this is very dangerous because it may interrupt an upsert need to move this and effect 
             // consumption into queue where state machine can consume based on interrupt-ability of current state
@@ -139,79 +109,55 @@ class SyncCoordinator {
         self.effectHandler.runEffect(syncEffect: newEffect)
     }
 
-    func effectSuccessful(_ syncState: SyncState, _ success: SyncEffectResult) -> (SyncState, SyncEffect) {
-        // let success: SyncEffectResult = ...
+    // Pure functions
+    static func reduceEffect(_ syncState: SyncState, _ result: Result<SyncEffectResult, SyncEffectError>) ->  (SyncState, SyncEffect) {
+        switch result {
+        case .success(let value):
+            reduceEffectSuccess(syncState, value)
+        case .failure(let error):
+            reduceEffectFailure(syncState, error)
+        }
+    }
+
+    static func reduceEffectSuccess(_ syncState: SyncState, _ success: SyncEffectResult) -> (SyncState, SyncEffect) {
+
         switch (syncState, success) {
             // Web socket closed due to instability
             case (.resync(let t), .closeWebSocketSuccessful):
-                return (syncState, .sleep(t));
+                (syncState, .sleep(t));
 
             case (.resync, .sleepSuccessful):
-                return (syncState, .readLastModified);
+                (syncState, .readLastModified);
 
             case (.resync, .readLastModifiedSuccessful(let lm)):
-                return (syncState, .resync(lm));
+                (syncState, .resync(lm));
 
             case (.resync, .resyncSuccessful):
-                return (.initializeWebSocket, .openWebSocket);
+                (.initializeWebSocket, .openWebSocket);
 
             case (.initializeWebSocket, .openWebSocketSuccessful):
-                return (.webSocketConnected, .sendPing);
+                (.webSocketConnected, .sendPing);
 
             case (.webSocketConnected, .sendPingSuccessful):
-                return (.webSocketConnected, .sleep(30))
+                (.webSocketConnected, .sleep(30))
 
             case (.webSocketConnected, .sleepSuccessful):
-                return (.webSocketConnected, .sendPing)
+                (.webSocketConnected, .sendPing)
             default:
-                return (.disabled, .nullEffect);
-//        case (.disconnected(_), _):
-//            <#code#>
-//        case (.disabled, _):
-//            <#code#>
-//        case (.webSocketConnected, .readLastModifiedSuccessful(_)):
-//            <#code#>
-//        case (.webSocketConnected, .resyncSuccessful(_)):
-//            <#code#>
-//        case (.webSocketConnected, .openWebSocketSuccessful):
-//            <#code#>
-//        case (.webSocketConnected, .closeWebSocketSuccessful):
-//            <#code#>
-//        case (.initializeWebSocket, .sleepSuccessful):
-//            <#code#>
-//        case (.initializeWebSocket, .readLastModifiedSuccessful(_)):
-//            <#code#>
-//        case (.initializeWebSocket, .resyncSuccessful(_)):
-//            <#code#>
-//        case (.initializeWebSocket, .sendPingSuccessful):
-//            <#code#>
-//        case (.initializeWebSocket, .closeWebSocketSuccessful):
-//            <#code#>
-//        case (.resync(_), .openWebSocketSuccessful):
-//            <#code#>
-//        case (.resync(_), .sendPingSuccessful):
-//            <#code#>
+                (.disabled, .nullEffect);
         }
     }
-    
-//     enum SyncEffectError {
-//     .readLastModifiedFailed
-//     .resyncFailed
-//     .sendPingFailed
-//     .openWebSocketFailed
-//     .closeWebSocketFailed
-// }
 
-    func effectFailed(_ syncState: SyncState, _ error: SyncEffectError) -> (SyncState, SyncEffect) {
+    static func reduceEffectFailure(_ syncState: SyncState, _ error: SyncEffectError) -> (SyncState, SyncEffect) {
         // let success: SyncEffectResult = ...
         switch (syncState, error) {
-            case (.resync, .readLastModifiedFailed):
-                // heavy resync log in new relic
-                return (syncState, .resync(nil));
+        case (.resync, .readLastModifiedFailed):
+            // heavy resync log in new relic
+            return (syncState, .resync(nil));
 
         // shrug? at least send the signal to NR
         case (.resync(let t), .closeWebSocketFailed):
-                return (syncState, .sleep(t));
+            return (syncState, .sleep(t));
 
         case (.resync(let wait), .resyncFailed):
                 let backoff = wait * 2
@@ -222,29 +168,34 @@ class SyncCoordinator {
 
         case (.webSocketConnected, .sendPingFailed):
             return (.resync(wait:5), .closeWebSocket)
-            
-        default:
+
+        // Explicitly list all other unhandled failure cases to fall back to a disabled state.
+        case (.disconnected, .readLastModifiedFailed),
+             (.disconnected, .resyncFailed),
+             (.disconnected, .upsertDBFailed),
+             (.disconnected, .openWebSocketFailed),
+             (.disconnected, .sendPingFailed),
+             (.disconnected, .closeWebSocketFailed),
+             (.resync, .upsertDBFailed),
+             (.resync, .openWebSocketFailed),
+             (.resync, .sendPingFailed),
+             (.initializeWebSocket, .readLastModifiedFailed),
+             (.initializeWebSocket, .resyncFailed),
+             (.initializeWebSocket, .upsertDBFailed),
+             (.initializeWebSocket, .sendPingFailed),
+             (.initializeWebSocket, .closeWebSocketFailed),
+             (.webSocketConnected, .readLastModifiedFailed),
+             (.webSocketConnected, .resyncFailed),
+             (.webSocketConnected, .upsertDBFailed),
+             (.webSocketConnected, .openWebSocketFailed),
+             (.webSocketConnected, .closeWebSocketFailed),
+             (.disabled, .readLastModifiedFailed),
+             (.disabled, .resyncFailed),
+             (.disabled, .upsertDBFailed),
+             (.disabled, .openWebSocketFailed),
+             (.disabled, .sendPingFailed),
+             (.disabled, .closeWebSocketFailed):
             return (.disabled, .nullEffect)
-
         }
     }
-
-    func effectCompleted(_ syncState: SyncState, _ result: Result<SyncEffectResult, SyncEffectError>) ->  (SyncState, SyncEffect) {
-        switch result {
-        case .success(let value):
-            effectSuccessful(syncState, value)
-        case .failure(let error):
-            effectFailed(syncState, error)
-        }
-    }
-
-    // state affected by external input
-//    func updateState(_ currentState, _ newState: SyncState) -> SyncEffect {
-//        switch (currentState, newState) {
-//            case (_, .resync(wait)):
-//            self.currentState = .resync(wait:wait)
-//                return .sleep(wait)
-//                // return .readLastModified;
-//        }
-//    }
 }

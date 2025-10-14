@@ -2,18 +2,6 @@ import Foundation
 import GRDB
 import ReactiveSwift
 
-// Your feedback is excellent. Coupling your domain models to a specific
-// database library is not ideal. A great way to solve this is by using
-// the Repository Pattern, where you have separate models for your
-// database layer (DTOs - Data Transfer Objects) and your domain layer.
-//
-// This keeps your domain models "plain" and persistence-ignorant.
-// The database service will be responsible for fetching DTOs and mapping
-// them to your domain models.
-
-// MARK: - 1. Domain Models (Plain Objects)
-// These are the models used throughout your app. They are clean and
-// have no dependency on GRDB.
 
 struct MyDomainModel { // Example domain model
     let id: Int64
