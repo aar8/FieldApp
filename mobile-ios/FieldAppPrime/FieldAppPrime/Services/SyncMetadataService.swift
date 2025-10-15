@@ -8,6 +8,12 @@ protocol SyncMetadataService {
     /// The timestamp of the last successful synchronization, typically in ISO8601 format.
     /// A `nil` value indicates that a sync has never completed successfully.
     var lastSyncTimestamp: String? { get set }
+    
+    /// The base URL of the server to sync with.
+    var hostURL: URL? { get set }
+    
+    /// The ID of the tenant to sync data for.
+    var tenantID: String? { get set }
 }
 
 
@@ -18,6 +24,8 @@ class UserDefaultsSyncMetadataService: SyncMetadataService {
     
     // A namespaced key to prevent collisions in UserDefaults.
     private static let lastSyncTimestampKey = "com.fieldapp.sync.lastSyncTimestamp"
+    private static let hostURLKey = "com.fieldapp.sync.hostURL"
+    private static let tenantIDKey = "com.fieldapp.sync.tenantID"
 
     /// Initializes the service with a specific UserDefaults instance.
     /// - Parameter userDefaults: The UserDefaults instance to use. Defaults to `.standard`.
@@ -27,13 +35,28 @@ class UserDefaultsSyncMetadataService: SyncMetadataService {
 
     var lastSyncTimestamp: String? {
         get {
-            // Retrieve the string value from UserDefaults.
             return userDefaults.string(forKey: Self.lastSyncTimestampKey)
         }
         set {
-            // Set the new value in UserDefaults.
-            // If `newValue` is nil, it removes the key-value pair.
             userDefaults.set(newValue, forKey: Self.lastSyncTimestampKey)
+        }
+    }
+    
+    var hostURL: URL? {
+        get {
+            return userDefaults.url(forKey: Self.hostURLKey)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Self.hostURLKey)
+        }
+    }
+    
+    var tenantID: String? {
+        get {
+            return userDefaults.string(forKey: Self.tenantIDKey)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Self.tenantIDKey)
         }
     }
 }

@@ -137,7 +137,7 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
-use chrono::Utc;
+use chrono::{SecondsFormat, Utc};
 use rusqlite::{Connection, params};
 use serde_json::Value;
 
@@ -190,7 +190,7 @@ pub async fn sync_handler(
     State(state): State<AppState>,
     Query(params): Query<SyncParams>,
 ) -> impl IntoResponse {
-    let now = Utc::now().to_rfc3339();
+    let now = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
     let since = params.since.unwrap_or_else(|| "1970-01-01T00:00:00Z".to_string());
 
     // Lock the DB once for all reads

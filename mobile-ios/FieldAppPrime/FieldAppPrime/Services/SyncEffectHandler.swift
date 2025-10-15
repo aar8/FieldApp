@@ -15,7 +15,6 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
     
     private var completionHandler: ((Result<SyncEffectResult, SyncEffectError>) -> Void)?
 
-    // --- Initializer ---
     init(
         apiService: APIService,
         databaseService: DatabaseService,
@@ -28,65 +27,54 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
         self.metadataService = metadataService
     }
 
-    // The SyncCoordinator calls this once at startup to register its callback.
     func effectCompleted(callback: @escaping (Result<SyncEffectResult, SyncEffectError>) -> Void) {
         self.completionHandler = callback
     }
 
     // This method is called by the SyncCoordinator to execute a side effect.
-    func runEffect(syncEffect: SyncEffect) {
-        // Ensure the completion handler has been set before proceeding.
-        guard let completionHandler = completionHandler else {
-            print("SyncEffectHandler Error: completionHandler was not set by the coordinator!")
-            return
+    func runEffect(syncEffect: SyncEffect)  {
+        Task {
+            // Ensure the completion handler has been set before proceeding.
+            guard let completionHandler = completionHandler else {
+                print("SyncEffectHandler Error: completionHandler was not set by the coordinator!")
+                return
+            }
+            
+            if let effectResult = await result(for: syncEffect) {
+                completionHandler(effectResult)
+            }
         }
+    }
 
-        print("--- Running Effect: \(syncEffect) ---")
-
+    private func result(for syncEffect: SyncEffect) async -> Result<SyncEffectResult, SyncEffectError>? {
         switch syncEffect {
-        
         case .sleep(let duration):
-            // TODO: Implement a real async sleep, e.g., DispatchQueue.main.asyncAfter
-            print("EFFECT: Pretending to sleep for \(duration) seconds.")
-            completionHandler(.success(.sleepSuccessful))
-
+            let nanoseconds: UInt64 = UInt64(duration) * 1_000_000_000
+            try? await Task.sleep(nanoseconds: nanoseconds)
+            
+            return .success(.sleepSuccessful)
         case .readLastModified:
-            // TODO: Use metadataService to get the last modified timestamp.
-            print("EFFECT: Reading last modified timestamp from local DB.")
-            let fakeTimestamp = ISO8601DateFormatter().string(from: Date())
-            completionHandler(.success(.readLastModifiedSuccessful(fakeTimestamp)))
+            let lastModified = metadataService.lastSyncTimestamp
+            return .success(.readLastModifiedSuccessful(lastModified))
 
         case .resync(let lastModified):
-            // TODO: Use apiService to make the resync network call.
-            print("EFFECT: Calling resync endpoint (last modified: \(lastModified ?? "none")).")
             let responseData = "{\"message\":\"fake server data\"}".data(using: .utf8)!
-            completionHandler(.success(.resyncSuccessful("new_sync_token", responseData)))
+            return .success(.resyncSuccessful("new_sync_token", responseData))
             
         case .upsertDB(let data):
-            // TODO: Use databaseService to perform the write operation.
-            print("EFFECT: Upserting \(data.count) bytes to the database.")
-            completionHandler(.success(.upsertDBSuccessful))
+            return .success(.upsertDBSuccessful)
 
         case .openWebSocket:
-            // TODO: Use webSocketService to connect.
-            print("EFFECT: Opening WebSocket connection.")
-            completionHandler(.success(.openWebSocketSuccessful))
+            return .success(.openWebSocketSuccessful)
 
         case .sendPing:
-            // TODO: Use webSocketService to send a ping.
-            print("EFFECT: Sending WebSocket ping.")
-            completionHandler(.success(.sendPingSuccessful))
+            return .success(.sendPingSuccessful)
 
         case .closeWebSocket:
-            // TODO: Use webSocketService to disconnect.
-            print("EFFECT: Closing WebSocket connection.")
-            completionHandler(.success(.closeWebSocketSuccessful))
+            return .success(.closeWebSocketSuccessful)
             
         case .nullEffect:
-            // This effect intentionally does nothing. We don't call the completion
-            // handler because that would trigger an unnecessary state machine cycle.
-            print("EFFECT: Null effect. Doing nothing.")
-            break
+            return nil
         }
     }
 }

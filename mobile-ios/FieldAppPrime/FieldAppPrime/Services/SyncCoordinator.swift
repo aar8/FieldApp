@@ -39,7 +39,7 @@ enum SyncEffect {
 
 enum SyncEffectResult {
     case sleepSuccessful
-    case readLastModifiedSuccessful(String)
+    case readLastModifiedSuccessful(String?)
     case resyncSuccessful(String, Data)
     case upsertDBSuccessful
     case openWebSocketSuccessful

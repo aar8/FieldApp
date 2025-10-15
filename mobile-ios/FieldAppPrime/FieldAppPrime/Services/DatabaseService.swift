@@ -52,16 +52,20 @@ protocol DatabaseService {
     /// Fetches an array of domain models.
     /// The request is a GRDB query on the DTO associated with the domain model.
     func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError>
+
+//    var allJobs: Signal<[Job], Never>
 }
 
 class DefaultDatabaseService: DatabaseService {
     private let dbQueue: DatabaseQueue
+//    let allJobs: Signal<[Job], Never>
     
     init(dbQueue: DatabaseQueue) {
         self.dbQueue = dbQueue
     }
 
     func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError> {
+
         return SignalProducer { [dbQueue] observer, lifetime in
             do {
                 // Fetch DTOs from the database

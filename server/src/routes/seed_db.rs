@@ -1,4 +1,4 @@
-use chrono::{Duration, Utc};
+use chrono::{Duration, SecondsFormat, Utc};
 use fake::{
     faker::{
         company::en::{Bs, CatchPhrase, CompanyName},
@@ -39,7 +39,7 @@ fn get_variable_datetime() -> String {
     let offset = offsets.choose(&mut rng).map(|d| *d).unwrap_or(Duration::zero());
     let dt = now - offset;
     // Format for SQLite DATETIME
-    dt.to_rfc3339()
+    dt.to_rfc3339_opts(SecondsFormat::Secs, true)
 }
 
 pub fn seed_db(conn: &mut Connection) -> rusqlite::Result<()> {
