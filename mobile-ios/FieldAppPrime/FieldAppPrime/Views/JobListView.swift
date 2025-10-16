@@ -13,9 +13,9 @@ struct JobListView: View {
                 // Read the current value from the ReactiveSwift Property
                 List(viewModel.jobs.value) { job in
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(job.title)
-                            .font(.headline)
                         Text(job.status)
+                            .font(.headline)
+                        Text(job.tenantId)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

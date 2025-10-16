@@ -17,9 +17,15 @@
 import Foundation
 import ReactiveSwift
 
+enum ResyncError: Error {
+    case malformedURL
+    case missingTenantID
+    case apiError(APIError)
+    
+}
 enum SyncEffectError: Error {
     case readLastModifiedFailed
-    case resyncFailed
+    case resyncFailed(ResyncError)
     case upsertDBFailed
     case openWebSocketFailed
     case sendPingFailed
@@ -30,7 +36,7 @@ enum SyncEffect {
     case sleep(Int)
     case readLastModified
     case resync(String?)
-    case upsertDB(Data)
+    case upsertDB(SyncResponse)
     case openWebSocket
     case sendPing
     case closeWebSocket
@@ -40,7 +46,7 @@ enum SyncEffect {
 enum SyncEffectResult {
     case sleepSuccessful
     case readLastModifiedSuccessful(String?)
-    case resyncSuccessful(String, Data)
+    case resyncSuccessful(SyncResponse)
     case upsertDBSuccessful
     case openWebSocketSuccessful
     case sendPingSuccessful
@@ -63,6 +69,7 @@ enum DisconnectedReason {
 enum SyncState {
     case disconnected(DisconnectedReason)
     case resync(wait: Int)
+    case upserting
     case initializeWebSocket
     case webSocketConnected
     case disabled
@@ -132,8 +139,11 @@ class SyncCoordinator {
             case (.resync, .readLastModifiedSuccessful(let lm)):
                 (syncState, .resync(lm));
 
-            case (.resync, .resyncSuccessful):
-                (.initializeWebSocket, .openWebSocket);
+            case (.resync, .resyncSuccessful(let response)):
+                (.upserting, .upsertDB(response));
+                
+            case (.upserting, .upsertDBSuccessful):
+                (.initializeWebSocket, .openWebSocket)
 
             case (.initializeWebSocket, .openWebSocketSuccessful):
                 (.webSocketConnected, .sendPing);
@@ -163,6 +173,11 @@ class SyncCoordinator {
                 let backoff = wait * 2
             return (.resync(wait: backoff), .sleep(backoff));
 
+        case (.upserting, .upsertDBFailed):
+            // TODO: we need a more specific error and better
+            // recovery handling
+            return (.resync(wait: 5), .sleep(5))
+            
         case (.initializeWebSocket, .openWebSocketFailed):
             return (.resync(wait: 5), .sleep(5));
 
@@ -195,6 +210,8 @@ class SyncCoordinator {
              (.disabled, .openWebSocketFailed),
              (.disabled, .sendPingFailed),
              (.disabled, .closeWebSocketFailed):
+            return (.disabled, .nullEffect)
+        default:
             return (.disabled, .nullEffect)
         }
     }

@@ -70,11 +70,12 @@ struct Contact: Decodable {
 // MARK: - API Job Model
 
 struct APIJob: Decodable {
-    let id, objectType, status, tenantID: String
+    let id: Int
+    let objectType, status, tenantID: String
     let createdAt, updatedAt: Date
     let createdBy, modifiedBy: String?
     let version: Int
-    let data: JobData
+    let data: APIJobData
 
     enum CodingKeys: String, CodingKey {
         case id, data, version, status
@@ -87,7 +88,11 @@ struct APIJob: Decodable {
     }
 }
 
-struct JobData: Decodable {
+struct APIJobData: Decodable {
+    struct CustomFields: Decodable {
+        let priority: String
+    }
+    
     let customerID, assignedTo: String
     let notes: String
     let customFields: CustomFields
@@ -100,9 +105,7 @@ struct JobData: Decodable {
     }
 }
 
-struct CustomFields: Decodable {
-    let priority: String
-}
+
 
 // MARK: - AnyDecodable Helper
 

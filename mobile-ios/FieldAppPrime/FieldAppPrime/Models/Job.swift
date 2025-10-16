@@ -1,31 +1,20 @@
 import Foundation
-import GRDB
+
+/// Represents the data payload for a Job in the domain layer.
+struct JobDomainData: Hashable {
+    var title: String
+    var description: String?
+}
 
 /// Represents a single job record in the system.
-struct Job: Identifiable {
-    let id: UUID
-    let title: String
-    let status: String
-}
-
-// MARK: - Database Mapping
-
-/// The DTO (Data Transfer Object) for a Job, used for database persistence with GRDB.
-struct JobDTO: Codable, FetchableRecord, TableRecord {
-    let id: String
-    let title: String
-    let status: String
-
-    static var databaseTableName: String { "job" }
-}
-
-/// Conformance to allow mapping from the database DTO to the domain model.
-extension Job: DatabaseMappable {
-    typealias DTO = JobDTO
-    
-    init(from dto: JobDTO) {
-        self.id = UUID(uuidString: dto.id) ?? UUID()
-        self.title = dto.title
-        self.status = dto.status
-    }
+/// This is a "clean" domain model with no persistence-specific code.
+struct Job: Identifiable, Hashable {
+    let id: Int
+    var tenantId: String
+    var objectType: String
+    var status: String
+    var data: JobDomainData // This now uses the clear domain-specific model
+    var version: Int
+    var createdAt: Date
+    var updatedAt: Date
 }

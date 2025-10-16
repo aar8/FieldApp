@@ -2,107 +2,84 @@ import Foundation
 import GRDB
 import ReactiveSwift
 
-
-struct MyDomainModel { // Example domain model
-    let id: Int64
-    let name: String
-}
-
-// MARK: - 2. Database Mappable Protocol
-// A protocol to bridge the gap between the database models and domain models.
-
-protocol DatabaseMappable {
-    /// The associated GRDB-specific model (DTO).
-    associatedtype DTO: FetchableRecord & TableRecord
-    
-    /// Initializes a domain model from a DTO.
-    init(from dto: DTO)
-}
-
-// MARK: - 3. Database Models (DTOs)
-// These models are specific to your GRDB persistence layer.
-
-struct MyDomainModelDTO: Codable, FetchableRecord, TableRecord {
-    let id: Int64
-    let name: String
-
-    static var databaseTableName: String { "my_domain_model" }
-}
-
-// MARK: - 4. Mapping
-// Your domain model conforms to `DatabaseMappable` to define the mapping.
-
-extension MyDomainModel: DatabaseMappable {
-    typealias DTO = MyDomainModelDTO
-    
-    init(from dto: MyDomainModelDTO) {
-        self.id = dto.id
-        self.name = dto.name
-    }
-}
-
-// MARK: - 5. Database Service
-
-enum AppError: Error {
-    case databaseError(Error)
-    case notFound
-}
+// MARK: - Database Service Protocol
 
 protocol DatabaseService {
-    /// Fetches an array of domain models.
-    /// The request is a GRDB query on the DTO associated with the domain model.
-    func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError>
-
-//    var allJobs: Signal<[Job], Never>
+    /// A property representing the list of jobs. 
+    /// New subscribers immediately receive the current list of jobs and then all future updates.
+    var jobs: Property<[Job]> { get }
+    
+    /// Upserts an array of job records into the database.
+    /// - Parameter jobs: The job records to save.
+    /// - Returns: A `Result` indicating success or failure.
+    func upsert(jobs: [JobRecord]) -> Result<Void, Error>
 }
+
+// MARK: - Default Implementation
 
 class DefaultDatabaseService: DatabaseService {
     private let dbQueue: DatabaseQueue
-//    let allJobs: Signal<[Job], Never>
-    
-    init(dbQueue: DatabaseQueue) {
-        self.dbQueue = dbQueue
-    }
+    let jobs: Property<[Job]>
 
-    func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError> {
-
-        return SignalProducer { [dbQueue] observer, lifetime in
-            do {
-                // Fetch DTOs from the database
-                let dtos = try dbQueue.read { db in
-                    try request.fetchAll(db)
-                }
-                // Map DTOs to domain models
-                let models = dtos.map(T.init)
-                
-                observer.send(value: models)
-                observer.sendCompleted()
-            } catch {
-                observer.send(error: .databaseError(error))
-            }
+    init(appDatabase: AppDatabaseProtocol) {
+        self.dbQueue = appDatabase.dbQueue
+        
+        let observation = ValueObservation.tracking { db in
+            try JobRecord.fetchAll(db)
         }
+        
+        let jobsProducer = SignalProducer<[Job], Never> { observer, lifetime in
+            let cancellable = observation.start(
+                in: appDatabase.dbQueue,
+                onError: { error in
+                    // TODO: Log the database error to our logging service.
+                    observer.send(value: [])
+                },
+                onChange: { records in
+                    let jobs = records.map { $0.toDomainModel() }
+                    observer.send(value: jobs)
+                }
+            )
+            lifetime.observeEnded { cancellable.cancel() }
+        }
+        
+        self.jobs = Property(initial: [], then: jobsProducer)
+    }
+    
+    func upsert(jobs: [JobRecord]) -> Result<Void, Error> {
+//        do {
+//            try dbQueue.write { db in
+//                for job in jobs {
+//                
+//                    try job.save(db)
+//                }
+//                return .commit
+//            }
+//            return .success(())
+//        } catch {
+//            return .failure(error)
+//        }
+        .success(())
     }
 }
 
-// MARK: - Mock Service for UI Previews and Testing
+// MARK: - Mock Service
 
 class MockDatabaseService: DatabaseService {
+    let jobs: Property<[Job]>
     
-    func fetch<T: DatabaseMappable>(_ request: QueryInterfaceRequest<T.DTO>) -> SignalProducer<[T], AppError> {
-        // Check if the fetch request is for Jobs.
-        if T.self == Job.self {
-            let sampleJobs = [
-                Job(id: UUID(), title: "Install new HVAC unit", status: "Scheduled"),
-                Job(id: UUID(), title: "Repair leaking pipe", status: "In Progress"),
-                Job(id: UUID(), title: "Quarterly generator maintenance", status: "Completed"),
-                Job(id: UUID(), title: "Fix faulty wiring", status: "Scheduled")
-            ] as! [T] // Force cast to the generic type T
-
-            // Return a producer that immediately sends the sample jobs and completes.
-            return SignalProducer(value: sampleJobs)
-        }
+    init() {
+        let sampleJobs = [
+            Job(id: 1, tenantId: "t1", objectType: "job", status: "Scheduled", data: JobDomainData(title: "Install new HVAC unit", description: ""), version: 1, createdAt: Date(), updatedAt: Date()),
+            Job(id: 2, tenantId: "t1", objectType: "job", status: "In Progress", data: JobDomainData(title: "Repair leaking pipe", description: ""), version: 1, createdAt: Date(), updatedAt: Date()),
+            Job(id: 3, tenantId: "t1", objectType: "job", status: "Completed", data: JobDomainData(title: "Quarterly generator maintenance", description: ""), version: 1, createdAt: Date(), updatedAt: Date())
+        ]
         
-        // For any other type, return an empty array.
-        return SignalProducer(value: [])
+        self.jobs = Property(value: sampleJobs)
+    }
+    
+    func upsert(jobs: [JobRecord]) -> Result<Void, Error> {
+        // In the mock service, the upsert can just succeed without doing anything.
+        return .success(())
     }
 }

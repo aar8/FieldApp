@@ -53,16 +53,50 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
             try? await Task.sleep(nanoseconds: nanoseconds)
             
             return .success(.sleepSuccessful)
+
         case .readLastModified:
             let lastModified = metadataService.lastSyncTimestamp
             return .success(.readLastModifiedSuccessful(lastModified))
 
         case .resync(let lastModified):
-            let responseData = "{\"message\":\"fake server data\"}".data(using: .utf8)!
-            return .success(.resyncSuccessful("new_sync_token", responseData))
+            guard let hostURL = metadataService.hostURL else {
+                return .failure(.resyncFailed(.malformedURL))
+            }
+            guard let tenantID = metadataService.tenantID else {
+                return .failure(.resyncFailed(.missingTenantID))
+            }
+
+            let syncResult = await apiService.performResync(host: hostURL, tenantID: tenantID, since: lastModified)
+            return syncResult.map { .resyncSuccessful($0) }
+                .mapError { .resyncFailed(.apiError($0)) }
             
-        case .upsertDB(let data):
-            return .success(.upsertDBSuccessful)
+        case .upsertDB(let syncResponse):
+            // TODO: hand this reponse to the db or some other layer this is too much for the effect
+            // handler which does not own this domain.
+            // 1. Map API models to persistence models
+            let jobRecords = syncResponse.data.jobs.map { apiJob -> JobRecord in
+                JobRecord(
+                    id: apiJob.id,
+                    tenantId: apiJob.tenantID,
+                    objectType: apiJob.objectType,
+                    status: apiJob.status,
+                    data: apiJob.data,
+                    version: apiJob.version,
+                    createdAt: apiJob.createdAt,
+                    updatedAt: apiJob.updatedAt
+                )
+            }
+            
+            // 2. Hand off to the database service
+            let result = databaseService.upsert(jobs: jobRecords)
+            
+            // 3. Return the result of the upsert operation
+            switch result {
+            case .success:
+                return .success(.upsertDBSuccessful)
+            case .failure:
+                return .failure(.upsertDBFailed)
+            }
 
         case .openWebSocket:
             return .success(.openWebSocketSuccessful)
