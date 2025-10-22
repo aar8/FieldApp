@@ -30,7 +30,7 @@ final class AppDatabase: AppDatabaseProtocol {
             let fileManager = FileManager.default
             let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let dbURL = appSupportURL.appendingPathComponent("fieldapp.sqlite")
-            
+            print(dbURL)
             let dbQueue = try DatabaseQueue(path: dbURL.path)
             let appDatabase = AppDatabase(dbQueue: dbQueue)
             
@@ -50,15 +50,15 @@ final class AppDatabase: AppDatabaseProtocol {
         migrator.registerMigration("v1") { db in
             try db.create(table: JobRecord.databaseTableName) { t in
                 t.primaryKey("id", .text)
-                t.column("tenantId", .text).notNull()
-                t.column("objectType", .text).notNull()
+                t.column("tenant_id", .text).notNull()
+                t.column("object_type", .text).notNull()
+                t.column("status", .text).notNull()
                 t.column("data", .jsonText).notNull()
                 t.column("version", .integer).notNull()
-                t.column("createdAt", .datetime).notNull()
-                t.column("updatedAt", .datetime).notNull()
-                
-                t.column("status", .text)
-                    .generatedAs(sql: "json_extract(data, '$.status')")
+                t.column("created_by", .text)
+                t.column("modified_by", .text)
+                t.column("created_at", .datetime).notNull()
+                t.column("updated_at", .datetime).notNull()
             }
             
             try db.create(index: "idx_jobs_status", on: JobRecord.databaseTableName, columns: ["status"])
