@@ -18,7 +18,7 @@ import Foundation
 import ReactiveSwift
 
 enum ResyncError: Error {
-    case malformedURL
+    case missingURL
     case missingTenantID
     case apiError(APIError)
     
@@ -112,6 +112,7 @@ class SyncCoordinator {
             (.disabled, .nullEffect)
         }
         
+        print("\(newState) - \(newEffect)")
         self.currentState = newState
         self.effectHandler.runEffect(syncEffect: newEffect)
     }
@@ -158,6 +159,20 @@ class SyncCoordinator {
         }
     }
 
+    static func reduceResyncFailed(_ syncState: SyncState, _ error: ResyncError) -> (SyncState, SyncEffect) {
+        switch (syncState, error) {
+        case (.resync, .missingURL):
+            return (.disabled, .nullEffect)
+        case (.resync, .missingTenantID):
+            return (.disabled, .nullEffect)
+        case (.resync(let wait), .apiError):
+            let backoff = min(wait, 1) * 2
+            return (.resync(wait: backoff), .sleep(backoff));
+        default:
+            return (.disabled, .nullEffect)
+        }
+    }
+
     static func reduceEffectFailure(_ syncState: SyncState, _ error: SyncEffectError) -> (SyncState, SyncEffect) {
         // let success: SyncEffectResult = ...
         switch (syncState, error) {
@@ -169,9 +184,8 @@ class SyncCoordinator {
         case (.resync(let t), .closeWebSocketFailed):
             return (syncState, .sleep(t));
 
-        case (.resync(let wait), .resyncFailed):
-                let backoff = wait * 2
-            return (.resync(wait: backoff), .sleep(backoff));
+        case (.resync, .resyncFailed(let resyncError)):
+            return reduceResyncFailed(syncState, resyncError)
 
         case (.upserting, .upsertDBFailed):
             // TODO: we need a more specific error and better
