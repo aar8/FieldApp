@@ -9,7 +9,7 @@ struct JobDomainData: Hashable {
 /// Represents a single job record in the system.
 /// This is a "clean" domain model with no persistence-specific code.
 struct Job: Identifiable, Hashable {
-    let id: Int
+    let id: String
     var tenantId: String
     var objectType: String
     var status: String
