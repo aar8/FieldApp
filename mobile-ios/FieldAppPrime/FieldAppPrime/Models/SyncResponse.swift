@@ -70,47 +70,32 @@ struct Contact: Decodable {
 // MARK: - API Job Model
 
 struct APIJob: Decodable {
-    let id: Int
-    let objectType, status, tenantID: String
-    let createdAt, updatedAt: Date
-    let createdBy, modifiedBy: String?
+    let id: String
+    let tenantId: String
+    let objectType: String
+    let status: String
     let version: Int
-    let data: APIJobData
+    let createdBy: String?
+    let modifiedBy: String?
+    let createdAt: Date
+    let updatedAt: Date
+    let data: [String: AnyDecodable] // Using the flexible decoder
 
     enum CodingKeys: String, CodingKey {
         case id, data, version, status
+        case tenantId = "tenant_id"
         case objectType = "object_type"
-        case tenantID = "tenant_id"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
         case createdBy = "created_by"
         case modifiedBy = "modified_by"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
 }
-
-struct APIJobData: Decodable {
-    struct CustomFields: Decodable {
-        let priority: String
-    }
-    
-    let customerID, assignedTo: String
-    let notes: String
-    let customFields: CustomFields
-
-    enum CodingKeys: String, CodingKey {
-        case notes
-        case customerID = "customer_id"
-        case assignedTo = "assigned_to"
-        case customFields = "custom_fields"
-    }
-}
-
-
 
 // MARK: - AnyDecodable Helper
 
-// Helper to decode mixed-type dictionaries like `object_metadata`
-struct AnyDecodable: Decodable {
+// Helper to decode, and encode, any JSON value.
+struct AnyDecodable: Codable {
     let value: Any
 
     init<T>(_ value: T?) {
@@ -133,6 +118,28 @@ struct AnyDecodable: Decodable {
             self.value = dictValue.mapValues { $0.value }
         } else {
             throw DecodingError.typeMismatch(AnyDecodable.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unsupported type"))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self.value {
+        case is NSNull, is Void:
+            try container.encodeNil()
+        case let bool as Bool:
+            try container.encode(bool)
+        case let int as Int:
+            try container.encode(int)
+        case let double as Double:
+            try container.encode(double)
+        case let string as String:
+            try container.encode(string)
+        case let array as [Any]:
+            try container.encode(array.map { AnyDecodable($0) })
+        case let dictionary as [String: Any]:
+            try container.encode(dictionary.mapValues { AnyDecodable($0) })
+        default:
+            throw EncodingError.invalidValue(self.value, EncodingError.Context(codingPath: container.codingPath, debugDescription: "AnyDecodable value cannot be encoded"))
         }
     }
 }
