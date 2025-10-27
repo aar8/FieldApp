@@ -11,6 +11,7 @@ use std::sync::{Arc, Mutex};
 mod routes;
 use routes::sync::{sync_handler, AppState};
 use routes::seed::{seed_handler};
+use routes::seed_epic1_db::{seed_epic1_handler};
 
 #[tokio::main]
 async fn main() {
@@ -25,6 +26,7 @@ async fn main() {
         .route("/health", get(health))
         .route("/sync", get(sync_handler))
         .route("/seed", get(seed_handler))
+        .route("/seed/epic1", get(seed_epic1_handler))
         .with_state(state);
 
     // Start server
@@ -38,14 +40,14 @@ async fn main() {
 async fn health() -> impl IntoResponse {
     let result = check_db();
     match result {
-        Ok(_) => Json(json!({
-            "status": "ok",
-            "sqlite_connected": true
+        Ok(_) => Json(json!({ 
+            "status": "ok", 
+            "sqlite_connected": true 
         })),
-        Err(e) => Json(json!({
-            "status": "ok",
-            "sqlite_connected": false,
-            "error": e.to_string()
+        Err(e) => Json(json!({ 
+            "status": "ok", 
+            "sqlite_connected": false, 
+            "error": e.to_string() 
         })),
     }
 }

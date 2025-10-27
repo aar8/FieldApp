@@ -41,6 +41,7 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
             }
             
             if let effectResult = await result(for: syncEffect) {
+                print(effectResult)
                 completionHandler(effectResult)
             }
         }
@@ -60,7 +61,7 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
 
         case .resync(let lastModified):
             guard let hostURL = metadataService.hostURL else {
-                return .failure(.resyncFailed(.malformedURL))
+                return .failure(.resyncFailed(.missingURL))
             }
             guard let tenantID = metadataService.tenantID else {
                 return .failure(.resyncFailed(.missingTenantID))
@@ -77,13 +78,16 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
             let jobRecords = syncResponse.data.jobs.map { apiJob -> JobRecord in
                 JobRecord(
                     id: apiJob.id,
-                    tenantId: apiJob.tenantID,
+                    tenantId: apiJob.tenantId,
+                    objectName: "job",
                     objectType: apiJob.objectType,
                     status: apiJob.status,
-                    data: apiJob.data,
                     version: apiJob.version,
+                    createdBy: apiJob.createdAt,
+                    modifiedBy: apiJob.updatedAt,
                     createdAt: apiJob.createdAt,
-                    updatedAt: apiJob.updatedAt
+                    updatedAt: apiJob.updatedAt,
+                    data: apiJob.data
                 )
             }
             
@@ -94,7 +98,8 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
             switch result {
             case .success:
                 return .success(.upsertDBSuccessful)
-            case .failure:
+            case .failure(let error):
+                print(error)
                 return .failure(.upsertDBFailed)
             }
 

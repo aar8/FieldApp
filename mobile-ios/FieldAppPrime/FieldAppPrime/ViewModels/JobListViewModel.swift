@@ -14,18 +14,10 @@ class JobListViewModel: ObservableObject {
     let errorMessage: Property<String?> = .init(value: nil)
     let isLoading: Property<Bool> = .init(value: false)
 
-    // MARK: - Private Properties
-//    private let fetchAction: Action<Void, [Job], AppError>
     let (viewDidAppear, viewDidAppearObserver) = Signal<(), Never>.pipe()
 
     init(databaseService: DatabaseService) {
-//        // 1. Define the action that fetches jobs from the database.
-//        self.fetchAction = Action {
-//            databaseService.fetch(JobRecord.all())
-//        }
         self.jobs = databaseService.jobs
-        // 2. The `jobs` property is now defined by the output of the fetch action.
-        //    It starts empty and is replaced by the action's results.
         
         databaseService.jobs.signal.combineLatest(with: self.viewDidAppear)
             .observe(on: UIScheduler())

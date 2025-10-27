@@ -19,71 +19,25 @@ struct Meta: Decodable {
     }
 }
 
-// MARK: - Data Payload
+// MARK: - Generic API Record Wrapper
 
-struct DataPayload: Decodable {
-    let objectMetadata: [[String: AnyDecodable]]
-    let layouts: [[String: AnyDecodable]]
-    let customers: [APICustomer]
-    let jobs: [APIJob]
-
-    enum CodingKeys: String, CodingKey {
-        case objectMetadata = "object_metadata"
-        case layouts, customers, jobs
-    }
-}
-
-// MARK: - API Customer Model
-
-struct APICustomer: Decodable {
-    let id, objectType, status, tenantID: String
-    let createdAt, updatedAt: Date
-    let createdBy, modifiedBy: String?
-    let version: Int
-    let data: CustomerData
-
-    enum CodingKeys: String, CodingKey {
-        case id, data, version, status
-        case objectType = "object_type"
-        case tenantID = "tenant_id"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-        case createdBy = "created_by"
-        case modifiedBy = "modified_by"
-    }
-}
-
-struct CustomerData: Decodable {
-    let name: String
-    let contact: Contact
-    let address: Address
-}
-
-struct Address: Decodable {
-    let street, city, state, zip: String
-}
-
-struct Contact: Decodable {
-    let email, phone: String
-}
-
-// MARK: - API Job Model
-
-struct APIJob: Decodable {
+struct APIRecord<T: Codable>: Codable {
     let id: String
     let tenantId: String
+    let objectName: String
     let objectType: String
     let status: String
     let version: Int
     let createdBy: String?
     let modifiedBy: String?
-    let createdAt: Date
-    let updatedAt: Date
-    let data: [String: AnyDecodable] // Using the flexible decoder
+    let createdAt: String
+    let updatedAt: String
+    let data: T
 
     enum CodingKeys: String, CodingKey {
         case id, data, version, status
         case tenantId = "tenant_id"
+        case objectName = "object_name"
         case objectType = "object_type"
         case createdBy = "created_by"
         case modifiedBy = "modified_by"
@@ -92,54 +46,361 @@ struct APIJob: Decodable {
     }
 }
 
-// MARK: - AnyDecodable Helper
+// MARK: - Data Payload
 
-// Helper to decode, and encode, any JSON value.
-struct AnyDecodable: Codable {
-    let value: Any
-
-    init<T>(_ value: T?) {
-        self.value = value ?? ()
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let intValue = try? container.decode(Int.self) {
-            self.value = intValue
-        } else if let doubleValue = try? container.decode(Double.self) {
-            self.value = doubleValue
-        } else if let stringValue = try? container.decode(String.self) {
-            self.value = stringValue
-        } else if let boolValue = try? container.decode(Bool.self) {
-            self.value = boolValue
-        } else if let arrayValue = try? container.decode([AnyDecodable].self) {
-            self.value = arrayValue.map { $0.value }
-        } else if let dictValue = try? container.decode([String: AnyDecodable].self) {
-            self.value = dictValue.mapValues { $0.value }
-        } else {
-            throw DecodingError.typeMismatch(AnyDecodable.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unsupported type"))
-        }
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self.value {
-        case is NSNull, is Void:
-            try container.encodeNil()
-        case let bool as Bool:
-            try container.encode(bool)
-        case let int as Int:
-            try container.encode(int)
-        case let double as Double:
-            try container.encode(double)
-        case let string as String:
-            try container.encode(string)
-        case let array as [Any]:
-            try container.encode(array.map { AnyDecodable($0) })
-        case let dictionary as [String: Any]:
-            try container.encode(dictionary.mapValues { AnyDecodable($0) })
-        default:
-            throw EncodingError.invalidValue(self.value, EncodingError.Context(codingPath: container.codingPath, debugDescription: "AnyDecodable value cannot be encoded"))
-        }
+struct DataPayload: Decodable {
+    let users: [APIRecord<UserData>]
+    let customers: [APIRecord<CustomerData>]
+    let jobs: [APIRecord<JobData>]
+    let calendarEvents: [APIRecord<CalendarEventData>]
+    let pricebooks: [APIRecord<PricebookData>]
+    let products: [APIRecord<ProductData>]
+    let locations: [APIRecord<LocationData>]
+    let productItems: [APIRecord<ProductItemData>]
+    let pricebookEntries: [APIRecord<PricebookEntryData>]
+    let jobLineItems: [APIRecord<JobLineItemData>]
+    let quotes: [APIRecord<QuoteData>]
+    let objectFeeds: [APIRecord<ObjectFeedData>]
+    let invoices: [APIRecord<InvoiceData>]
+    let invoiceLineItems: [APIRecord<InvoiceLineItemData>]
+    let objectMetadata: [APIObjectMetadataRecord]
+    let layoutDefinitions: [APILayoutDefinitionRecord]
+    
+    enum CodingKeys: String, CodingKey {
+        case users, customers, jobs, pricebooks, products, locations, quotes, invoices
+        case calendarEvents = "calendar_events"
+        case productItems = "product_items"
+        case pricebookEntries = "pricebook_entries"
+        case jobLineItems = "job_line_items"
+        case objectFeeds = "object_feeds"
+        case invoiceLineItems = "invoice_line_items"
+        case objectMetadata = "object_metadata"
+        case layoutDefinitions = "layout_definitions"
     }
 }
+
+// MARK: - Concrete Data Models (Matching schema.md)
+
+struct JobData: Codable {
+    let jobNumber: String
+    let customerId: String
+    let jobAddress: String?
+    let jobDescription: String?
+    let assignedTechId: String?
+    let statusNote: String?
+    let quoteId: String?
+    let equipmentId: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case jobNumber = "job_number"
+        case customerId = "customer_id"
+        case jobAddress = "job_address"
+        case jobDescription = "job_description"
+        case assignedTechId = "assigned_tech_id"
+        case statusNote = "status_note"
+        case quoteId = "quote_id"
+        case equipmentId = "equipment_id"
+    }
+}
+
+struct UserData: Codable {
+    let email: String
+    let displayName: String
+    let role: String
+    
+    enum CodingKeys: String, CodingKey {
+        case email
+        case displayName = "display_name"
+        case role
+    }
+}
+
+struct CustomerData: Codable {
+    let name: String
+    let contact: ContactInfo?
+    let address: Address?
+}
+
+struct ContactInfo: Codable {
+    let email: String?
+    let phone: String?
+}
+
+struct Address: Codable {
+    let street: String?
+    let city: String?
+    let state: String?
+    let zipCode: String?
+    let country: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case street, city, state, country
+        case zipCode = "zip_code"
+    }
+}
+
+struct CalendarEventData: Codable {
+    let title: String
+    let startTime: String
+    let endTime: String
+    let isAllDay: Bool?
+    let jobId: String?
+    let userId: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case title
+        case startTime = "start_time"
+        case endTime = "end_time"
+        case isAllDay = "is_all_day"
+        case jobId = "job_id"
+        case userId = "user_id"
+    }
+}
+
+struct PricebookData: Codable {
+    let name: String
+    let description: String?
+    let isActive: Bool
+    let currency: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name, description, currency
+        case isActive = "is_active"
+    }
+}
+
+struct ProductData: Codable {
+    let name: String
+    let description: String?
+    let productCode: String?
+    let type: String
+    
+    enum CodingKeys: String, CodingKey {
+        case name, description, type
+        case productCode = "product_code"
+    }
+}
+
+struct LocationData: Codable {
+    let name: String
+    let address: Address?
+}
+
+struct ProductItemData: Codable {
+    let quantityOnHand: Double
+    let productId: String
+    let locationId: String
+    
+    enum CodingKeys: String, CodingKey {
+        case quantityOnHand = "quantity_on_hand"
+        case productId = "product_id"
+        case locationId = "location_id"
+    }
+}
+
+struct PricebookEntryData: Codable {
+    let price: Double
+    let currency: String
+    let pricebookId: String
+    let productId: String
+    
+    enum CodingKeys: String, CodingKey {
+        case price, currency
+        case pricebookId = "pricebook_id"
+        case productId = "product_id"
+    }
+}
+
+struct JobLineItemData: Codable {
+    let quantity: Double
+    let priceAtTimeOfSale: Double
+    let description: String?
+    let jobId: String
+    let productId: String
+    
+    enum CodingKeys: String, CodingKey {
+        case quantity, description
+        case priceAtTimeOfSale = "price_at_time_of_sale"
+        case jobId = "job_id"
+        case productId = "product_id"
+    }
+}
+
+struct QuoteData: Codable {
+    let quoteNumber: String
+    let customerId: String
+    let pricebookId: String?
+    let totalAmount: Double
+    let currency: String
+    let quoteStatus: String
+    let notes: String?
+    let preparedBy: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case currency, notes
+        case quoteNumber = "quote_number"
+        case customerId = "customer_id"
+        case pricebookId = "pricebook_id"
+        case totalAmount = "total_amount"
+        case quoteStatus = "quote_status"
+        case preparedBy = "prepared_by"
+    }
+}
+
+struct ObjectFeedData: Codable {
+    let relatedObjectName: String
+    let relatedRecordId: String
+    let entryType: String
+    let message: String?
+    let authorId: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case message
+        case relatedObjectName = "related_object_name"
+        case relatedRecordId = "related_record_id"
+        case entryType = "entry_type"
+        case authorId = "author_id"
+    }
+}
+
+struct InvoiceData: Codable {
+    let invoiceNumber: String
+    let customerId: String
+    let jobId: String?
+    let quoteId: String?
+    let subtotalAmount: Double
+    let taxAmount: Double?
+    let discountAmount: Double?
+    let totalAmount: Double
+    let currency: String
+    let issueDate: String
+    let dueDate: String?
+    let paymentStatus: String
+    let notes: String?
+    let issuedBy: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case currency, notes
+        case invoiceNumber = "invoice_number"
+        case customerId = "customer_id"
+        case jobId = "job_id"
+        case quoteId = "quote_id"
+        case subtotalAmount = "subtotal_amount"
+        case taxAmount = "tax_amount"
+        case discountAmount = "discount_amount"
+        case totalAmount = "total_amount"
+        case issueDate = "issue_date"
+        case dueDate = "due_date"
+        case paymentStatus = "payment_status"
+        case issuedBy = "issued_by"
+    }
+}
+
+struct InvoiceLineItemData: Codable {
+    let quantity: Double
+    let priceAtTimeOfInvoice: Double
+    let description: String?
+    let invoiceId: String
+    let productId: String
+    let taxRate: Double?
+    let discountAmount: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case quantity, description
+        case priceAtTimeOfInvoice = "price_at_time_of_invoice"
+        case invoiceId = "invoice_id"
+        case productId = "product_id"
+        case taxRate = "tax_rate"
+        case discountAmount = "discount_amount"
+    }
+}
+
+// MARK: - Metadata Records
+
+struct APIObjectMetadataRecord: Codable {
+    let id: String
+    let tenantId: String
+    let objectName: String
+    let version: Int
+    let createdBy: String?
+    let modifiedBy: String?
+    let createdAt: String
+    let updatedAt: String
+    let data: ObjectMetadataData
+
+    enum CodingKeys: String, CodingKey {
+        case id, data, version
+        case tenantId = "tenant_id"
+        case objectName = "object_name"
+        case createdBy = "created_by"
+        case modifiedBy = "modified_by"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+struct ObjectMetadataData: Codable {
+    let fieldDefinitions: [FieldDefinition]
+    
+    enum CodingKeys: String, CodingKey {
+        case fieldDefinitions = "field_definitions"
+    }
+}
+
+enum FieldType: String, Codable {
+    case string, date, picklist, checkbox, bool, numeric, currency, reference, file
+}
+
+enum FieldFormat: String, Codable {
+    case email, phone, url
+}
+
+struct FieldDefinition: Codable {
+    let name: String
+    let label: String
+    let type: FieldType
+    let required: Bool?
+    let format: FieldFormat?
+    let options: [String]?
+    let targetObject: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, label, type, required, format, options
+        case targetObject = "target_object"
+    }
+}
+
+struct APILayoutDefinitionRecord: Codable {
+    let id: String
+    let tenantId: String
+    let objectName: String
+    let objectType: String
+    let status: String
+    let version: Int
+    let createdBy: String?
+    let modifiedBy: String?
+    let createdAt: String
+    let updatedAt: String
+    let data: LayoutDefinitionData
+
+    enum CodingKeys: String, CodingKey {
+        case id, data, version, status
+        case tenantId = "tenant_id"
+        case objectName = "object_name"
+        case objectType = "object_type"
+        case createdBy = "created_by"
+        case modifiedBy = "modified_by"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+struct LayoutDefinitionData: Codable {
+    let sections: [LayoutSection]
+}
+
+struct LayoutSection: Codable {
+    let label: String
+    let fields: [String]
+}
+

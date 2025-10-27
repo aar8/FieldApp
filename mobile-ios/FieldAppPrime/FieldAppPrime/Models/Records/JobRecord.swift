@@ -1,54 +1,50 @@
 import Foundation
 import GRDB
 
-// MARK: - Job Record (DTO)
-
-/// The `JobRecord` struct represents a row in the `jobs` database table.
+/// Represents a row in the `jobs` database table, conforming to GRDB protocols.
 struct JobRecord: Codable, FetchableRecord, PersistableRecord {
     let id: String
-    var tenantId: String
-    var objectType: String
-    var status: String
-    let data: [String: AnyDecodable]
-    var version: Int
-    var createdBy: String?
-    var modifiedBy: String?
-    var createdAt: Date
-    var updatedAt: Date
+    let tenantId: String
+    let objectName: String
+    let objectType: String
+    let status: String
+    let version: Int
+    let createdBy: String?
+    let modifiedBy: String?
+    let createdAt: String
+    let updatedAt: String
+    let data: JobData // Uses the Codable struct from SyncResponse.swift
 
+    // Explicitly tells GRDB to use the "jobs" table for this record.
     static let databaseTableName = "jobs"
-    
+
     enum CodingKeys: String, CodingKey {
-        case id
-        case data
-        case version
-        case status
+        case id, data, version, status
         case tenantId = "tenant_id"
+        case objectName = "object_name"
         case objectType = "object_type"
         case createdBy = "created_by"
         case modifiedBy = "modified_by"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-    
-    // GRDB needs this custom encoder to map to snake_case columns
-    // when a custom encode(to: PersistenceContainer) is not provided.
-    // Since we don't need a custom encoder anymore, this ensures correct mapping.
+}
 
+// The mapping function to the domain model.
+extension JobRecord {
     /// Maps a `JobRecord` from the database to a clean `Job` domain model.
-    func toDomainModel() -> Job {
-        // TODO: Decode the 'data' JSON string to populate the domain model correctly.
-        let domainData = JobDomainData(title: "Title (from JSON)", description: nil)
-        
+    var domainModel: Job {
         return Job(
-            id: id,
-            tenantId: tenantId,
-            objectType: objectType,
-            status: status,
-            data: domainData,
-            version: version,
-            createdAt: createdAt,
-            updatedAt: updatedAt
+            id: self.id,
+            status: self.status,
+            version: self.version,
+            updatedAt: self.updatedAt,
+            jobNumber: self.data.jobNumber,
+            customerId: self.data.customerId,
+            jobAddress: self.data.jobAddress,
+            jobDescription: self.data.jobDescription,
+            assignedTechId: self.data.assignedTechId,
+            statusNote: self.data.statusNote
         )
     }
 }

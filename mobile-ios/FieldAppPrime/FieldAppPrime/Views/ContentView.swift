@@ -8,8 +8,3 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    // For the preview, we create a factory with a mock service.
-    let factory = ViewFactory(databaseService: MockDatabaseService())
-    ContentView(viewFactory: factory)
-}
