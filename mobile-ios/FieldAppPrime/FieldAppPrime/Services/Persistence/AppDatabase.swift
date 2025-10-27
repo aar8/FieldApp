@@ -10,15 +10,15 @@ enum DatabaseError: Error {
 
 /// The protocol for the AppDatabase, allowing for mock/fake implementations for testing.
 protocol AppDatabaseProtocol {
-    var dbQueue: DatabaseQueue { get }
+    var dbQueue: DatabasePool { get }
 }
 
 /// `AppDatabase` is responsible for setting up the database connection and managing schema migrations.
 final class AppDatabase: AppDatabaseProtocol {
     
-    let dbQueue: DatabaseQueue
+    let dbQueue: DatabasePool
     
-    private init(dbQueue: DatabaseQueue) {
+    private init(dbQueue: DatabasePool) {
         self.dbQueue = dbQueue
     }
     
@@ -31,7 +31,7 @@ final class AppDatabase: AppDatabaseProtocol {
             let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let dbURL = appSupportURL.appendingPathComponent("fieldapp.sqlite")
             print(dbURL)
-            let dbQueue = try DatabaseQueue(path: dbURL.path)
+            let dbQueue = try DatabasePool(path: dbURL.path)
             let appDatabase = AppDatabase(dbQueue: dbQueue)
             
             try appDatabase.migrator.migrate(dbQueue)
@@ -51,17 +51,30 @@ final class AppDatabase: AppDatabaseProtocol {
             try db.create(table: JobRecord.databaseTableName) { t in
                 t.primaryKey("id", .text)
                 t.column("tenant_id", .text).notNull()
+                t.column("object_name", .text).notNull()
                 t.column("object_type", .text).notNull()
                 t.column("status", .text).notNull()
                 t.column("data", .jsonText).notNull()
                 t.column("version", .integer).notNull()
                 t.column("created_by", .text)
                 t.column("modified_by", .text)
-                t.column("created_at", .datetime).notNull()
-                t.column("updated_at", .datetime).notNull()
+                t.column("created_at", .text).notNull()
+                t.column("updated_at", .text).notNull()
             }
             
             try db.create(index: "idx_jobs_status", on: JobRecord.databaseTableName, columns: ["status"])
+            
+            try db.create(table: ObjectMetadataRecord.databaseTableName) { t in
+                t.primaryKey("id", .text)
+                t.column("tenant_id", .text).notNull()
+                t.column("object_name", .text).notNull()
+                t.column("data", .jsonText).notNull()
+                t.column("version", .integer).notNull()
+                t.column("created_by", .text)
+                t.column("modified_by", .text)
+                t.column("created_at", .text).notNull()
+                t.column("updated_at", .text).notNull()
+            }
         }
         
         return migrator

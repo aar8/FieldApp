@@ -1,20 +1,19 @@
 import Foundation
 
-/// Represents the data payload for a Job in the domain layer.
-struct JobDomainData: Hashable {
-    var title: String
-    var description: String?
-}
-
-/// Represents a single job record in the system.
-/// This is a "clean" domain model with no persistence-specific code.
+/// Represents a single job, flattened for easy use in UI and business logic.
+/// This is a "clean" domain model, independent of persistence or network layers.
 struct Job: Identifiable, Hashable {
     let id: String
-    var tenantId: String
-    var objectType: String
-    var status: String
-    var data: JobDomainData // This now uses the clear domain-specific model
-    var version: Int
-    var createdAt: Date
-    var updatedAt: Date
+    let status: String
+    let version: Int
+    let updatedAt: String
+    
+    // Properties from the 'data' blob
+    let jobNumber: String
+    let customerId: String
+    let jobAddress: String?
+    let jobDescription: String?
+    let assignedTechId: String?
+    let statusNote: String?
 }
+

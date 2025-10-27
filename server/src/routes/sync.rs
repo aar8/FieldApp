@@ -135,11 +135,13 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
 use chrono::{SecondsFormat, Utc};
-use rusqlite::{Connection, params};
-use serde_json::Value;
+use rusqlite::{params, Connection, Result};
+use serde::{
+    Deserialize, Serialize
+};
+use serde_json::{json, Value};
+use std::sync::{Arc, Mutex};
 
 // Shared state (same as in main.rs)
 #[derive(Clone)]
@@ -163,20 +165,22 @@ pub struct SyncMeta {
 
 #[derive(Serialize, Default)]
 pub struct SyncData {
-    pub object_metadata: Vec<serde_json::Value>,
-    pub layouts: Vec<serde_json::Value>,
-    pub customers: Vec<serde_json::Value>,
-    pub jobs: Vec<serde_json::Value>,
-    pub users: Vec<serde_json::Value>,
-    pub devices: Vec<serde_json::Value>,
-    pub attachments: Vec<serde_json::Value>,
-    pub checklist_templates: Vec<serde_json::Value>,
-    pub job_checklists: Vec<serde_json::Value>,
-    pub calendar_events: Vec<serde_json::Value>,
-    pub pricebooks: Vec<serde_json::Value>,
-    pub services: Vec<serde_json::Value>,
-    pub equipment_types: Vec<serde_json::Value>,
-    pub customer_equipment: Vec<serde_json::Value>,
+    pub users: Vec<Value>,
+    pub customers: Vec<Value>,
+    pub jobs: Vec<Value>,
+    pub calendar_events: Vec<Value>,
+    pub pricebooks: Vec<Value>,
+    pub products: Vec<Value>,
+    pub locations: Vec<Value>,
+    pub product_items: Vec<Value>,
+    pub pricebook_entries: Vec<Value>,
+    pub job_line_items: Vec<Value>,
+    pub quotes: Vec<Value>,
+    pub object_feeds: Vec<Value>,
+    pub invoices: Vec<Value>,
+    pub invoice_line_items: Vec<Value>,
+    pub object_metadata: Vec<Value>,
+    pub layout_definitions: Vec<Value>,
 }
 
 #[derive(Serialize)]
@@ -193,66 +197,100 @@ pub async fn sync_handler(
     let now = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
     let since = params.since.unwrap_or_else(|| "1970-01-01T00:00:00Z".to_string());
 
-    // Lock the DB once for all reads
     let conn = state.db.lock().unwrap();
 
-    fn fetch_table(conn: &Connection, table: &str, tenant_id: &str, since: &str) -> Vec<Value> {
-        let cols = match table {
-            "object_metadata" | "layout_definitions" =>
-                "id, tenant_id, object_type, data, version, created_by, modified_by, created_at, updated_at",
-            _ =>
-                "id, tenant_id, object_type, status, data, version, created_by, modified_by, created_at, updated_at",
-        };
-        let sql: String = format!("SELECT {} FROM {} WHERE tenant_id=?1 AND updated_at>?2 ORDER BY updated_at ASC", cols, table);
-
-        let mut stmt = conn
-            .prepare(&sql)
-            .unwrap();
-
-        let rows = stmt
-            .query_map(params![tenant_id, since], |row| {
-                Ok(serde_json::json!({
-                    "id": row.get::<_, String>(0)?,
-                    "tenant_id": row.get::<_, String>(1)?,
-                    "object_type": row.get::<_, String>(2)?,
-                    "status": row.get::<_, String>(3)?,
-                    "data": serde_json::from_str::<Value>(&row.get::<_, String>(4)?).unwrap_or(Value::Null),
-                    "version": row.get::<_, i64>(5)?,
-                    "created_by": row.get::<_, Option<String>>(6)?,
-                    "modified_by": row.get::<_, Option<String>>(7)?,
-                    "created_at": row.get::<_, String>(8)?,
-                    "updated_at": row.get::<_, String>(9)?,
-                }))
-            })
-            .unwrap();
-
-        rows.filter_map(Result::ok).collect()
+    // Helper function to deserialize JSON data from a string column
+    fn get_json_data(row: &rusqlite::Row, index: usize) -> Result<Value> {
+        let data_str: String = row.get(index)?;
+        serde_json::from_str(&data_str).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(index, rusqlite::types::Type::Text, Box::new(e))
+        })
     }
 
-    let data = SyncData {
-        object_metadata: fetch_table(&conn, "object_metadata", &params.tenant_id, &since),
-        layouts: fetch_table(&conn, "layout_definitions", &params.tenant_id, &since),
-        customers: fetch_table(&conn, "customers", &params.tenant_id, &since),
-        jobs: fetch_table(&conn, "jobs", &params.tenant_id, &since),
-        users: fetch_table(&conn, "users", &params.tenant_id, &since),
-        devices: fetch_table(&conn, "devices", &params.tenant_id, &since),
-        attachments: fetch_table(&conn, "attachments", &params.tenant_id, &since),
-        checklist_templates: fetch_table(&conn, "checklist_templates", &params.tenant_id, &since),
-        job_checklists: fetch_table(&conn, "job_checklists", &params.tenant_id, &since),
-        calendar_events: fetch_table(&conn, "calendar_events", &params.tenant_id, &since),
-        pricebooks: fetch_table(&conn, "pricebooks", &params.tenant_id, &since),
-        services: fetch_table(&conn, "services", &params.tenant_id, &since),
-        equipment_types: fetch_table(&conn, "equipment_types", &params.tenant_id, &since),
-        customer_equipment: fetch_table(&conn, "customer_equipment", &params.tenant_id, &since),
-    };
+    let data_result: Result<SyncData> = (|| {
+        // Standard tables with object_name, object_type, and status
+        macro_rules! fetch_standard_table {
+            ($table:literal) => {
+                {
+                    let mut stmt = conn.prepare(&format!(
+                        "SELECT id, tenant_id, object_name, object_type, status, data, version, created_by, modified_by, created_at, updated_at FROM {} WHERE tenant_id=?1 AND updated_at>?2",
+                        $table
+                    ))?;
+                    let rows = stmt.query_map(params![&params.tenant_id, &since], |row| {
+                        Ok(json!({
+                            "id": row.get::<_, String>(0)?,
+                            "tenant_id": row.get::<_, String>(1)?,
+                            "object_name": row.get::<_, String>(2)?,
+                            "object_type": row.get::<_, String>(3)?,
+                            "status": row.get::<_, String>(4)?,
+                            "data": get_json_data(row, 5)?,
+                            "version": row.get::<_, i64>(6)?,
+                            "created_by": row.get::<_, Option<String>>(7)?,
+                            "modified_by": row.get::<_, Option<String>>(8)?,
+                            "created_at": row.get::<_, String>(9)?,
+                            "updated_at": row.get::<_, String>(10)?,
+                        }))
+                    })?;
+                    rows.collect::<Result<Vec<Value>>>()
+                }
+            }
+        }
 
-    let response = SyncResponse {
-        meta: SyncMeta {
-            server_time: now,
-            since,
-        },
-        data,
-    };
+        // Special case: object_metadata (no object_type, status)
+        let object_metadata: Vec<Value> = {
+            let mut stmt = conn.prepare("SELECT id, tenant_id, object_name, data, version, created_by, modified_by, created_at, updated_at FROM object_metadata WHERE tenant_id=?1 AND updated_at>?2")?;
+            let rows = stmt.query_map(params![&params.tenant_id, &since], |row| {
+                Ok(json!({
+                    "id": row.get::<_, String>(0)?,
+                    "tenant_id": row.get::<_, String>(1)?,
+                    "object_name": row.get::<_, String>(2)?,
+                    "data": get_json_data(row, 3)?,
+                    "version": row.get::<_, i64>(4)?,
+                    "created_by": row.get::<_, Option<String>>(5)?,
+                    "modified_by": row.get::<_, Option<String>>(6)?,
+                    "created_at": row.get::<_, String>(7)?,
+                    "updated_at": row.get::<_, String>(8)?,
+                }))
+            })?;
+            rows.collect::<Result<Vec<Value>>>()
+        }?;
 
-    Json(response)
+        // layout_definitions has all the standard columns
+        let layout_definitions: Vec<Value> = fetch_standard_table!("layout_definitions")?;
+
+        Ok(SyncData {
+            object_metadata,
+            layout_definitions,
+            users: fetch_standard_table!("users")?,
+            customers: fetch_standard_table!("customers")?,
+            jobs: fetch_standard_table!("jobs")?,
+            calendar_events: fetch_standard_table!("calendar_events")?,
+            pricebooks: fetch_standard_table!("pricebooks")?,
+            products: fetch_standard_table!("products")?,
+            locations: fetch_standard_table!("locations")?,
+            product_items: fetch_standard_table!("product_items")?,
+            pricebook_entries: fetch_standard_table!("pricebook_entries")?,
+            job_line_items: fetch_standard_table!("job_line_items")?,
+            quotes: fetch_standard_table!("quotes")?,
+            object_feeds: fetch_standard_table!("object_feeds")?,
+            invoices: fetch_standard_table!("invoices")?,
+            invoice_line_items: fetch_standard_table!("invoice_line_items")?,
+        })
+    })();
+
+    match data_result {
+        Ok(data) => {
+            let response = SyncResponse {
+                meta: SyncMeta {
+                    server_time: now,
+                    since,
+                },
+                data,
+            };
+            Json(response).into_response()
+        }
+        Err(e) => {
+            Json(json!({ "status": "error", "message": e.to_string() })).into_response()
+        }
+    }
 }

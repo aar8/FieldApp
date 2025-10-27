@@ -18,34 +18,50 @@ protocol DatabaseService {
 // MARK: - Default Implementation
 
 class DefaultDatabaseService: DatabaseService {
-    private let dbQueue: DatabaseQueue
+    private let dbQueue: DatabasePool
     let jobs: Property<[Job]>
-//    let cancellable: AnyDatabaseCancellable
+    var cancellable: AnyDatabaseCancellable? = nil
     init(appDatabase: AppDatabaseProtocol) {
         let dbQueue = appDatabase.dbQueue
         self.dbQueue = dbQueue
-        
-        let observation = ValueObservation.tracking { db in
-            try JobRecord.fetchAll(db)
-        }
-        
-//        let cancellable = observation.start(
-//            in: dbQueue,
-//            onError: { error in
-//                // TODO: Log the database error to our logging service.
-////                observer.send(value: [])
-//            },
-//            onChange: { records in
-//                let jobs = records.map { $0.toDomainModel() }
-////                observer.send(value: jobs)
+//        DispatchQueue.main.async {
+//            let observation = ValueObservation.tracking { db in
+//                try JobRecord.fetchAll(db)
 //            }
-//        )
-        
+//
+//            self.cancellable = try? observation.start(
+//                in: dbQueue,
+//                onError: { error in
+//                    print("ERROR: \(error)")
+//                },
+//                onChange: { jobs in
+//                    print("Observed jobs: \(jobs.count)")
+//                }
+//            )
+//
+//            sleep(50)
+//            self.cancellable?.cancel()
+//        }
+
         let jobsProducer = SignalProducer<[Job], Never> { observer, lifetime in
-//            lifetime.observeEnded { cancellable.cancel() }
+            let observation = ValueObservation.tracking { db in
+                try JobRecord.fetchAll(db)
+            }
+                
+            let cancellable = observation.start(
+                in: dbQueue,
+                onError: { error in
+                
+                    // TODO: Log the database error to our logging service.
+                },
+                onChange: { records in
+                    let jobs = records.map(\.domainModel)
+                    observer.send(value: jobs)
+                }
+            )
+            lifetime.observeEnded { cancellable.cancel() }
         }
         
-//        self.cancellable = cancellable
         self.jobs = Property(initial: [], then: jobsProducer)
     }
     
@@ -60,26 +76,5 @@ class DefaultDatabaseService: DatabaseService {
         } catch {
             return .failure(error)
         }
-    }
-}
-
-// MARK: - Mock Service
-
-class MockDatabaseService: DatabaseService {
-    let jobs: Property<[Job]>
-    
-    init() {
-        let sampleJobs = [
-            Job(id: "1", tenantId: "t1", objectType: "job", status: "Scheduled", data: JobDomainData(title: "Install new HVAC unit", description: ""), version: 1, createdAt: Date(), updatedAt: Date()),
-            Job(id: "2", tenantId: "t1", objectType: "job", status: "In Progress", data: JobDomainData(title: "Repair leaking pipe", description: ""), version: 1, createdAt: Date(), updatedAt: Date()),
-            Job(id: "3", tenantId: "t1", objectType: "job", status: "Completed", data: JobDomainData(title: "Quarterly generator maintenance", description: ""), version: 1, createdAt: Date(), updatedAt: Date())
-        ]
-        
-        self.jobs = Property(value: sampleJobs)
-    }
-    
-    func upsert(jobs: [JobRecord]) -> Result<Void, Error> {
-        // In the mock service, the upsert can just succeed without doing anything.
-        return .success(())
     }
 }

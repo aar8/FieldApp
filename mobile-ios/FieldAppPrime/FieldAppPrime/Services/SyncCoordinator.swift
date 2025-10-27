@@ -112,7 +112,7 @@ class SyncCoordinator {
             (.disabled, .nullEffect)
         }
         
-        print("\(newState) - \(newEffect)")
+//        print("\(newState) - \(newEffect)")
         self.currentState = newState
         self.effectHandler.runEffect(syncEffect: newEffect)
     }
