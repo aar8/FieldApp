@@ -9,10 +9,10 @@ protocol DatabaseService {
     /// New subscribers immediately receive the current list of jobs and then all future updates.
     var jobs: Property<[Job]> { get }
     
-    /// Upserts an array of job records into the database.
-    /// - Parameter jobs: The job records to save.
+    /// Upserts all records from a sync response into the database in a single transaction.
+    /// - Parameter syncResponse: The response from the server containing records to upsert.
     /// - Returns: A `Result` indicating success or failure.
-    func upsert(jobs: [JobRecord]) -> Result<Void, Error>
+    func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
 }
 
 // MARK: - Default Implementation
@@ -24,34 +24,15 @@ class DefaultDatabaseService: DatabaseService {
     init(appDatabase: AppDatabaseProtocol) {
         let dbQueue = appDatabase.dbQueue
         self.dbQueue = dbQueue
-//        DispatchQueue.main.async {
-//            let observation = ValueObservation.tracking { db in
-//                try JobRecord.fetchAll(db)
-//            }
-//
-//            self.cancellable = try? observation.start(
-//                in: dbQueue,
-//                onError: { error in
-//                    print("ERROR: \(error)")
-//                },
-//                onChange: { jobs in
-//                    print("Observed jobs: \(jobs.count)")
-//                }
-//            )
-//
-//            sleep(50)
-//            self.cancellable?.cancel()
-//        }
 
         let jobsProducer = SignalProducer<[Job], Never> { observer, lifetime in
             let observation = ValueObservation.tracking { db in
-                try JobRecord.fetchAll(db)
+                try! JobRecord.fetchAll(db)
             }
                 
             let cancellable = observation.start(
                 in: dbQueue,
                 onError: { error in
-                
                     // TODO: Log the database error to our logging service.
                 },
                 onChange: { records in
@@ -65,11 +46,22 @@ class DefaultDatabaseService: DatabaseService {
         self.jobs = Property(initial: [], then: jobsProducer)
     }
     
-    func upsert(jobs: [JobRecord]) -> Result<Void, Error> {
+    func upsert(syncResponse: SyncResponse) -> Result<Void, Error> {
         do {
             try dbQueue.write { db in
-                for job in jobs {                
+                let jobs = syncResponse.data.jobs.map { $0.asJobRecord }
+                for job in jobs {
                     try job.save(db)
+                }
+                
+                let metadata = syncResponse.data.objectMetadata.map { $0.asObjectMetadataRecord }
+                for record in metadata {
+                    try record.save(db)
+                }
+                
+                let layouts = syncResponse.data.layoutDefinitions.map { $0.asLayoutDefinitionRecord }
+                for layout in layouts {
+                    try layout.save(db)
                 }
             }
             return .success(())
