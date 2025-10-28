@@ -72,29 +72,7 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
                 .mapError { .resyncFailed(.apiError($0)) }
             
         case .upsertDB(let syncResponse):
-            // TODO: hand this reponse to the db or some other layer this is too much for the effect
-            // handler which does not own this domain.
-            // 1. Map API models to persistence models
-            let jobRecords = syncResponse.data.jobs.map { apiJob -> JobRecord in
-                JobRecord(
-                    id: apiJob.id,
-                    tenantId: apiJob.tenantId,
-                    objectName: "job",
-                    objectType: apiJob.objectType,
-                    status: apiJob.status,
-                    version: apiJob.version,
-                    createdBy: apiJob.createdAt,
-                    modifiedBy: apiJob.updatedAt,
-                    createdAt: apiJob.createdAt,
-                    updatedAt: apiJob.updatedAt,
-                    data: apiJob.data
-                )
-            }
-            
-            // 2. Hand off to the database service
-            let result = databaseService.upsert(jobs: jobRecords)
-            
-            // 3. Return the result of the upsert operation
+            let result = databaseService.upsert(syncResponse: syncResponse)
             switch result {
             case .success:
                 return .success(.upsertDBSuccessful)

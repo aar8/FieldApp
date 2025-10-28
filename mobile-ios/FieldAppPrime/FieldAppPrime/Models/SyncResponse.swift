@@ -81,7 +81,7 @@ struct DataPayload: Decodable {
 
 // MARK: - Concrete Data Models (Matching schema.md)
 
-struct JobData: Codable {
+struct JobData: Codable, Hashable {
     let jobNumber: String
     let customerId: String
     let jobAddress: String?
@@ -103,7 +103,7 @@ struct JobData: Codable {
     }
 }
 
-struct UserData: Codable {
+struct UserData: Codable, Hashable {
     let email: String
     let displayName: String
     let role: String
@@ -115,18 +115,18 @@ struct UserData: Codable {
     }
 }
 
-struct CustomerData: Codable {
+struct CustomerData: Codable, Hashable {
     let name: String
     let contact: ContactInfo?
     let address: Address?
 }
 
-struct ContactInfo: Codable {
+struct ContactInfo: Codable, Hashable {
     let email: String?
     let phone: String?
 }
 
-struct Address: Codable {
+struct Address: Codable, Hashable {
     let street: String?
     let city: String?
     let state: String?
@@ -139,7 +139,7 @@ struct Address: Codable {
     }
 }
 
-struct CalendarEventData: Codable {
+struct CalendarEventData: Codable, Hashable {
     let title: String
     let startTime: String
     let endTime: String
@@ -157,7 +157,7 @@ struct CalendarEventData: Codable {
     }
 }
 
-struct PricebookData: Codable {
+struct PricebookData: Codable, Hashable {
     let name: String
     let description: String?
     let isActive: Bool
@@ -169,7 +169,7 @@ struct PricebookData: Codable {
     }
 }
 
-struct ProductData: Codable {
+struct ProductData: Codable, Hashable {
     let name: String
     let description: String?
     let productCode: String?
@@ -181,12 +181,12 @@ struct ProductData: Codable {
     }
 }
 
-struct LocationData: Codable {
+struct LocationData: Codable, Hashable {
     let name: String
     let address: Address?
 }
 
-struct ProductItemData: Codable {
+struct ProductItemData: Codable, Hashable {
     let quantityOnHand: Double
     let productId: String
     let locationId: String
@@ -198,7 +198,7 @@ struct ProductItemData: Codable {
     }
 }
 
-struct PricebookEntryData: Codable {
+struct PricebookEntryData: Codable, Hashable {
     let price: Double
     let currency: String
     let pricebookId: String
@@ -211,7 +211,7 @@ struct PricebookEntryData: Codable {
     }
 }
 
-struct JobLineItemData: Codable {
+struct JobLineItemData: Codable, Hashable {
     let quantity: Double
     let priceAtTimeOfSale: Double
     let description: String?
@@ -226,7 +226,7 @@ struct JobLineItemData: Codable {
     }
 }
 
-struct QuoteData: Codable {
+struct QuoteData: Codable, Hashable {
     let quoteNumber: String
     let customerId: String
     let pricebookId: String?
@@ -247,7 +247,7 @@ struct QuoteData: Codable {
     }
 }
 
-struct ObjectFeedData: Codable {
+struct ObjectFeedData: Codable, Hashable {
     let relatedObjectName: String
     let relatedRecordId: String
     let entryType: String
@@ -263,7 +263,7 @@ struct ObjectFeedData: Codable {
     }
 }
 
-struct InvoiceData: Codable {
+struct InvoiceData: Codable, Hashable {
     let invoiceNumber: String
     let customerId: String
     let jobId: String?
@@ -296,7 +296,7 @@ struct InvoiceData: Codable {
     }
 }
 
-struct InvoiceLineItemData: Codable {
+struct InvoiceLineItemData: Codable, Hashable {
     let quantity: Double
     let priceAtTimeOfInvoice: Double
     let description: String?
@@ -339,7 +339,7 @@ struct APIObjectMetadataRecord: Codable {
     }
 }
 
-struct ObjectMetadataData: Codable {
+struct ObjectMetadataData: Codable, Hashable {
     let fieldDefinitions: [FieldDefinition]
     
     enum CodingKeys: String, CodingKey {
@@ -347,15 +347,15 @@ struct ObjectMetadataData: Codable {
     }
 }
 
-enum FieldType: String, Codable {
+enum FieldType: String, Codable, Hashable {
     case string, date, picklist, checkbox, bool, numeric, currency, reference, file
 }
 
-enum FieldFormat: String, Codable {
+enum FieldFormat: String, Codable, Hashable {
     case email, phone, url
 }
 
-struct FieldDefinition: Codable {
+struct FieldDefinition: Codable, Hashable {
     let name: String
     let label: String
     let type: FieldType
@@ -395,12 +395,67 @@ struct APILayoutDefinitionRecord: Codable {
     }
 }
 
-struct LayoutDefinitionData: Codable {
+struct LayoutDefinitionData: Codable, Hashable {
     let sections: [LayoutSection]
 }
 
-struct LayoutSection: Codable {
+struct LayoutSection: Codable, Hashable {
     let label: String
     let fields: [String]
+}
+
+
+// MARK: - API to Record Mappings
+
+extension APIRecord where T == JobData {
+    var asJobRecord: JobRecord {
+        JobRecord(
+            id: self.id,
+            tenantId: self.tenantId,
+            objectName: self.objectName,
+            objectType: self.objectType,
+            status: self.status,
+            version: self.version,
+            createdBy: self.createdBy,
+            modifiedBy: self.modifiedBy,
+            createdAt: self.createdAt,
+            updatedAt: self.updatedAt,
+            data: self.data
+        )
+    }
+}
+
+extension APIObjectMetadataRecord {
+    var asObjectMetadataRecord: ObjectMetadataRecord {
+        ObjectMetadataRecord(
+            id: self.id,
+            tenantId: self.tenantId,
+            objectName: self.objectName,
+            version: self.version,
+            createdBy: self.createdBy,
+            modifiedBy: self.modifiedBy,
+            createdAt: self.createdAt,
+            updatedAt: self.updatedAt,
+            data: self.data
+        )
+    }
+}
+
+extension APILayoutDefinitionRecord {
+    var asLayoutDefinitionRecord: LayoutDefinitionRecord {
+        LayoutDefinitionRecord(
+            id: self.id,
+            tenantId: self.tenantId,
+            objectName: self.objectName,
+            objectType: self.objectType,
+            status: self.status,
+            version: self.version,
+            createdBy: self.createdBy,
+            modifiedBy: self.modifiedBy,
+            createdAt: self.createdAt,
+            updatedAt: self.updatedAt,
+            data: self.data
+        )
+    }
 }
 
