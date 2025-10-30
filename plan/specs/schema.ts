@@ -1,18 +1,28 @@
 /**
- * A marker type to indicate a field should be stored as JSON in SQL.
- * It doesn't change the actual TypeScript type.
+ * A marker interface to indicate a field should be stored as JSON in SQL.
+ * The phantom property `__sql_json_brand` holds the underlying type.
+ * @api skip
+ * @db skip
  */
-type SqlJson<T> = T;
+interface SqlJson<T> {
+  __sql_json_brand: T;
+}
 
 /**
- * Represents a foreign key reference to another record.
- * It's an alias for a string (UUID), but provides stronger typing
- * and documents the relationship in the type system.
+ * Represents a foreign key reference. It is structurally a string,
+ * but the phantom property `__reference_brand` holds the referenced record's type,
+ * allowing the generator to create foreign key constraints.
+ * @api skip
+ * @db skip
  */
-type Reference<T> = string;
+interface Reference<T> {
+  __reference_brand: T;
+}
 
 /**
  * Base interface for common fields across all synchronized tables.
+ * @api skip
+ * @db skip
  */
 interface BaseRecord {
   /** The unique identifier for the record (UUID). */
@@ -38,15 +48,20 @@ interface BaseRecord {
 
   /** ISO 8601 timestamp string of when the record was last updated. */
   updated_at: string;
-}
 
-// ---
-/*
-This table represents a specific **work order** or service request. It's a central record tracking a task requested by an end client (like an AC repair or tune-up), including details like the associated customer, the assigned technician (user), status (scheduled, in progress, complete), and specific notes about the job. Each job belongs to one tenant.
-*/
+  /** The primary object name for this record (e.g., 'job', 'customer'). */
+  object_name: string;
+
+  /** The specific sub-type of the record (e.g., 'job_residential_tuneup'). */
+  object_type: string;
+
+  /** The JSON payload for this record. Subtypes should narrow this type. */
+  data: SqlJson<any>;
+}
 
 /**
  * Defines the structure of the JSON 'data' blob specifically for Job records.
+ * @api only
  */
 interface JobData {
   /** The unique, human-readable identifier for the job (e.g., "J-1024"). */
@@ -72,9 +87,6 @@ interface JobData {
 
   /** The ID of the primary customer equipment being serviced. */
   equipment_id?: Reference<CustomerEquipmentRecord>;
-
-  /** Optional container for dynamically added custom fields. */
-  custom_fields?: Record<string, any>; // Record<string, any> allows arbitrary key-value pairs
 }
 
 /**
@@ -91,7 +103,6 @@ interface JobRecord extends BaseRecord {
   data: SqlJson<JobData>;
 }
 
-// ---
 
 /**
 ### `tenants`
@@ -101,6 +112,8 @@ This table holds information about each **customer company** using the software 
 
 /**
  * Defines the structure of the JSON 'data' blob specifically for Tenant records.
+ * @api skip
+ * @db skip
  */
 interface TenantData {
   /** The name of the tenant organization. */
@@ -108,26 +121,35 @@ interface TenantData {
 
   /** The subscription plan for the tenant (e.g., "pro", "free"). */
   plan: string;
-
-  /** Tenant-specific settings. */
-  settings: Record<string, any>;
 }
 
 /**
- * Represents a Tenant record, combining base fields with tenant-specific data.
+ * Represents a Tenant record. It does not extend BaseRecord as tenants are the top-level entity.
+ * @api skip
+ * @db skip
  */
-interface TenantRecord extends BaseRecord {
-  /** The primary object name, always 'tenant' for this table. */
-  object_name: 'tenant';
-
-  /** The specific sub-type of the tenant. */
-  object_type: string; // Should reference a record_type_metadata table eventually
+interface TenantRecord {
+  /** The unique identifier for the record (UUID). */
+  id: string;
 
   /** The tenant-specific payload, stored as JSON. */
   data: SqlJson<TenantData>;
-}
 
-// ---
+  /** Optimistic concurrency control version number. Incremented on each update. */
+  version: number;
+
+  /** The ID of the user who created this record. Optional. */
+  created_by?: Reference<UserRecord>;
+
+  /** The ID of the user who last modified this record. Optional. */
+  modified_by?: Reference<UserRecord>;
+
+  /** ISO 8601 timestamp string of when the record was created. */
+  created_at: string;
+
+  /** ISO 8601 timestamp string of when the record was last updated. */
+  updated_at: string;
+}
 
 /**
 ### `users`
@@ -137,6 +159,7 @@ This table stores login information and details for **individual people** who us
 
 /**
  * Defines the structure of the JSON 'data' blob specifically for User records.
+ * @api only
  */
 interface UserData {
   /** The user's email address. */
@@ -167,6 +190,7 @@ interface UserRecord extends BaseRecord {
 
 /**
  * Represents contact information.
+ * @api only
  */
 interface ContactInfo {
   email?: string;
@@ -175,6 +199,7 @@ interface ContactInfo {
 
 /**
  * Represents a physical address.
+ * @api only
  */
 interface Address {
   street?: string;
@@ -192,6 +217,7 @@ This table stores information about the **end clients** who receive services fro
 
 /**
  * Defines the structure of the JSON 'data' blob specifically for Customer records.
+ * @api only
  */
 interface CustomerData {
   /** The name of the customer. */
@@ -202,9 +228,6 @@ interface CustomerData {
 
   /** The primary address for the customer. */
   address?: Address;
-
-  /** Optional container for dynamically added custom fields. */
-  custom_fields?: Record<string, any>;
 }
 
 /**
@@ -231,6 +254,7 @@ This table tracks **time blocks** on the schedule for users (technicians). It ca
 
 /**
  * Defines the structure of the JSON 'data' blob for Calendar Event records.
+ * @api only
  */
 interface CalendarEventData {
   /** The title of the event. */
@@ -271,6 +295,7 @@ This table defines different **collections of prices**. A company might have a s
 
 /**
  * Defines the structure of the JSON 'data' blob for Pricebook records.
+ * @api only
  */
 interface PricebookData {
   /** The name of the pricebook. */
@@ -305,6 +330,7 @@ This table is the master **catalog** of everything a tenant company sells or use
 
 /**
  * Defines the structure of the JSON 'data' blob for Product records.
+ * @api only
  */
 interface ProductData {
   /** The name of the product. */
@@ -339,6 +365,7 @@ This table defines physical places where inventory is kept, such as a **main war
 
 /**
  * Defines the structure of the JSON 'data' blob for Location records.
+ * @api only
  */
 interface LocationData {
   /** The name of the location (e.g., "Main Warehouse", "Van 12"). */
@@ -367,6 +394,7 @@ This table tracks the **quantity on hand** of a specific physical **product** (p
 
 /**
  * Defines the structure of the JSON 'data' blob for Product Item records.
+ * @api only
  */
 interface ProductItemData {
   /** The quantity of the product on hand at a specific location. */
@@ -398,6 +426,7 @@ This table links a specific **product** to a specific **pricebook** and defines 
 
 /**
  * Defines the structure of the JSON 'data' blob for Pricebook Entry records.
+ * @api only
  */
 interface PricebookEntryData {
   /** The price of the product. */
@@ -432,6 +461,7 @@ This table represents a specific **product** (service, part, or labor) that was 
 
 /**
  * Defines the structure of the JSON 'data' blob for Job Line Item records.
+ * @api only
  */
 interface JobLineItemData {
   /** The quantity of the product or service used. */
@@ -461,6 +491,7 @@ interface JobLineItemRecord extends BaseRecord {
 
 /**
  * Defines the structure of the JSON 'data' blob for Quote records.
+ * @api only
  */
 interface QuoteData {
   /** A human-readable quote number (e.g., "Q-203"). */
@@ -488,10 +519,7 @@ interface QuoteData {
   prepared_by?: Reference<UserRecord>;
 
   /** The IDs of the quote line items belonging to this quote. */
-  line_item_ids?: Reference<QuoteLineItemRecord>[];
-
-  /** Optional container for dynamically added custom fields. */
-  custom_fields?: Record<string, any>;
+  line_item_ids?: Reference<QuoteLineItemRecord[];
 }
 
 /**
@@ -505,6 +533,7 @@ interface QuoteRecord extends BaseRecord {
 
 /**
  * Defines the structure of the JSON 'data' blob for Object Feed records.
+ * @api only
  */
 interface ObjectFeedData {
   /** The target record that this feed entry is associated with. */
@@ -519,17 +548,11 @@ interface ObjectFeedData {
   /** The text body of the feed entry, if applicable. */
   message?: string;
 
-  /** Optional metadata for system or integration events. */
-  metadata?: Record<string, any>;
-
   /** The ID of the user who authored this entry, if applicable. */
   author_id?: Reference<UserRecord>;
 
   /** An optional list of file IDs attached to this feed entry. */
   attachment_ids?: string[];
-
-  /** Optional container for dynamically added custom fields. */
-  custom_fields?: Record<string, any>;
 }
 
 /**
@@ -543,6 +566,7 @@ interface ObjectFeedRecord extends BaseRecord {
 
 /**
  * Defines the structure of the JSON 'data' blob for Invoice records.
+ * @api only
  */
 interface InvoiceData {
   /** A human-readable invoice number (e.g., "INV-1005"). */
@@ -588,10 +612,7 @@ interface InvoiceData {
   issued_by?: Reference<UserRecord>;
 
   /** The IDs of the invoice line items included in this invoice. */
-  line_item_ids?: Reference<InvoiceLineItemRecord>[];
-
-  /** Optional container for dynamically added custom fields. */
-  custom_fields?: Record<string, any>;
+  line_item_ids?: Reference<InvoiceLineItemRecord[];
 }
 
 /**
@@ -605,6 +626,7 @@ interface InvoiceRecord extends BaseRecord {
 
 /**
  * Defines the structure of the JSON 'data' blob for Invoice Line Item records.
+ * @api only
  */
 interface InvoiceLineItemData {
   /** The quantity of the product or service billed. */
@@ -666,6 +688,7 @@ interface InvoiceLineItemRecord extends BaseRecord {
 
 /**
  * Defines a single field in object metadata.
+ * @api only
  */
 interface FieldDefinition {
   name: string;
@@ -679,6 +702,7 @@ interface FieldDefinition {
 
 /**
  * Defines the structure of the JSON 'data' blob for Object Metadata records.
+ * @api only
  */
 interface ObjectMetadataData {
   /** The array of field definitions for the object. */
@@ -686,18 +710,44 @@ interface ObjectMetadataData {
 }
 
 /**
- * Represents an Object Metadata record.
+ * Represents a record in the `object_metadata` table.
+ * These records are not standard business objects but are definitions that describe other objects.
+ * Each record defines the schema for a business object like 'job' or 'customer'.
  */
-interface ObjectMetadataRecord extends BaseRecord {
-  object_name: 'object_metadata';
-  object_type: string;
+interface ObjectMetadataRecord {
+  /** The unique identifier for the metadata record itself. */
+  id: string;
+
+  /** The ID of the tenant this metadata belongs to. Can be null for global metadata. */
+  tenant_id?: Reference<TenantRecord>;
+
+  /** The name of the object whose schema is being defined (e.g., 'job', 'customer'). */
+  object_name: string;
+
+  /** The metadata payload, containing field definitions. */
   data: SqlJson<ObjectMetadataData>;
+
+  /** Optimistic concurrency control version number. */
+  version: number;
+
+  /** The ID of the user who created this record. */
+  created_by?: Reference<UserRecord>;
+
+  /** The ID of the user who last modified this record. */
+  modified_by?: Reference<UserRecord>;
+
+  /** ISO 8601 timestamp of when the record was created. */
+  created_at: string;
+
+  /** ISO 8601 timestamp of when the record was last updated. */
+  updated_at: string;
 }
 
 // ---
 
 /**
  * Defines a section within a layout.
+ * @api only
  */
 interface LayoutSection {
   /** The user-visible label for the section. */
@@ -708,6 +758,7 @@ interface LayoutSection {
 
 /**
  * Defines the structure of the JSON 'data' blob for Layout Definition records.
+ * @api only
  */
 interface LayoutDefinitionData {
   /** The array of sections that make up the layout. */
@@ -735,8 +786,81 @@ interface LayoutDefinitionData {
  *
  * By binding layouts to this compound key (`object_name`, `object_type`, `status`), the system can present entirely different views and available fields for the same type of object depending on its specific state and classification (e.g., an "In Progress Residential Job" layout vs. a read-only "Completed Commercial Job" layout). 🎨
  */
-interface LayoutDefinitionRecord extends BaseRecord {
-  object_name: 'layout_definition';
+/**
+ * Represents a record in the `layout_definitions` table.
+ * These records define the UI layout for a specific type of object in a specific status.
+ */
+interface LayoutDefinitionRecord {
+  /** The unique identifier for the layout definition itself. */
+  id: string;
+
+  /** The ID of the tenant this layout belongs to. Can be null for global layouts. */
+  tenant_id?: Reference<TenantRecord>;
+
+  /** The name of the object this layout applies to (e.g., 'job', 'customer'). */
+  object_name: string;
+
+  /** The sub-type of the object this layout applies to (e.g., 'job_residential_tuneup', '*'). */
   object_type: string;
+
+  /** The status of the object this layout applies to (e.g., 'scheduled', 'in_progress', '*'). */
+  status: string;
+
+  /** The layout definition payload, containing sections and fields. */
   data: SqlJson<LayoutDefinitionData>;
+
+  /** Optimistic concurrency control version number. */
+  version: number;
+
+  /** The ID of the user who created this record. */
+  created_by?: Reference<UserRecord>;
+
+  /** The ID of the user who last modified this record. */
+  modified_by?: Reference<UserRecord>;
+
+  /** ISO 8601 timestamp of when the record was created. */
+  created_at: string;
+
+  /** ISO 8601 timestamp of when the record was last updated. */
+  updated_at: string;
+}
+
+type IsoTimestamp = string;
+
+/**
+ * @api only
+ */
+interface SyncResponse {
+  meta: Meta;
+  data: ResponseData;
+}
+
+/**
+ * @api only
+ */
+interface Meta {
+    server_time: IsoTimestamp
+    since: IsoTimestamp
+}
+
+/**
+ * @api only
+ */
+interface ResponseData {
+    users: UserRecord[];
+    customers: CustomerRecord[];
+    jobs: JobRecord[];
+    calendar_events: CalendarEventRecord[];
+    pricebooks: PricebookRecord[];
+    products: ProductRecord[];
+    locations: LocationData[];
+    product_items: ProductItemRecord[];
+    pricebook_entries: PricebookEntryRecord[];
+    job_line_items: JobLineItemRecord[];
+    quotes: QuoteRecord[];
+    object_feeds: ObjectFeedRecord[];
+    invoices: InvoiceRecord[];
+    invoice_line_items: InvoiceLineItemRecord[];
+    object_metadata: ObjectMetadataRecord[];
+    layout_definitions: LayoutDefinitionRecord[];
 }

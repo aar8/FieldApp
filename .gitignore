@@ -3,3 +3,5 @@ server/target
 
 # Xcode
 xcuserdata/
+
+node_modules

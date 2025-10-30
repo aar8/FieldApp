@@ -266,6 +266,61 @@ const toTable = (iface: string) => {
 };
 const toCamelFromSnake = (snake: string) => snake.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 
+// Build a Swift UI model mapper property for a given Record interface
+function generateRecordModelMapper(intf: ResolvedInterface): string {
+  if (!intf.name.endsWith('Record')) return '';
+  const dataProp = intf.properties.find(p => p.name === 'data');
+  if (!dataProp) return '';
+  const dataInner = getGenericTypeArg(dataProp.type, 'SqlJson');
+  if (!dataInner) return '';
+
+  const modelName = intf.name.replace(/Record$/, '');
+  const fields = dataInner.getProperties().map(sym => {
+    const nm = sym.getName();
+    const camel = toCamelFromSnake(nm);
+    return `${camel}: data.${camel}`;
+  });
+  const args = ['id: id', ...fields].join(', ');
+  return [
+    `    var model: ${modelName} {`,
+    `        ${modelName}(${args})`,
+    `    }`,
+  ].join('\n');
+}
+
+// --- Swift UI Models (Data + id) using resolvedInterfaces only ---
+function generateSwiftModels(resolved: ResolvedInterface[]): string {
+  const blocks: string[] = [];
+  for (const intf of resolved) {
+    if (!intf.name.endsWith('Record')) continue;
+    const dataProp = intf.properties.find(p => p.name === 'data');
+    if (!dataProp) continue;
+    const dataInner = getGenericTypeArg(dataProp.type, 'SqlJson');
+    if (!dataInner) continue;
+
+    // Derive fields from the inner data type without using sourceFile
+    const modelFields = dataInner.getProperties().map(sym => {
+      const decl: any = sym.getValueDeclaration?.() || (sym.getDeclarations?.() || [])[0];
+      const name = sym.getName();
+      const camel = toCamelFromSnake(name);
+      const t = decl?.getType?.() || sym.getDeclaredType();
+      const swiftType = mapTsDataTypeToSwift(t as Type, name);
+      const optional = !!(decl?.hasQuestionToken?.());
+      return { camel, swiftType, optional };
+    });
+
+    const modelName = intf.name.replace(/Record$/, '');
+    const lines = [
+      `struct ${modelName}: Identifiable, Hashable {`,
+      `    let id: String`,
+      ...modelFields.map(f => `    let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`),
+      `}`,
+    ];
+    blocks.push(lines.join('\n'));
+  }
+  return blocks.join('\n\n');
+}
+
 // --- Swift Generation (SyncResponse wrappers) ---
 function generateSwiftSyncResponse(sourceFile: SourceFile, resolvedInterfaces: ResolvedInterface[]): string {
   // Helpers mirroring table naming
@@ -388,20 +443,79 @@ function generateSwiftSyncResponse(sourceFile: SourceFile, resolvedInterfaces: R
       ...codingKeyLines,
       ...props.filter(f => f.camel === f.name).map(f => `        case ${f.camel}`),
     ];
+    const modelMapper = generateRecordModelMapper(intf);
     const block = [
       `struct ${intf.name}: Codable, Hashable${intf.inDb ? ', FetchableRecord, PersistableRecord' : ''} {`,
       ...fieldLines,
-      intf.inDb ? `    static let databaseTableName = "${toTableName(intf.name)}"` : '',
+      intf.inDb ? `    static let databaseTableName = "${toTable(intf.name)}"` : '',
+      modelMapper,
       '',
       ...(codingKeyLinesCombined.length
         ? ['    enum CodingKeys: String, CodingKey {', ...codingKeyLinesCombined, '    }']
         : []),
       '}',
-    ].join('\n');
+    ].filter(Boolean).join('\n');
     dataStructs.push(block);
   }
 
-  return [header, /*apiRecord, syncStruct, metaStruct, dataPayload,*/ ...dataStructs].join('\n\n');
+  const uiModels = generateSwiftModels(resolvedInterfaces);
+  return [header, /*apiRecord, syncStruct, metaStruct, dataPayload,*/ ...dataStructs, uiModels].join('\n\n');
+}
+
+// --- Swift GRDB Migrator Generation ---
+function generateSwiftMigrator(resolvedInterfaces: ResolvedInterface[]): string {
+  const header = `// GENERATED FILE — DO NOT EDIT\n// Run: npm run build && npm run generate\n\nimport Foundation\nimport GRDB\n`;
+
+  const stmts: string[] = [];
+
+  const mapToGrdbType = (t: Type): string => {
+    const typeSymbol = t.getAliasSymbol() || t.getSymbol();
+    const typeName = typeSymbol?.getName();
+    if (typeName === 'SqlJson') return '.jsonText';
+    if (typeName === 'Reference') return '.text';
+    if (t.isStringLiteral() || t.isString()) return '.text';
+    if (t.isNumber() || t.isBoolean()) return '.integer';
+    return '.text';
+  };
+
+  for (const intf of resolvedInterfaces) {
+    // Only generate tables for DB-included interfaces
+    if (!intf.inDb) continue;
+    const tableName = toTable(intf.name);
+
+    const cols: string[] = [];
+    for (const prop of intf.properties) {
+      if (prop.name === 'id') {
+        cols.push(`t.primaryKey("id", .text)`);
+        continue;
+      }
+      const grdbType = mapToGrdbType(prop.type);
+      const notNull = prop.isOptional ? '' : '.notNull()';
+      cols.push(`t.column("${prop.name}", ${grdbType})${notNull}`);
+    }
+
+    const createBlock = [
+      `try db.create(table: "${tableName}") { t in`,
+      ...cols.map(c => `    ${c}`),
+      `}`,
+    ].join('\n');
+
+    stmts.push(createBlock);
+  }
+
+  const body = [
+    'struct SchemaMigrator {',
+    '    static func migrator() -> DatabaseMigrator {',
+    '        var migrator = DatabaseMigrator()',
+    '        migrator.registerMigration("v1") { db in',
+    ...stmts.map(s => s.split('\n').map(l => '            ' + l).join('\n')),
+    '        }',
+    '        return migrator',
+    '    }',
+    '}',
+  ].join('\n');
+
+  return [header, body].join('\n\n');
 }
 
 // --- Main Orchestration ---
@@ -421,7 +535,7 @@ function main() {
   const resolvedInterfaces = resolveInterfaces(sourceFile, targetNames);
   const sql = generateSqlSchema(resolvedInterfaces);
 
-  const OUTPUT_SQL = resolve(__dirname, '../../../server/init.sql.generated');
+  const OUTPUT_SQL = resolve(__dirname, '../../../server/init.generated.sql');
   const header = `-- GENERATED FILE — DO NOT EDIT\n-- Run: npm run build && npm run generate\n`;
   try {
     writeFileSync(OUTPUT_SQL, header + '\n' + sql + '\n');
@@ -438,6 +552,16 @@ function main() {
     console.log(`\n📝 Wrote Swift to: ${OUTPUT_SWIFT}`);
   } catch (err) {
     console.error('Failed to write Swift file:', err);
+  }
+
+  // Swift GRDB migrator output
+  const swiftMigrator = generateSwiftMigrator(resolvedInterfaces);
+  const OUTPUT_MIGRATOR = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/SchemaMigrator.generated.swift');
+  try {
+    writeFileSync(OUTPUT_MIGRATOR, swiftMigrator);
+    console.log(`\n📝 Wrote Swift migrator to: ${OUTPUT_MIGRATOR}`);
+  } catch (err) {
+    console.error('Failed to write Swift migrator:', err);
   }
 
   console.log('\n✅ Generation complete.');
