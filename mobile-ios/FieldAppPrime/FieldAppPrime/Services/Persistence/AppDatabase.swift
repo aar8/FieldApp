@@ -45,52 +45,6 @@ final class AppDatabase: AppDatabaseProtocol {
     }
     
     private var migrator: DatabaseMigrator {
-        var migrator = DatabaseMigrator()
-        
-        migrator.registerMigration("v1") { db in
-            try db.create(table: JobRecord.databaseTableName) { t in
-                t.primaryKey("id", .text)
-                t.column("tenant_id", .text).notNull()
-                t.column("object_name", .text).notNull()
-                t.column("object_type", .text).notNull()
-                t.column("status", .text).notNull()
-                t.column("data", .jsonText).notNull()
-                t.column("version", .integer).notNull()
-                t.column("created_by", .text)
-                t.column("modified_by", .text)
-                t.column("created_at", .text).notNull()
-                t.column("updated_at", .text).notNull()
-            }
-            
-            try db.create(index: "idx_jobs_status", on: JobRecord.databaseTableName, columns: ["status"])
-            
-            try db.create(table: ObjectMetadataRecord.databaseTableName) { t in
-                t.primaryKey("id", .text)
-                t.column("tenant_id", .text).notNull()
-                t.column("object_name", .text).notNull()
-                t.column("data", .jsonText).notNull()
-                t.column("version", .integer).notNull()
-                t.column("created_by", .text)
-                t.column("modified_by", .text)
-                t.column("created_at", .text).notNull()
-                t.column("updated_at", .text).notNull()
-            }
-            
-            try db.create(table: LayoutDefinitionRecord.databaseTableName) { t in
-                t.primaryKey("id", .text)
-                t.column("tenant_id", .text).notNull()
-                t.column("object_name", .text).notNull()
-                t.column("object_type", .text).notNull()
-                t.column("status", .text).notNull()
-                t.column("data", .jsonText).notNull()
-                t.column("version", .integer).notNull()
-                t.column("created_by", .text)
-                t.column("modified_by", .text)
-                t.column("created_at", .text).notNull()
-                t.column("updated_at", .text).notNull()
-            }
-        }
-        
-        return migrator
+        SchemaMigrator.migrator()
     }
 }

@@ -35,8 +35,7 @@ pub fn seed_epic1_db(conn: &mut Connection) -> rusqlite::Result<()> {
     let tenant_id = "tnt_epic1_demo".to_string();
     let tenant_data = json!({
         "name": "FieldApp Demo Inc.",
-        "plan": "premium",
-        "settings": { "timezone": "America/Chicago" }
+        "plan": "premium"
     }).to_string();
     let timestamp = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
 
@@ -50,9 +49,9 @@ pub fn seed_epic1_db(conn: &mut Connection) -> rusqlite::Result<()> {
     let tech_user_id = "tech-bob".to_string();
 
     let admin_data = json!({
-        "display_name": "Sue Admin",
-        "email": "sue@fieldappdemo.com",
-        "role": "dispatcher"
+        "display_name": "Sue (Admin)",
+        "email": "sue@example.com",
+        "role": "admin"
     }).to_string();
     txn.execute(
         "INSERT OR REPLACE INTO users (id, tenant_id, object_name, object_type, data, created_at, updated_at) VALUES (?1, ?2, 'user', 'admin', ?3, ?4, ?5)",
@@ -60,8 +59,8 @@ pub fn seed_epic1_db(conn: &mut Connection) -> rusqlite::Result<()> {
     )?;
 
     let tech_data = json!({
-        "display_name": "Bob Tech",
-        "email": "bob@fieldappdemo.com",
+        "display_name": "Tech Bob",
+        "email": "bob@example.com",
         "role": "tech"
     }).to_string();
     txn.execute(

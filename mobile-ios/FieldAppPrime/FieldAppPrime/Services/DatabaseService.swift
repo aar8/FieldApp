@@ -36,7 +36,7 @@ class DefaultDatabaseService: DatabaseService {
                     // TODO: Log the database error to our logging service.
                 },
                 onChange: { records in
-                    let jobs = records.map(\.domainModel)
+                    let jobs = records.map(\.model)
                     observer.send(value: jobs)
                 }
             )
@@ -49,17 +49,17 @@ class DefaultDatabaseService: DatabaseService {
     func upsert(syncResponse: SyncResponse) -> Result<Void, Error> {
         do {
             try dbQueue.write { db in
-                let jobs = syncResponse.data.jobs.map { $0.asJobRecord }
+                let jobs = syncResponse.data.jobs
                 for job in jobs {
                     try job.save(db)
                 }
                 
-                let metadata = syncResponse.data.objectMetadata.map { $0.asObjectMetadataRecord }
+                let metadata = syncResponse.data.objectMetadata
                 for record in metadata {
                     try record.save(db)
                 }
                 
-                let layouts = syncResponse.data.layoutDefinitions.map { $0.asLayoutDefinitionRecord }
+                let layouts = syncResponse.data.layoutDefinitions
                 for layout in layouts {
                     try layout.save(db)
                 }

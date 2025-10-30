@@ -1,0 +1,2 @@
+read @/Users/adrian/work/FieldApp/plan/specs/schema.md and understand that it is the source of truth that we use to define  our            
+schemas throught our server sql.  please verify that init.sql matches what is defined in schema.md 
