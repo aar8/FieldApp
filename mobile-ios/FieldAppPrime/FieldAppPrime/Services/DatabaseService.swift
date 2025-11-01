@@ -12,13 +12,18 @@ protocol DatabaseService {
     /// Upserts all records from a sync response into the database in a single transaction.
     /// - Parameter syncResponse: The response from the server containing records to upsert.
     /// - Returns: A `Result` indicating success or failure.
-    func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
+     func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
+    
+    /// Fetches all layout definitions from the database, sorted by object name.
+    /// - Returns: A `Result` containing an array of `LayoutDefinition` or an error.
+    func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error>
 }
 
 // MARK: - Default Implementation
 
 class DefaultDatabaseService: DatabaseService {
-    private let dbQueue: DatabasePool
+    let dbQueue: DatabasePool
+    
     let jobs: Property<[Job]>
     var cancellable: AnyDatabaseCancellable? = nil
     init(appDatabase: AppDatabaseProtocol) {
@@ -46,25 +51,12 @@ class DefaultDatabaseService: DatabaseService {
         self.jobs = Property(initial: [], then: jobsProducer)
     }
     
-    func upsert(syncResponse: SyncResponse) -> Result<Void, Error> {
+    func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error> {
         do {
-            try dbQueue.write { db in
-                let jobs = syncResponse.data.jobs
-                for job in jobs {
-                    try job.save(db)
-                }
-                
-                let metadata = syncResponse.data.objectMetadata
-                for record in metadata {
-                    try record.save(db)
-                }
-                
-                let layouts = syncResponse.data.layoutDefinitions
-                for layout in layouts {
-                    try layout.save(db)
-                }
+            let layouts = try dbQueue.read { db in
+                try LayoutDefinitionRecord.fetchAll(db)
             }
-            return .success(())
+            return .success(layouts)
         } catch {
             return .failure(error)
         }

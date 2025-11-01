@@ -8,10 +8,10 @@ use rusqlite::Connection;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
+pub mod models;
+pub mod fetching;
 mod routes;
 use routes::sync::{sync_handler, AppState};
-use routes::seed::{seed_handler};
-use routes::seed_epic1_db::{seed_epic1_handler};
 
 #[tokio::main]
 async fn main() {
@@ -25,8 +25,6 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/sync", get(sync_handler))
-        .route("/seed", get(seed_handler))
-        .route("/seed/epic1", get(seed_epic1_handler))
         .with_state(state);
 
     // Start server

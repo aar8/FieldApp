@@ -482,7 +482,7 @@ struct QuoteData: Codable, Hashable {
     let quoteStatus: String
     let notes: String?
     let preparedBy: String?
-    let lineItemIds: String?
+    let lineItemIds: [String]?
     enum CodingKeys: String, CodingKey {
         case quoteNumber = "quote_number"
         case customerId = "customer_id"
@@ -590,7 +590,7 @@ struct InvoiceData: Codable, Hashable {
     let paymentStatus: String
     let notes: String?
     let issuedBy: String?
-    let lineItemIds: String?
+    let lineItemIds: [String]?
     enum CodingKeys: String, CodingKey {
         case invoiceNumber = "invoice_number"
         case customerId = "customer_id"
@@ -816,7 +816,7 @@ struct ResponseData: Codable, Hashable {
     let calendarEvents: [CalendarEventRecord]
     let pricebooks: [PricebookRecord]
     let products: [ProductRecord]
-    let locations: [LocationData]
+    let locations: [LocationRecord]
     let productItems: [ProductItemRecord]
     let pricebookEntries: [PricebookEntryRecord]
     let jobLineItems: [JobLineItemRecord]
@@ -948,7 +948,7 @@ struct Quote: Identifiable, Hashable {
     let quoteStatus: String
     let notes: String?
     let preparedBy: String?
-    let lineItemIds: String?
+    let lineItemIds: [String]?
 }
 
 struct ObjectFeed: Identifiable, Hashable {
@@ -977,7 +977,7 @@ struct Invoice: Identifiable, Hashable {
     let paymentStatus: String
     let notes: String?
     let issuedBy: String?
-    let lineItemIds: String?
+    let lineItemIds: [String]?
 }
 
 struct InvoiceLineItem: Identifiable, Hashable {

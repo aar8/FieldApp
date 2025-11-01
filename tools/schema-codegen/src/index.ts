@@ -657,7 +657,139 @@ function main() {
     console.error('Failed to write Swift upsert extension file:', err);
   }
 
+  // Rust models generation
+  const rustModels = generateRustModels(resolvedInterfaces);
+  const OUTPUT_RUST_MODELS = resolve(__dirname, '../../../server/src/models.rs');
+  try {
+    writeFileSync(OUTPUT_RUST_MODELS, rustModels);
+    console.log(`\n📝 Wrote Rust models to: ${OUTPUT_RUST_MODELS}`);
+  } catch (err) {
+    console.error('Failed to write Rust models file:', err);
+  }
+
+  // Rust data_result generation
+  const rustDataResult = generateRustDataResultFile(resolvedInterfaces);
+  const OUTPUT_RUST_DATA_RESULT = resolve(__dirname, '../../../server/src/routes/data_result.rs');
+  try {
+    writeFileSync(OUTPUT_RUST_DATA_RESULT, rustDataResult);
+    console.log(`\n📝 Wrote Rust data_result to: ${OUTPUT_RUST_DATA_RESULT}`);
+  } catch (err) {
+    console.error('Failed to write Rust data_result file:', err);
+  }
+
   console.log('\n✅ Generation complete.');
+}
+
+function generateRustDataResultFile(resolvedInterfaces: ResolvedInterface[]): string {
+    const responseData = resolvedInterfaces.find(i => i.name === 'ResponseData');
+    if (!responseData) {
+        throw new Error("Could not find ResponseData interface");
+    }
+    const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+use rusqlite::{Connection, Result};
+use crate::models::*;
+use crate::fetching::fetch_all;
+`;
+
+    const fetchFields = responseData.properties.map(p => {
+        const fieldName = p.name;
+        const tableName = fieldName;
+        const recordType = getTypeName(p.type.getArrayElementTypeOrThrow());
+        const decoderFn = `crate::models::${toSnake(recordType)}_from_row`;
+        return `        ${fieldName}: fetch_all(&conn, "${tableName}", tenant_id, since, ${decoderFn})?,`;
+    });
+
+    const functionBody = `pub fn get_data_result(conn: &Connection, tenant_id: &str, since: &str) -> Result<ResponseData> {
+    Ok(ResponseData {
+${fetchFields.join('\n')}
+    })
+}`;
+
+    return [header, functionBody].join('\n\n');
+ 
+}
+
+function generateRustModels(resolvedInterfaces: ResolvedInterface[]): string {
+    const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use rusqlite::Row;
+`;
+
+    const blocks: string[] = [];
+
+    const mapTsTypeToRust = (type: Type): string => {
+        if (type.isUnion()) {
+            const nonNullish = type.getUnionTypes().find(t => !t.isUndefined() && !t.isNull());
+            if (nonNullish) {
+                return `Option<${mapTsTypeToRust(nonNullish)}>`;
+            }
+        }
+        if (type.isArray()) {
+            return `Vec<${mapTsTypeToRust(type.getArrayElementTypeOrThrow())}>`;
+        }
+        if (type.isString() || type.isStringLiteral()) return 'String';
+        if (type.isNumber()) return 'f64';
+        if (type.isBoolean()) return 'bool';
+
+        const name = getTypeName(type);
+        if (name && resolvedInterfaces.some(i => i.name === name)) {
+            return name;
+        }
+        return 'Value';
+    };
+
+    const interfacesToGenerate = resolvedInterfaces.filter(i => i.inApi && i.platforms.server);
+
+    for (const intf of interfacesToGenerate) {
+        const properties = intf.properties.map(p => {
+            let typeString = mapTsTypeToRust(p.type);
+            if (p.isOptional && !typeString.startsWith('Option<')) {
+                typeString = `Option<${typeString}>`;
+            }
+            
+            const fieldName = p.name === 'type' ? 'r#type' : p.name;
+            const serdeRename = p.name === 'type' ? `#[serde(rename = "type")]\n    ` : '';
+
+            return `    ${serdeRename}pub ${fieldName}: ${typeString},`;
+        });
+
+        const derive = intf.name === 'ResponseData'
+            ? '#[derive(Serialize, Deserialize, Debug, Clone, Default)]'
+            : '#[derive(Serialize, Deserialize, Debug, Clone)]';
+
+        blocks.push(`${derive}\npub struct ${intf.name} {\n${properties.join('\n')}\n}`);
+
+        // Generate the decoder function
+        const fieldDecoders = intf.properties.map(p => {
+            const fieldName = p.name;
+            const structFieldName = fieldName === 'type' ? 'r#type' : fieldName;
+
+            if (p.isSqlJson) {
+                const dataType = getTypeName(p.type);
+                return `            ${structFieldName}: {
+                let data_str: String = row.get("${fieldName}")?;
+                serde_json::from_str::<${dataType}>(&data_str).map_err(|e| rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e)))?
+            },`;
+            } else {
+                return `            ${structFieldName}: row.get("${fieldName}")?,`;
+            }
+        });
+
+        if (intf.inDb) {
+          const decoderFn = `
+  pub fn ${toSnake(intf.name)}_from_row(row: &Row) -> rusqlite::Result<${intf.name}> {
+      Ok(${intf.name} {\n${fieldDecoders.join('\n')}\n    })
+  }`;
+          blocks.push(decoderFn);
+        }
+    }
+
+    return [header, ...blocks].join('\n\n');
 }
 
 main();

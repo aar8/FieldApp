@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct JobListView: View {
+    let viewFactory: ViewFactory
     @ObservedObject var viewModel: JobListViewModel
     @State private var selectedJob: Job? = nil
 
-    init(viewModel: JobListViewModel) {
+    init(viewModel: JobListViewModel, viewFactory: ViewFactory) {
         self.viewModel = viewModel
+        self.viewFactory = viewFactory
     }
 
     var body: some View {
@@ -44,32 +46,7 @@ struct JobListView: View {
                 viewModel.onAppear()
             }
             .sheet(item: $selectedJob) { job in
-                JobDetailView(job: job)
-            }
-        }
-    }
-}
-
-struct JobDetailView: View {
-    let job: Job
-
-    var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Job Number: \(job.jobNumber)")
-                    .font(.title2)
-                Text(job.jobDescription ?? "No description available.")
-                    .font(.body)
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Job Details")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") {
-                        // SwiftUI automatically dismisses sheet
-                    }
-                }
+                viewFactory.makeJobDetailView(job: job)
             }
         }
     }

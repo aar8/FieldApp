@@ -122,32 +122,41 @@ export async function seedDatabase(dbPath: string, scenario: Scenario) {
 
   try {
     // 1. Drop all tables
+    db.exec('PRAGMA foreign_keys = OFF;');
+
     const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as { name: string }[];
     for (const table of tables) {
+      console.log(`Dropping table: ${table.name}`)
       if (table.name !== 'sqlite_sequence') {
         db.prepare(`DROP TABLE IF EXISTS ${table.name}`).run();
       }
     }
+
+    db.exec('PRAGMA foreign_keys = ON;');
+
+
 
     // 2. Run init.generated.sql to recreate schema
     const initSqlPath = resolve(__dirname, '../../../../server/init.generated.sql');
     const initSql = readFileSync(initSqlPath, 'utf8');
     db.exec(initSql);
 
-    // 3. Insert metadata records
+    // 3. Insert tenant
+    insertTenant(db, scenario.tenant);
+
+    // 4. Insert metadata records
     const metadataModule = await import('../../output/default-metadata.generated.js');
     for (const record of metadataModule.defaultMetadata) {
-      insertMetadataRecord(db, record);
+      insertMetadataRecord(db, { ...record, tenant_id: scenario.tenant.id });
     }
 
-    // 4. Insert layout records
+    // 5. Insert layout records
     const layoutsModule = await import('../../output/default-layouts.generated.js');
     for (const record of layoutsModule.defaultLayouts) {
-      insertLayoutRecord(db, record);
+      insertLayoutRecord(db, { ...record, tenant_id: scenario.tenant.id });
     }
 
-    // 5. Insert tenant
-    insertTenant(db, scenario.tenant);
+
 
     // 6. Insert scenario records
     for (const record of scenario.records) {
@@ -158,6 +167,7 @@ export async function seedDatabase(dbPath: string, scenario: Scenario) {
     console.log(`✅ Seeded database: ${dbPath}`);
     console.log(`   Tenant: ${scenario.tenant.data.name}`);
     console.log(`   Records: ${scenario.records.length}`);
+    console.log(`   Tenant ID: ${scenario.tenant.id}`);
 
     // 7. Print test script
     printTestScript(scenario.testScript);

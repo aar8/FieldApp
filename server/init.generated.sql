@@ -15,6 +15,16 @@ CREATE TABLE jobs (
   data JSON NOT NULL
 );
 
+CREATE TABLE tenants (
+  id TEXT PRIMARY KEY NOT NULL,
+  data JSON NOT NULL,
+  version INTEGER NOT NULL DEFAULT 0,
+  created_by TEXT REFERENCES users(id),
+  modified_by TEXT REFERENCES users(id),
+  created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+  updated_at TEXT NOT NULL
+);
+
 CREATE TABLE users (
   id TEXT PRIMARY KEY NOT NULL,
   tenant_id TEXT NOT NULL REFERENCES tenants(id),

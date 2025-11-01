@@ -9,10 +9,15 @@ class ViewFactory {
         self.databaseService = databaseService
     }
 
-
     @ViewBuilder
     func makeJobListView() -> some View {
         let viewModel = JobListViewModel(databaseService: databaseService)
-        JobListView(viewModel: viewModel)
+        JobListView(viewModel: viewModel, viewFactory: self)
+    }
+
+        @ViewBuilder
+    func makeJobDetailView(job: Job) -> some View {
+        let viewModel = JobDetailViewModel(job: job, databaseService: databaseService)
+        JobDetailView(viewModel: viewModel)
     }
 }

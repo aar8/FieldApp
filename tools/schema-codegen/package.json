@@ -6,9 +6,12 @@
   "scripts": {
     "build": "tsc",
     "generate": "node dist/index.js",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "seed": "tsx src/seeding/cli.ts"
   },
   "dependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.4.1",
     "ts-morph": "^21.0.1"
   },
   "devDependencies": {

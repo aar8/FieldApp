@@ -4,7 +4,6 @@
 import Foundation
 import GRDB
 
-
 struct SchemaMigrator {
     static func migrator() -> DatabaseMigrator {
         var migrator = DatabaseMigrator()
@@ -21,6 +20,15 @@ struct SchemaMigrator {
                 t.column("object_name", .text).notNull()
                 t.column("object_type", .text).notNull()
                 t.column("data", .jsonText).notNull()
+            }
+            try db.create(table: "tenants") { t in
+                t.primaryKey("id", .text)
+                t.column("data", .jsonText).notNull()
+                t.column("version", .integer).notNull()
+                t.column("created_by", .text)
+                t.column("modified_by", .text)
+                t.column("created_at", .text).notNull()
+                t.column("updated_at", .text).notNull()
             }
             try db.create(table: "users") { t in
                 t.primaryKey("id", .text)
