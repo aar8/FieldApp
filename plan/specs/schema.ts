@@ -1,23 +1,3 @@
-/**
- * A marker interface to indicate a field should be stored as JSON in SQL.
- * The phantom property `__sql_json_brand` holds the underlying type.
- * @api skip
- * @db skip
- */
-interface SqlJson<T> {
-  __sql_json_brand: T;
-}
-
-/**
- * Represents a foreign key reference. It is structurally a string,
- * but the phantom property `__reference_brand` holds the referenced record's type,
- * allowing the generator to create foreign key constraints.
- * @api skip
- * @db skip
- */
-interface Reference<T> {
-  __reference_brand: T;
-}
 
 /**
  * Base interface for common fields across all synchronized tables.
@@ -29,7 +9,8 @@ interface BaseRecord {
   id: string;
 
   /** The ID of the tenant this record belongs to. */
-  tenant_id: Reference<TenantRecord>;
+  /** @reference TenantRecord */
+  tenant_id: string;
 
   /** The current domain-specific status of the record (e.g., 'scheduled', 'active'). */
   status: string; // Consider using specific string literal unions later (e.g., JobStatus)
@@ -38,10 +19,12 @@ interface BaseRecord {
   version: number;
 
   /** The ID of the user who created this record. Optional. */
-  created_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  created_by?: string;
 
   /** The ID of the user who last modified this record. Optional. */
-  modified_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  modified_by?: string;
 
   /** ISO 8601 timestamp string of when the record was created. */
   created_at: string;
@@ -56,7 +39,8 @@ interface BaseRecord {
   object_type: string;
 
   /** The JSON payload for this record. Subtypes should narrow this type. */
-  data: SqlJson<any>;
+  /** @sqlJson */
+  data: any;
 }
 
 /**
@@ -68,7 +52,8 @@ interface JobData {
   job_number: string;
 
   /** The ID of the customer associated with this job. */
-  customer_id: Reference<CustomerRecord>;
+  /** @reference CustomerRecord */
+  customer_id: string;
 
   /** The primary address where the job will be performed. */
   job_address?: string;
@@ -77,7 +62,8 @@ interface JobData {
   job_description?: string;
 
   /** The ID of the primary technician assigned to this job. */
-  assigned_tech_id?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  assigned_tech_id?: string;
 
   /** A short note reflecting the latest status update (e.g., "Tech en route"). Optional. */
   status_note?: string;
@@ -86,7 +72,8 @@ interface JobData {
   quote_id?: string;
 
   /** The ID of the primary customer equipment being serviced. */
-  equipment_id?: Reference<CustomerEquipmentRecord>;
+  /** @reference CustomerEquipmentRecord */
+  equipment_id?: string;
 }
 
 /**
@@ -100,7 +87,8 @@ interface JobRecord extends BaseRecord {
   object_type: string; // Should reference a record_type_metadata table eventually
 
   /** The job-specific payload, stored as JSON. */
-  data: SqlJson<JobData>;
+  /** @sqlJson */
+  data: JobData;
 }
 
 
@@ -125,24 +113,27 @@ interface TenantData {
 
 /**
  * Represents a Tenant record. It does not extend BaseRecord as tenants are the top-level entity.
- * @api skip
- * @db skip
+ * @db only
+ * @platform server
  */
 interface TenantRecord {
   /** The unique identifier for the record (UUID). */
   id: string;
 
   /** The tenant-specific payload, stored as JSON. */
-  data: SqlJson<TenantData>;
+  /** @sqlJson */
+  data: TenantData;
 
   /** Optimistic concurrency control version number. Incremented on each update. */
   version: number;
 
   /** The ID of the user who created this record. Optional. */
-  created_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  created_by?: string;
 
   /** The ID of the user who last modified this record. Optional. */
-  modified_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  modified_by?: string;
 
   /** ISO 8601 timestamp string of when the record was created. */
   created_at: string;
@@ -183,7 +174,8 @@ interface UserRecord extends BaseRecord {
   object_type: string; // Should reference a record_type_metadata table eventually
 
   /** The user-specific payload, stored as JSON. */
-  data: SqlJson<UserData>;
+  /** @sqlJson */
+  data: UserData;
 }
 
 // ---
@@ -241,7 +233,8 @@ interface CustomerRecord extends BaseRecord {
   object_type: string; // Should reference a record_type_metadata table eventually
 
   /** The customer-specific payload, stored as JSON. */
-  data: SqlJson<CustomerData>;
+  /** @sqlJson */
+  data: CustomerData;
 }
 
 // ---
@@ -270,10 +263,12 @@ interface CalendarEventData {
   is_all_day?: boolean;
 
   /** The ID of the job this event is associated with. */
-  job_id?: Reference<JobRecord>;
+  /** @reference JobRecord */
+  job_id?: string;
 
   /** The ID of the user this event is associated with. */
-  user_id?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  user_id?: string;
 }
 
 /**
@@ -282,7 +277,8 @@ interface CalendarEventData {
 interface CalendarEventRecord extends BaseRecord {
   object_name: 'calendar_event';
   object_type: string;
-  data: SqlJson<CalendarEventData>;
+  /** @sqlJson */
+  data: CalendarEventData;
 }
 
 // ---
@@ -317,7 +313,8 @@ interface PricebookData {
 interface PricebookRecord extends BaseRecord {
   object_name: 'pricebook';
   object_type: string;
-  data: SqlJson<PricebookData>;
+  /** @sqlJson */
+  data: PricebookData;
 }
 
 // ---
@@ -352,7 +349,8 @@ interface ProductData {
 interface ProductRecord extends BaseRecord {
   object_name: 'product';
   object_type: string;
-  data: SqlJson<ProductData>;
+  /** @sqlJson */
+  data: ProductData;
 }
 
 // ---
@@ -381,7 +379,8 @@ interface LocationData {
 interface LocationRecord extends BaseRecord {
   object_name: 'location';
   object_type: string;
-  data: SqlJson<LocationData>;
+  /** @sqlJson */
+  data: LocationData;
 }
 
 // ---
@@ -401,10 +400,12 @@ interface ProductItemData {
   quantity_on_hand: number;
 
   /** The ID of the product. */
-  product_id: Reference<ProductRecord>;
+  /** @reference ProductRecord */
+  product_id: string;
 
   /** The ID of the location where the product is stored. */
-  location_id: Reference<LocationRecord>;
+  /** @reference LocationRecord */
+  location_id: string;
 }
 
 /**
@@ -413,7 +414,8 @@ interface ProductItemData {
 interface ProductItemRecord extends BaseRecord {
   object_name: 'product_item';
   object_type: string;
-  data: SqlJson<ProductItemData>;
+  /** @sqlJson */
+  data: ProductItemData;
 }
 
 // ---
@@ -436,10 +438,12 @@ interface PricebookEntryData {
   currency: string;
 
   /** The ID of the pricebook this entry belongs to. */
-  pricebook_id: Reference<PricebookRecord>;
+  /** @reference PricebookRecord */
+  pricebook_id: string;
 
   /** The ID of the product this entry defines the price for. */
-  product_id: Reference<ProductRecord>;
+  /** @reference ProductRecord */
+  product_id: string;
 }
 
 /**
@@ -448,7 +452,8 @@ interface PricebookEntryData {
 interface PricebookEntryRecord extends BaseRecord {
   object_name: 'pricebook_entry';
   object_type: string;
-  data: SqlJson<PricebookEntryData>;
+  /** @sqlJson */
+  data: PricebookEntryData;
 }
 
 // ---
@@ -474,10 +479,12 @@ interface JobLineItemData {
   description?: string;
 
   /** The ID of the job this line item belongs to. */
-  job_id: Reference<JobRecord>;
+  /** @reference JobRecord */
+  job_id: string;
 
   /** The ID of the product being used or sold. */
-  product_id: Reference<ProductRecord>;
+  /** @reference ProductRecord */
+  product_id: string;
 }
 
 /**
@@ -486,7 +493,8 @@ interface JobLineItemData {
 interface JobLineItemRecord extends BaseRecord {
   object_name: 'job_line_item';
   object_type: string;
-  data: SqlJson<JobLineItemData>;
+  /** @sqlJson */
+  data: JobLineItemData;
 }
 
 /**
@@ -498,10 +506,12 @@ interface QuoteData {
   quote_number: string;
 
   /** The ID of the customer receiving this quote. */
-  customer_id: Reference<CustomerRecord>;
+  /** @reference CustomerRecord */
+  customer_id: string;
 
   /** The ID of the pricebook used to calculate pricing for this quote. */
-  pricebook_id?: Reference<PricebookRecord>;
+  /** @reference PricebookRecord */
+  pricebook_id?: string;
 
   /** The total price of the quote, including all line items. */
   total_amount: number;
@@ -516,10 +526,12 @@ interface QuoteData {
   notes?: string;
 
   /** The ID of the user (typically a salesperson) who prepared this quote. */
-  prepared_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  prepared_by?: string;
 
   /** The IDs of the quote line items belonging to this quote. */
-  line_item_ids?: Reference<QuoteLineItemRecord[];
+  /** @reference QuoteLineItemRecord */
+  line_item_ids?: string[];
 }
 
 /**
@@ -528,7 +540,8 @@ interface QuoteData {
 interface QuoteRecord extends BaseRecord {
   object_name: 'quote';
   object_type: string;
-  data: SqlJson<QuoteData>;
+  /** @sqlJson */
+  data: QuoteData;
 }
 
 /**
@@ -549,7 +562,8 @@ interface ObjectFeedData {
   message?: string;
 
   /** The ID of the user who authored this entry, if applicable. */
-  author_id?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  author_id?: string;
 
   /** An optional list of file IDs attached to this feed entry. */
   attachment_ids?: string[];
@@ -561,7 +575,8 @@ interface ObjectFeedData {
 interface ObjectFeedRecord extends BaseRecord {
   object_name: 'object_feed';
   object_type: string;
-  data: SqlJson<ObjectFeedData>;
+  /** @sqlJson */
+  data: ObjectFeedData;
 }
 
 /**
@@ -573,13 +588,16 @@ interface InvoiceData {
   invoice_number: string;
 
   /** The ID of the customer being billed. */
-  customer_id: Reference<CustomerRecord>;
+  /** @reference CustomerRecord */
+  customer_id: string;
 
   /** The ID of the job this invoice is based on. */
-  job_id?: Reference<JobRecord>;
+  /** @reference JobRecord */
+  job_id?: string;
 
   /** The ID of the quote this invoice originated from, if applicable. */
-  quote_id?: Reference<QuoteRecord>;
+  /** @reference QuoteRecord */
+  quote_id?: string;
 
   /** The subtotal amount before taxes or discounts. */
   subtotal_amount: number;
@@ -609,10 +627,12 @@ interface InvoiceData {
   notes?: string;
 
   /** The ID of the user (e.g., admin) who issued the invoice. */
-  issued_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  issued_by?: string;
 
   /** The IDs of the invoice line items included in this invoice. */
-  line_item_ids?: Reference<InvoiceLineItemRecord[];
+  /** @reference UserRecord */
+  line_item_ids?: string[];
 }
 
 /**
@@ -621,7 +641,8 @@ interface InvoiceData {
 interface InvoiceRecord extends BaseRecord {
   object_name: 'invoice';
   object_type: string;
-  data: SqlJson<InvoiceData>;
+  /** @sqlJson */
+  data: InvoiceData;
 }
 
 /**
@@ -639,10 +660,12 @@ interface InvoiceLineItemData {
   description?: string;
 
   /** The ID of the invoice this line belongs to. */
-  invoice_id: Reference<InvoiceRecord>;
+  /** @reference InvoiceRecord */
+  invoice_id: string;
 
   /** The ID of the product being invoiced. */
-  product_id: Reference<ProductRecord>;
+  /** @reference ProductRecord */
+  product_id: string;
 
   /** Optional tax rate (e.g., 0.08 for 8%) applied to this line. */
   tax_rate?: number;
@@ -657,7 +680,8 @@ interface InvoiceLineItemData {
 interface InvoiceLineItemRecord extends BaseRecord {
   object_name: 'invoice_line_item';
   object_type: string;
-  data: SqlJson<InvoiceLineItemData>;
+  /** @sqlJson */
+  data: InvoiceLineItemData;
 }
 
 // ---
@@ -719,22 +743,26 @@ interface ObjectMetadataRecord {
   id: string;
 
   /** The ID of the tenant this metadata belongs to. Can be null for global metadata. */
-  tenant_id?: Reference<TenantRecord>;
+  /** @reference TenantRecord */
+  tenant_id?: string;
 
   /** The name of the object whose schema is being defined (e.g., 'job', 'customer'). */
   object_name: string;
 
   /** The metadata payload, containing field definitions. */
-  data: SqlJson<ObjectMetadataData>;
+  /** @sqlJson */
+  data: ObjectMetadataData;
 
   /** Optimistic concurrency control version number. */
   version: number;
 
   /** The ID of the user who created this record. */
-  created_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  created_by?: string;
 
   /** The ID of the user who last modified this record. */
-  modified_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  modified_by?: string;
 
   /** ISO 8601 timestamp of when the record was created. */
   created_at: string;
@@ -795,7 +823,8 @@ interface LayoutDefinitionRecord {
   id: string;
 
   /** The ID of the tenant this layout belongs to. Can be null for global layouts. */
-  tenant_id?: Reference<TenantRecord>;
+  /** @reference TenantRecord */
+  tenant_id?: string;
 
   /** The name of the object this layout applies to (e.g., 'job', 'customer'). */
   object_name: string;
@@ -807,16 +836,19 @@ interface LayoutDefinitionRecord {
   status: string;
 
   /** The layout definition payload, containing sections and fields. */
-  data: SqlJson<LayoutDefinitionData>;
+  /** @sqlJson */
+  data: LayoutDefinitionData;
 
   /** Optimistic concurrency control version number. */
   version: number;
 
   /** The ID of the user who created this record. */
-  created_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  created_by?: string;
 
   /** The ID of the user who last modified this record. */
-  modified_by?: Reference<UserRecord>;
+  /** @reference UserRecord */
+  modified_by?: string;
 
   /** ISO 8601 timestamp of when the record was created. */
   created_at: string;
@@ -853,7 +885,7 @@ interface ResponseData {
     calendar_events: CalendarEventRecord[];
     pricebooks: PricebookRecord[];
     products: ProductRecord[];
-    locations: LocationData[];
+    locations: LocationRecord[];
     product_items: ProductItemRecord[];
     pricebook_entries: PricebookEntryRecord[];
     job_line_items: JobLineItemRecord[];
@@ -864,3 +896,37 @@ interface ResponseData {
     object_metadata: ObjectMetadataRecord[];
     layout_definitions: LayoutDefinitionRecord[];
 }
+
+export type {
+  ObjectMetadataRecord,
+  LayoutDefinitionRecord,
+  TenantRecord,
+  TenantData,
+  UserRecord,
+  UserData,
+  CustomerRecord,
+  CustomerData,
+  JobRecord,
+  JobData,
+  CalendarEventRecord,
+  CalendarEventData,
+  PricebookRecord,
+  PricebookData,
+  ProductRecord,
+  ProductData,
+  LocationRecord,
+  ProductItemRecord,
+  ProductItemData,
+  PricebookEntryRecord,
+  PricebookEntryData,
+  JobLineItemRecord,
+  JobLineItemData,
+  QuoteRecord,
+  QuoteData,
+  ObjectFeedRecord,
+  ObjectFeedData,
+  InvoiceRecord,
+  InvoiceData,
+  InvoiceLineItemRecord,
+  InvoiceLineItemData,
+};

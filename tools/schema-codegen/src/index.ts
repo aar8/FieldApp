@@ -4,57 +4,75 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { parseTags } from './parseTags';
 
+// --- Naming Convention Helpers ---
+const toSnake = (name: string) => name.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
+const toCamelFromSnake = (snake: string) => snake.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+
+const pluralize = (w: string) => {
+  const exceptions: Record<string, string> = { metadata: 'metadata', equipment: 'equipment' };
+  if (exceptions[w]) return exceptions[w];
+  if (/[^aeiou]y$/.test(w)) return w.slice(0, -1) + 'ies';
+  if (/(s|x|z|ch|sh)$/.test(w)) return w + 'es';
+  return w + 's';
+};
+
+const toTableName = (iface: string) => {
+  const base = iface.replace(/Record$/, '');
+  const snake = toSnake(base);
+  const parts = snake.split('_');
+  const last = parts.pop() || '';
+  return [...parts, pluralize(last)].join('_');
+};
+
 // --- Data Structures ---
 interface ResolvedProperty {
   name: string;
   type: Type; // Store the actual Type object from ts-morph
   isOptional: boolean;
+  referenceTarget?: string;
+  isSqlJson?: boolean;
 }
 
 interface ResolvedInterface {
   name: string;
   properties: ResolvedProperty[];
   inDb: boolean,
-  inApi: boolean
+  inApi: boolean,
+  platforms: {
+    ios: boolean;
+    server: boolean;
+  };
 }
 
-function toTableName(name: string): string {
-  const base = name.replace(/Record$/, '');
-  const snake = base.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
+// Extract per-property JSDoc tags like `@reference TargetRecord` and `@sqlJson`
+function parsePropertyTags(prop: PropertySignature): { referenceTarget?: string; isSqlJson: boolean } {
+  let referenceTarget: string | undefined;
+  let isSqlJson = false;
 
-  const parts = snake.split('_');
-  const last = parts.pop() || '';
+  const tags = prop.getJsDocs().flatMap(d => d.getTags());
+  for (const t of tags) {
+    const anyTag = t as any;
+    const raw = anyTag.getTagNameNode?.()?.getText?.() ?? t.getName();
+    const comment = (anyTag.getCommentText?.() ?? t.getComment() ?? '').toString().trim();
+    if (raw === 'reference') {
+      referenceTarget = (comment.split(/\s+/)[0] || '').trim() || undefined;
+    } else if (raw === 'sqlJson' || raw.toLowerCase() === 'sqljson') {
+      isSqlJson = true;
+    }
+  }
 
-  const exceptions: Record<string, string> = {
-    metadata: 'metadata',
-    equipment: 'equipment',
-  };
-
-  const pluralize = (w: string): string => {
-    if (exceptions[w]) return exceptions[w];
-    if (/[^aeiou]y$/.test(w)) return w.slice(0, -1) + 'ies';
-    if (/(s|x|z|ch|sh)$/.test(w)) return w + 'es';
-    return w + 's';
-  };
-
-  const pluralLast = pluralize(last);
-  return [...parts, pluralLast].join('_');
+  return { referenceTarget, isSqlJson };
 }
 
 // --- Phase 1: Resolution Logic ---
-function resolveInterfaces(sourceFile: SourceFile, targetNames: string[]): ResolvedInterface[] {
+function resolveInterfaces(sourceFile: SourceFile): ResolvedInterface[] {
   const allInterfaces = sourceFile.getInterfaces();
-  // const targetInterfaces = allInterfaces.filter(i => targetNames.includes(i.getName()));
-
-  // console.log(`\nFound ${targetInterfaces.length} of ${targetNames.length} targeted interfaces.`);
   return allInterfaces.map(interfaceDecl => {
 
-    const { inDb, inApi } = parseTags(interfaceDecl);
+    const { inDb, inApi, platforms: platformNames } = parseTags(interfaceDecl);
 
     const tags = interfaceDecl.getJsDocs().flatMap(d => d.getTags());
 
-    // const tags = i.map(t => t.getTagNameNode()?.getText());
-    // console.log(tags)
     const properties: ResolvedProperty[] = [];
 
     const processProperties = (props: PropertySignature[]) => {
@@ -63,10 +81,13 @@ function resolveInterfaces(sourceFile: SourceFile, targetNames: string[]): Resol
         if (existingIndex !== -1) {
           properties.splice(existingIndex, 1);
         }
+        const { referenceTarget, isSqlJson } = parsePropertyTags(prop);
         properties.push({
           name: prop.getName(),
           type: prop.getType(), // KEY CHANGE: Store the rich Type object
           isOptional: prop.hasQuestionToken(),
+          referenceTarget,
+          isSqlJson,
         });
       });
     };
@@ -83,12 +104,18 @@ function resolveInterfaces(sourceFile: SourceFile, targetNames: string[]): Resol
     }
     processProperties(interfaceDecl.getProperties());
 
-    console.log({ name: interfaceDecl.getName(), inDb,  inApi, properties })
+    const platforms = {
+        ios: !platformNames || platformNames.length === 0 || platformNames.includes('ios'),
+        server: !platformNames || platformNames.length === 0 || platformNames.includes('server'),
+    };
+
+    console.log({ name: interfaceDecl.getName(), inDb,  inApi, platforms, properties })
     return {
       name: interfaceDecl.getName(),
-      inDb, 
+      inDb,
       inApi,
       properties,
+      platforms,
     };
   });
 }
@@ -98,10 +125,7 @@ function generateSqlSchema(resolvedInterfaces: ResolvedInterface[]): string {
   console.log('\n--- Generating CREATE TABLE Statements ---');
   const statements: string[] = [];
 
-  // Local helper to convert a Record interface name to a table name
-
-
-  resolvedInterfaces.filter(intf => intf.inDb).forEach(resolvedInterface => {
+  resolvedInterfaces.filter(intf => intf.platforms.server && intf.inDb).forEach(resolvedInterface => {
     const tableName = toTableName(resolvedInterface.name);
     const columns: string[] = [];
 
@@ -112,15 +136,11 @@ function generateSqlSchema(resolvedInterfaces: ResolvedInterface[]): string {
       let sqlType = '';
       let constraints = '';
 
-      // Get the symbol for the type, which could be an alias
-      const typeSymbol = propType.getAliasSymbol() || propType.getSymbol();
-      const typeName = typeSymbol?.getName();
-
-      if (typeName === 'SqlJson') {
+      // Prefer JSDoc tags over type branding
+      if (prop.isSqlJson) {
         sqlType = 'JSON';
-      } else if (typeName === 'Reference') {
-        const referencedRecord = propType.getTypeArguments()[0].getSymbol()?.getName() || 'unknown';
-        const referencedTable = toTableName(referencedRecord);
+      } else if (prop.referenceTarget) {
+        const referencedTable = toTableName(prop.referenceTarget);
         sqlType = 'TEXT';
         constraints = ` REFERENCES ${referencedTable}(id)`;
       } else if (propType.isStringLiteral()) {
@@ -133,6 +153,8 @@ function generateSqlSchema(resolvedInterfaces: ResolvedInterface[]): string {
       } else if (propType.isBoolean()) {
         sqlType = 'INTEGER';
       } else {
+        const typeSymbol = propType.getAliasSymbol() || propType.getSymbol();
+        const typeName = typeSymbol?.getName();
         sqlType = typeName || 'UNKNOWN';
       }
 
@@ -145,7 +167,7 @@ function generateSqlSchema(resolvedInterfaces: ResolvedInterface[]): string {
       if (!prop.isOptional) {
         columnDefinition += ' NOT NULL';
       }
-      
+
       columnDefinition += constraints;
 
       if (!propType.isStringLiteral()) {
@@ -161,34 +183,10 @@ function generateSqlSchema(resolvedInterfaces: ResolvedInterface[]): string {
     });
 
     const createTableStatement = `CREATE TABLE ${tableName} (\n${columns.join(',\n')}\n);`;
-    // console.log('\n' + createTableStatement);
     statements.push(createTableStatement);
   });
   return statements.join('\n\n');
 }
-
-// // --- Swift helpers ---
-// function mapTsTypeToSwiftForBaseRecord(propType: Type, propName: string): string {
-//   const aliasOrSymbol = propType.getAliasSymbol() || propType.getSymbol();
-//   const typeName = aliasOrSymbol?.getName();
-
-//   if (typeName === 'Reference') {
-//     return 'String';
-//   }
-//   if (typeName === 'SqlJson') {
-//     return propName === 'data' ? 'T' : 'String';
-//   }
-//   if (propType.isStringLiteral() || propType.isString()) {
-//     return 'String';
-//   }
-//   if (propType.isNumber()) {
-//     return 'Int';
-//   }
-//   if (propType.isBoolean()) {
-//     return 'Bool';
-//   }
-//   return 'String';
-// }
 
 const getGenericTypeArg = (type: Type, expectedName?: string): Type | undefined => {
   // Unwrap unions like SqlJson<T> | undefined
@@ -248,30 +246,12 @@ function mapTsDataTypeToSwift(propType: Type, propName: string): string {
   return 'String';
 }
 
-const toSnake = (name: string) => name.replace(/([A-Z])/g, '_$1').replace(/^_/, '').toLowerCase();
-const pluralize = (w: string) => {
-  const exceptions: Record<string, string> = { metadata: 'metadata', equipment: 'equipment' };
-  if (exceptions[w]) return exceptions[w];
-  if (/[^aeiou]y$/.test(w)) return w.slice(0, -1) + 'ies';
-  if (/(s|x|z|ch|sh)$/.test(w)) return w + 'es';
-  return w + 's';
-};
-
-const toTable = (iface: string) => {
-  const base = iface.replace(/Record$/, '');
-  const snake = toSnake(base);
-  const parts = snake.split('_');
-  const last = parts.pop() || '';
-  return [...parts, pluralize(last)].join('_');
-};
-const toCamelFromSnake = (snake: string) => snake.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-
 // Build a Swift UI model mapper property for a given Record interface
 function generateRecordModelMapper(intf: ResolvedInterface): string {
   if (!intf.name.endsWith('Record')) return '';
   const dataProp = intf.properties.find(p => p.name === 'data');
   if (!dataProp) return '';
-  const dataInner = getGenericTypeArg(dataProp.type, 'SqlJson');
+  const dataInner = dataProp.isSqlJson ? dataProp.type : undefined;
   if (!dataInner) return '';
 
   const modelName = intf.name.replace(/Record$/, '');
@@ -295,7 +275,7 @@ function generateSwiftModels(resolved: ResolvedInterface[]): string {
     if (!intf.name.endsWith('Record')) continue;
     const dataProp = intf.properties.find(p => p.name === 'data');
     if (!dataProp) continue;
-    const dataInner = getGenericTypeArg(dataProp.type, 'SqlJson');
+    const dataInner = dataProp.isSqlJson ? dataProp.type : undefined;
     if (!dataInner) continue;
 
     // Derive fields from the inner data type without using sourceFile
@@ -323,107 +303,15 @@ function generateSwiftModels(resolved: ResolvedInterface[]): string {
 
 // --- Swift Generation (SyncResponse wrappers) ---
 function generateSwiftSyncResponse(sourceFile: SourceFile, resolvedInterfaces: ResolvedInterface[]): string {
-  // Helpers mirroring table naming
+  const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
 
-  /*
-  const interfaces = sourceFile.getInterfaces();
-  // Collect BaseRecord fields for APIRecord generation
-  const baseRecord = sourceFile.getInterface('BaseRecord');
-  const baseFields = baseRecord
-    ? baseRecord.getProperties().map(p => {
-        const name = p.getName();
-        const t = p.getType();
-        const swiftType = mapTsTypeToSwiftForBaseRecord(t, name);
-        const optional = p.hasQuestionToken();
-        const camel = toCamelFromSnake(name);
-        return { name, camel, swiftType, optional };
-      })
-    : [];
-  const adherents = interfaces.filter(i =>
-    i.getName().endsWith('Record') &&
-    i.getHeritageClauses().some(h => h.getTypeNodes().some(t => t.getText().replace(/\s/g, '') === 'BaseRecord'))
-  );
-
-  const items = adherents.map(i => {
-    const dataProp = i.getProperty('data');
-    const dataArg = dataProp?.getType().getTypeArguments()[0];
-    const dataTypeName = dataArg?.getSymbol()?.getName() || 'UnknownData';
-    const tableName = toTable(i.getName());
-    const propName = toCamelFromSnake(tableName);
-    return { propName, tableName, dataTypeName };
-  }).sort((a, b) => a.tableName.localeCompare(b.tableName));
-
-  // Build APIRecord<T> from BaseRecord fields
-  const fieldLines = baseFields.map(f => `    let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`);
-  const codingKeyLines = baseFields
-    .filter(f => f.camel !== f.name)
-    .map(f => `        case ${f.camel} = "${f.name}"`);
-    
-  const codingKeyLinesCombined = [
-    ...codingKeyLines,
-    ...baseFields.filter(f => f.camel === f.name).map(f => `        case ${f.camel}`),
-  ];
-*/  
-  const header = `// GENERATED FILE — DO NOT EDIT\n// Run: npm run build && npm run generate\n\nimport Foundation\nimport GRDB\n`;
-/*
-  const apiRecord = [
-    'struct APIRecord<T: Codable>: Codable {',
-    ...fieldLines,
-    '',
-    '    enum CodingKeys: String, CodingKey {',
-    ...codingKeyLinesCombined,
-    '    }',
-    '}',
-  ].join('\n');
-
-  // Build DataPayload from adherent BaseRecord subtypes
-  const payloadProps = items.map(it => `    let ${it.propName}: [APIRecord<${it.dataTypeName}>]`).join('\n');
-  const payloadKeys = [
-    '    enum CodingKeys: String, CodingKey {',
-    ...items.map(it => `        case ${it.propName} = "${it.tableName}"`),
-    '    }',
-  ].join('\n');
-  const dataPayload = [
-    'struct DataPayload: Decodable {',
-    payloadProps,
-    '',
-    payloadKeys,
-    '}',
-  ].join('\n');
-
-  const syncStruct = [
-    'struct SyncResponse: Decodable {',
-    '    let meta: Meta',
-    '    let data: DataPayload',
-    '}',
-  ].join('\n');
-
-  const metaStruct = [
-    'struct Meta: Decodable {',
-    '    let serverTime: Date',
-    '    let since: String',
-    '',
-    '    enum CodingKeys: String, CodingKey {',
-    '        case serverTime = "server_time"',
-    '        case since',
-    '    }',
-    '}',
-  ].join('\n');
-*/
-
-  // Generate Swift structs for all interfaces that are NOT BaseRecord or descendants of BaseRecord
-  // const allIfaces = sourceFile.getInterfaces();
-  // const isDescendantOfBase = (iface: InterfaceDeclaration): boolean =>
-  //   iface.getHeritageClauses().some(h => h.getTypeNodes().some(t => t.getText().replace(/\s/g, '') === 'BaseRecord'));
-  // const dataTypeNames = allIfaces
-  //   .filter(i => i.getName() !== 'BaseRecord' && !isDescendantOfBase(i))
-  //   .map(i => i.getName())
-  //   .sort();
+import Foundation
+import GRDB
+`;
   const dataStructs: string[] = [];
 
-  for (const intf of resolvedInterfaces.filter(intf => intf.inDb || intf.inApi)) {
-    // const intf = sourceFile.getInterface(dtName);
-    // if (!intf) continue;
+  for (const intf of resolvedInterfaces.filter(intf => intf.platforms.ios && (intf.inDb || intf.inApi))) {
 
     const props = intf.properties.map(p => {
       const name = p.name;
@@ -447,7 +335,7 @@ function generateSwiftSyncResponse(sourceFile: SourceFile, resolvedInterfaces: R
     const block = [
       `struct ${intf.name}: Codable, Hashable${intf.inDb ? ', FetchableRecord, PersistableRecord' : ''} {`,
       ...fieldLines,
-      intf.inDb ? `    static let databaseTableName = "${toTable(intf.name)}"` : '',
+      intf.inDb ? `    static let databaseTableName = "${toTableName(intf.name)}"` : '',
       modelMapper,
       '',
       ...(codingKeyLinesCombined.length
@@ -459,20 +347,24 @@ function generateSwiftSyncResponse(sourceFile: SourceFile, resolvedInterfaces: R
   }
 
   const uiModels = generateSwiftModels(resolvedInterfaces);
-  return [header, /*apiRecord, syncStruct, metaStruct, dataPayload,*/ ...dataStructs, uiModels].join('\n\n');
+  return [header, ...dataStructs, uiModels].join('\n\n');
 }
 
 // --- Swift GRDB Migrator Generation ---
 function generateSwiftMigrator(resolvedInterfaces: ResolvedInterface[]): string {
-  const header = `// GENERATED FILE — DO NOT EDIT\n// Run: npm run build && npm run generate\n\nimport Foundation\nimport GRDB\n`;
+  const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+import Foundation
+import GRDB
+`;
 
   const stmts: string[] = [];
 
-  const mapToGrdbType = (t: Type): string => {
-    const typeSymbol = t.getAliasSymbol() || t.getSymbol();
-    const typeName = typeSymbol?.getName();
-    if (typeName === 'SqlJson') return '.jsonText';
-    if (typeName === 'Reference') return '.text';
+  const mapToGrdbType = (prop: ResolvedProperty): string => {
+    if (prop.isSqlJson) return '.jsonText';
+    if (prop.referenceTarget) return '.text';
+    const t = prop.type;
     if (t.isStringLiteral() || t.isString()) return '.text';
     if (t.isNumber() || t.isBoolean()) return '.integer';
     return '.text';
@@ -481,7 +373,7 @@ function generateSwiftMigrator(resolvedInterfaces: ResolvedInterface[]): string 
   for (const intf of resolvedInterfaces) {
     // Only generate tables for DB-included interfaces
     if (!intf.inDb) continue;
-    const tableName = toTable(intf.name);
+    const tableName = toTableName(intf.name);
 
     const cols: string[] = [];
     for (const prop of intf.properties) {
@@ -489,7 +381,7 @@ function generateSwiftMigrator(resolvedInterfaces: ResolvedInterface[]): string 
         cols.push(`t.primaryKey("id", .text)`);
         continue;
       }
-      const grdbType = mapToGrdbType(prop.type);
+      const grdbType = mapToGrdbType(prop);
       const notNull = prop.isOptional ? '' : '.notNull()';
       cols.push(`t.column("${prop.name}", ${grdbType})${notNull}`);
     }
@@ -515,31 +407,198 @@ function generateSwiftMigrator(resolvedInterfaces: ResolvedInterface[]): string 
     '}',
   ].join('\n');
 
-  return [header, body].join('\n\n');
+  return [header, body].join('\n');
+}
+
+// --- Metadata Generation ---
+function generateDefaultMetadata(resolvedInterfaces: ResolvedInterface[]): string {
+  const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+import type { ObjectMetadataRecord } from '../../../plan/specs/schema';
+
+export const defaultMetadata: ObjectMetadataRecord[] = [`;
+
+  const records: string[] = [];
+
+  for (const intf of resolvedInterfaces) {
+    if (!intf.name.endsWith('Record')) continue;
+    if (!intf.inApi) continue; // Only include API objects
+    const dataProp = intf.properties.find(p => p.name === 'data');
+    if (!dataProp || !dataProp.isSqlJson) continue;
+
+    const objectName = toSnake(intf.name.replace(/Record$/, ''));
+    const dataType = dataProp.type;
+
+    const fieldDefs: string[] = [];
+    for (const sym of dataType.getProperties()) {
+      const decl: any = sym.getValueDeclaration?.() || (sym.getDeclarations?.() || [])[0];
+      const fieldName = sym.getName();
+      const fieldType = decl?.getType?.() || sym.getDeclaredType();
+      const optional = !!(decl?.hasQuestionToken?.());
+
+      // Parse JSDoc for @reference using existing parser
+      const { referenceTarget } = decl ? parsePropertyTags(decl) : { referenceTarget: undefined }
+
+      // Map TS type to metadata type
+      let metaType = 'string';
+      if (referenceTarget) {
+        metaType = 'reference';
+      } else if (fieldType.isNumber()) {
+        metaType = 'numeric';
+      } else if (fieldType.isBoolean()) {
+        metaType = 'bool';
+      } else if (fieldType.isUnion()) {
+        // Check for string literal unions (picklist)
+        const types = fieldType.getUnionTypes();
+        const allStringLiterals = types.every(t => t.isStringLiteral() || t.isUndefined());
+        if (allStringLiterals) {
+          metaType = 'picklist';
+        }
+      }
+
+      const label = fieldName.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+      fieldDefs.push(`    { name: '${fieldName}', label: '${label}', type: '${metaType}', required: ${!optional}${referenceTarget ? `, target_object: '${toSnake(referenceTarget.replace(/Record$/, ''))}'` : ''} }`);
+    }
+
+    records.push(`  {
+    id: 'metadata_${objectName}',
+    object_name: '${objectName}',
+    data: {
+      field_definitions: [
+${fieldDefs.join(',\n')}
+      ]
+    },
+    version: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }`);
+  }
+
+  return header + '\n' + records.join(',\n') + '\n];\n';
+}
+
+// --- Layout Generation ---
+function generateDefaultLayouts(resolvedInterfaces: ResolvedInterface[]): string {
+  const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+import type { LayoutDefinitionRecord } from '../../../plan/specs/schema';
+
+export const defaultLayouts: LayoutDefinitionRecord[] = [`;
+
+  const records: string[] = [];
+
+  for (const intf of resolvedInterfaces) {
+    if (!intf.name.endsWith('Record')) continue;
+    if (!intf.inApi) continue; // Only include API objects
+    const dataProp = intf.properties.find(p => p.name === 'data');
+    if (!dataProp || !dataProp.isSqlJson) continue;
+
+    const objectName = toSnake(intf.name.replace(/Record$/, ''));
+    const dataType = dataProp.type;
+
+    const fields = dataType.getProperties().map(sym => sym.getName());
+
+    records.push(`  {
+    id: 'layout_${objectName}_default',
+    object_name: '${objectName}',
+    object_type: '*',
+    status: '*',
+    data: {
+      sections: [
+        { label: '${objectName.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} Details', fields: ${JSON.stringify(fields)} }
+      ]
+    },
+    version: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }`);
+  }
+
+  return header + '\n' + records.join(',\n') + '\n];\n';
+}
+
+function generateSwiftUpsertExtension(sourceFile: SourceFile): string {
+  const header = `//
+//  AppDatabase+Sync.generated.swift
+//  FieldAppPrime
+//
+//  Created by Gemini on 10/30/25.
+//
+// This file is generated by the schema-codegen script. Do not edit manually.
+
+import Foundation
+import GRDB
+`;
+
+  const responseDataInterface = sourceFile.getInterface("ResponseData");
+  if (!responseDataInterface) {
+      return "// Error: Could not find ResponseData interface in schema.ts";
+  }
+
+  const properties = responseDataInterface.getProperties();
+  const upsertLines = properties.map(prop => {
+      const propName = prop.getName();
+      const swiftPropName = toCamelFromSnake(propName);
+      return `                try syncResponse.data.${swiftPropName}.forEach { try $0.save(db) }`;
+  });
+
+  const body = `
+// This extension is generated to provide sync-related database operations.
+extension AppDatabase {
+
+    /**
+     Performs an "upsert" (insert or update) for all records in a \`SyncResponse\`.
+    
+     This method iterates through all the record arrays in the \`SyncResponse.data\` payload
+     and saves each record to the database within a single transaction. If any
+     record fails to save, the entire transaction is rolled back.
+    
+     - Parameter syncResponse: The \`SyncResponse\` containing arrays of records to save.
+     - Returns: A \`Result\` indicating success (\`.success\`) or failure (\`.failure(Error)\`).
+     */
+    func upsert(syncResponse: SyncResponse) -> Result<Void, Error> {
+        do {
+            try dbQueue.writeInTransaction { db in
+${upsertLines.join('\n')}
+
+                return .commit
+            }
+            return .success(())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+`;
+  return header + body;
 }
 
 // --- Main Orchestration ---
 function main() {
   const __dirname = dirname(fileURLToPath(import.meta.url));
   const SCHEMA_PATH = resolve(__dirname, '../../../plan/specs/schema.ts');
-  const targetNames = ['JobRecord', 'ObjectMetadataRecord'];
 
   console.log(`Reading schema from: ${SCHEMA_PATH}`);
-  console.log(`Targeting ${targetNames.length} interfaces: ${targetNames.join(', ')}`);
 
   const project = new Project();
   project.addSourceFileAtPath(SCHEMA_PATH);
 
   const sourceFile = project.getSourceFileOrThrow(SCHEMA_PATH);
 
-  const resolvedInterfaces = resolveInterfaces(sourceFile, targetNames);
+  const resolvedInterfaces = resolveInterfaces(sourceFile);
   const sql = generateSqlSchema(resolvedInterfaces);
 
   const OUTPUT_SQL = resolve(__dirname, '../../../server/init.generated.sql');
-  const header = `-- GENERATED FILE — DO NOT EDIT\n-- Run: npm run build && npm run generate\n`;
+  const header = `-- GENERATED FILE — DO NOT EDIT
+-- Run: npm run build && npm run generate
+`;
   try {
     writeFileSync(OUTPUT_SQL, header + '\n' + sql + '\n');
-    console.log(`\n📝 Wrote SQL to: ${OUTPUT_SQL}`);
+    console.log(`
+📝 Wrote SQL to: ${OUTPUT_SQL}`);
   } catch (err) {
     console.error('Failed to write SQL file:', err);
   }
@@ -549,7 +608,8 @@ function main() {
   const OUTPUT_SWIFT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Models/SyncResponse.generated.swift');
   try {
     writeFileSync(OUTPUT_SWIFT, swift);
-    console.log(`\n📝 Wrote Swift to: ${OUTPUT_SWIFT}`);
+    console.log(`
+📝 Wrote Swift to: ${OUTPUT_SWIFT}`);
   } catch (err) {
     console.error('Failed to write Swift file:', err);
   }
@@ -559,9 +619,42 @@ function main() {
   const OUTPUT_MIGRATOR = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/SchemaMigrator.generated.swift');
   try {
     writeFileSync(OUTPUT_MIGRATOR, swiftMigrator);
-    console.log(`\n📝 Wrote Swift migrator to: ${OUTPUT_MIGRATOR}`);
+    console.log(`
+📝 Wrote Swift migrator to: ${OUTPUT_MIGRATOR}`);
   } catch (err) {
     console.error('Failed to write Swift migrator:', err);
+  }
+
+  // Metadata generation
+  const metadata = generateDefaultMetadata(resolvedInterfaces);
+  const OUTPUT_METADATA = resolve(__dirname, '../output/default-metadata.generated.ts');
+  try {
+    writeFileSync(OUTPUT_METADATA, metadata);
+    console.log(`
+📝 Wrote metadata to: ${OUTPUT_METADATA}`);
+  } catch (err) {
+    console.error('Failed to write metadata file:', err);
+  }
+
+  // Layout generation
+  const layouts = generateDefaultLayouts(resolvedInterfaces);
+  const OUTPUT_LAYOUTS = resolve(__dirname, '../output/default-layouts.generated.ts');
+  try {
+    writeFileSync(OUTPUT_LAYOUTS, layouts);
+    console.log(`
+📝 Wrote layouts to: ${OUTPUT_LAYOUTS}`);
+  } catch (err) {
+    console.error('Failed to write layouts file:', err);
+  }
+
+  // Swift Upsert extension output
+  const swiftUpsert = generateSwiftUpsertExtension(sourceFile);
+  const OUTPUT_UPSERT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/AppDatabase+Sync.generated.swift');
+  try {
+    writeFileSync(OUTPUT_UPSERT, swiftUpsert);
+    console.log(`\n📝 Wrote Swift upsert extension to: ${OUTPUT_UPSERT}`);
+  } catch (err) {
+    console.error('Failed to write Swift upsert extension file:', err);
   }
 
   console.log('\n✅ Generation complete.');
