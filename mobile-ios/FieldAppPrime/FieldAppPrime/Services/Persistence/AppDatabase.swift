@@ -45,6 +45,6 @@ final class AppDatabase: AppDatabaseProtocol {
     }
     
     private var migrator: DatabaseMigrator {
-        SchemaMigrator.migrator()
+        SchemaMigrator.migratorWithFixedTables()
     }
 }

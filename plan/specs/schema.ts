@@ -56,7 +56,7 @@ interface JobData {
   customer_id: string;
 
   /** The primary address where the job will be performed. */
-  job_address?: string;
+  job_address?: Address;
 
   /** A description of the work requested or the problem reported. */
   job_description?: string;

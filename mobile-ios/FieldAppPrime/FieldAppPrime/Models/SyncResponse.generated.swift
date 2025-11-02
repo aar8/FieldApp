@@ -8,7 +8,7 @@ import GRDB
 struct JobData: Codable, Hashable {
     let jobNumber: String
     let customerId: String
-    let jobAddress: String?
+    let jobAddress: Address?
     let jobDescription: String?
     let assignedTechId: String?
     let statusNote: String?
@@ -851,6 +851,21 @@ struct Base: Identifiable, Hashable {
     let objectName: String
     let objectType: String
     let status: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        default:
+            return nil
+        }
+    }
 }
 
 struct Job: Identifiable, Hashable {
@@ -860,18 +875,62 @@ struct Job: Identifiable, Hashable {
     let status: String
     let jobNumber: String
     let customerId: String
-    let jobAddress: String?
+    let jobAddress: Address?
     let jobDescription: String?
     let assignedTechId: String?
     let statusNote: String?
     let quoteId: String?
     let equipmentId: String?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "job_number", "jobNumber":
+            return jobNumber
+        case "customer_id", "customerId":
+            return customerId
+        case "job_address", "jobAddress":
+            return jobAddress
+        case "job_description", "jobDescription":
+            return jobDescription
+        case "assigned_tech_id", "assignedTechId":
+            return assignedTechId
+        case "status_note", "statusNote":
+            return statusNote
+        case "quote_id", "quoteId":
+            return quoteId
+        case "equipment_id", "equipmentId":
+            return equipmentId
+        default:
+            return nil
+        }
+    }
 }
 
 struct Tenant: Identifiable, Hashable {
     let id: String
     let name: String
     let plan: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "name":
+            return name
+        case "plan":
+            return plan
+        default:
+            return nil
+        }
+    }
 }
 
 struct User: Identifiable, Hashable {
@@ -882,6 +941,27 @@ struct User: Identifiable, Hashable {
     let email: String
     let displayName: String
     let role: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "email":
+            return email
+        case "display_name", "displayName":
+            return displayName
+        case "role":
+            return role
+        default:
+            return nil
+        }
+    }
 }
 
 struct Customer: Identifiable, Hashable {
@@ -892,6 +972,27 @@ struct Customer: Identifiable, Hashable {
     let name: String
     let contact: ContactInfo?
     let address: Address?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "name":
+            return name
+        case "contact":
+            return contact
+        case "address":
+            return address
+        default:
+            return nil
+        }
+    }
 }
 
 struct CalendarEvent: Identifiable, Hashable {
@@ -905,6 +1006,33 @@ struct CalendarEvent: Identifiable, Hashable {
     let isAllDay: Bool?
     let jobId: String?
     let userId: String?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "title":
+            return title
+        case "start_time", "startTime":
+            return startTime
+        case "end_time", "endTime":
+            return endTime
+        case "is_all_day", "isAllDay":
+            return isAllDay
+        case "job_id", "jobId":
+            return jobId
+        case "user_id", "userId":
+            return userId
+        default:
+            return nil
+        }
+    }
 }
 
 struct Pricebook: Identifiable, Hashable {
@@ -916,6 +1044,29 @@ struct Pricebook: Identifiable, Hashable {
     let description: String?
     let isActive: Bool
     let currency: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "name":
+            return name
+        case "description":
+            return description
+        case "is_active", "isActive":
+            return isActive
+        case "currency":
+            return currency
+        default:
+            return nil
+        }
+    }
 }
 
 struct Product: Identifiable, Hashable {
@@ -927,6 +1078,29 @@ struct Product: Identifiable, Hashable {
     let description: String?
     let productCode: String?
     let type: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "name":
+            return name
+        case "description":
+            return description
+        case "product_code", "productCode":
+            return productCode
+        case "type":
+            return type
+        default:
+            return nil
+        }
+    }
 }
 
 struct Location: Identifiable, Hashable {
@@ -936,6 +1110,25 @@ struct Location: Identifiable, Hashable {
     let status: String
     let name: String
     let address: Address?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "name":
+            return name
+        case "address":
+            return address
+        default:
+            return nil
+        }
+    }
 }
 
 struct ProductItem: Identifiable, Hashable {
@@ -946,6 +1139,27 @@ struct ProductItem: Identifiable, Hashable {
     let quantityOnHand: Double
     let productId: String
     let locationId: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "quantity_on_hand", "quantityOnHand":
+            return quantityOnHand
+        case "product_id", "productId":
+            return productId
+        case "location_id", "locationId":
+            return locationId
+        default:
+            return nil
+        }
+    }
 }
 
 struct PricebookEntry: Identifiable, Hashable {
@@ -957,6 +1171,29 @@ struct PricebookEntry: Identifiable, Hashable {
     let currency: String
     let pricebookId: String
     let productId: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "price":
+            return price
+        case "currency":
+            return currency
+        case "pricebook_id", "pricebookId":
+            return pricebookId
+        case "product_id", "productId":
+            return productId
+        default:
+            return nil
+        }
+    }
 }
 
 struct JobLineItem: Identifiable, Hashable {
@@ -969,6 +1206,31 @@ struct JobLineItem: Identifiable, Hashable {
     let description: String?
     let jobId: String
     let productId: String
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "quantity":
+            return quantity
+        case "price_at_time_of_sale", "priceAtTimeOfSale":
+            return priceAtTimeOfSale
+        case "description":
+            return description
+        case "job_id", "jobId":
+            return jobId
+        case "product_id", "productId":
+            return productId
+        default:
+            return nil
+        }
+    }
 }
 
 struct Quote: Identifiable, Hashable {
@@ -985,6 +1247,39 @@ struct Quote: Identifiable, Hashable {
     let notes: String?
     let preparedBy: String?
     let lineItemIds: [String]?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "quote_number", "quoteNumber":
+            return quoteNumber
+        case "customer_id", "customerId":
+            return customerId
+        case "pricebook_id", "pricebookId":
+            return pricebookId
+        case "total_amount", "totalAmount":
+            return totalAmount
+        case "currency":
+            return currency
+        case "quote_status", "quoteStatus":
+            return quoteStatus
+        case "notes":
+            return notes
+        case "prepared_by", "preparedBy":
+            return preparedBy
+        case "line_item_ids", "lineItemIds":
+            return lineItemIds
+        default:
+            return nil
+        }
+    }
 }
 
 struct ObjectFeed: Identifiable, Hashable {
@@ -998,6 +1293,33 @@ struct ObjectFeed: Identifiable, Hashable {
     let message: String?
     let authorId: String?
     let attachmentIds: [String]?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "related_object_name", "relatedObjectName":
+            return relatedObjectName
+        case "related_record_id", "relatedRecordId":
+            return relatedRecordId
+        case "entry_type", "entryType":
+            return entryType
+        case "message":
+            return message
+        case "author_id", "authorId":
+            return authorId
+        case "attachment_ids", "attachmentIds":
+            return attachmentIds
+        default:
+            return nil
+        }
+    }
 }
 
 struct Invoice: Identifiable, Hashable {
@@ -1020,6 +1342,51 @@ struct Invoice: Identifiable, Hashable {
     let notes: String?
     let issuedBy: String?
     let lineItemIds: [String]?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "invoice_number", "invoiceNumber":
+            return invoiceNumber
+        case "customer_id", "customerId":
+            return customerId
+        case "job_id", "jobId":
+            return jobId
+        case "quote_id", "quoteId":
+            return quoteId
+        case "subtotal_amount", "subtotalAmount":
+            return subtotalAmount
+        case "tax_amount", "taxAmount":
+            return taxAmount
+        case "discount_amount", "discountAmount":
+            return discountAmount
+        case "total_amount", "totalAmount":
+            return totalAmount
+        case "currency":
+            return currency
+        case "issue_date", "issueDate":
+            return issueDate
+        case "due_date", "dueDate":
+            return dueDate
+        case "payment_status", "paymentStatus":
+            return paymentStatus
+        case "notes":
+            return notes
+        case "issued_by", "issuedBy":
+            return issuedBy
+        case "line_item_ids", "lineItemIds":
+            return lineItemIds
+        default:
+            return nil
+        }
+    }
 }
 
 struct InvoiceLineItem: Identifiable, Hashable {
@@ -1034,12 +1401,54 @@ struct InvoiceLineItem: Identifiable, Hashable {
     let productId: String
     let taxRate: Double?
     let discountAmount: Double?
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "quantity":
+            return quantity
+        case "price_at_time_of_invoice", "priceAtTimeOfInvoice":
+            return priceAtTimeOfInvoice
+        case "description":
+            return description
+        case "invoice_id", "invoiceId":
+            return invoiceId
+        case "product_id", "productId":
+            return productId
+        case "tax_rate", "taxRate":
+            return taxRate
+        case "discount_amount", "discountAmount":
+            return discountAmount
+        default:
+            return nil
+        }
+    }
 }
 
 struct ObjectMetadata: Identifiable, Hashable {
     let id: String
     let objectName: String
     let fieldDefinitions: [FieldDefinition]
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "field_definitions", "fieldDefinitions":
+            return fieldDefinitions
+        default:
+            return nil
+        }
+    }
 }
 
 struct LayoutDefinition: Identifiable, Hashable {
@@ -1048,4 +1457,21 @@ struct LayoutDefinition: Identifiable, Hashable {
     let objectType: String
     let status: String
     let sections: [LayoutSection]
+
+    func value(for key: String) -> Any? {
+        switch key {
+        case "id":
+            return id
+        case "object_name", "objectName":
+            return objectName
+        case "object_type", "objectType":
+            return objectType
+        case "status":
+            return status
+        case "sections":
+            return sections
+        default:
+            return nil
+        }
+    }
 }

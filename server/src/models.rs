@@ -10,7 +10,7 @@ use rusqlite::Row;
 pub struct JobData {
     pub job_number: String,
     pub customer_id: String,
-    pub job_address: Option<String>,
+    pub job_address: Option<Address>,
     pub job_description: Option<String>,
     pub assigned_tech_id: Option<String>,
     pub status_note: Option<String>,

@@ -19,20 +19,23 @@
 - [x] Wire up tap gesture on job list to navigate to detail view
 
 ### Current Sprint: Metadata-Driven Detail/Edit View
-- [ ] Query layout_definitions table for job + status to get field list
-- [ ] Query object_metadata table to get field type definitions
-- [ ] Render first field from metadata as a static label (proof of concept)
-- [ ] add object metadata mvp data
-- [ ] sync down object metadata
-- [ ] define layout format
+- [x] Query layout_definitions table for job + status to get field list
+- [x] Query object_metadata table to get field type definitions
+- [x] Render first field from metadata as a static label (proof of concept)
+- [x] Generate value(for:) method for dynamic field access
+- [x] Render ALL layout fields in form with actual values
+- [x] add object metadata mvp data
+- [x] sync down object metadata
+- [x] define layout format
 
 ### Next: Local Edit & Save Flow
-- [ ] iOS editing plan
-- [ ] Make fields editable in the detail view
-- [ ] Implement save button that updates local DB
-- [ ] Increment version number on save
-- [ ] Update updated_at timestamp
-- [ ] Verify changes persist after app restart
+- [x] Make one field editable (TextField for job_description)
+- [x] Add Save button to detail view
+- [x] Wire Save button to stub function (prints for now)
+- [ ] Design overlay table schema
+- [ ] Add overlay table to schema.ts and regenerate
+- [ ] Implement actual save to overlay table
+- [ ] Verify overlay changes persist after app restart
 
 ### Future: Sync Upload Engine
 - [ ] Build change tracking system (detect modified records since last sync)

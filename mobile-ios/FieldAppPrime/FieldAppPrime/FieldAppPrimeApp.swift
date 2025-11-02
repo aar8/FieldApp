@@ -58,7 +58,7 @@ struct FieldAppPrimeApp: App {
         self.viewFactory = viewFactory
 
         metadataService.hostURL = URL(string: "http://localhost:8080")
-        metadataService.tenantID = "74a6cb9e-8df7-4107-b729-c2ad15284745"
+        metadataService.tenantID = "7f33e4b0-2ba2-4084-bbda-57d6268d7ccb"
         
         syncCoordinator.foreground()
     }
