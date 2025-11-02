@@ -852,18 +852,43 @@ struct Base: Identifiable, Hashable {
     let objectType: String
     let status: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
         }
     }
 }
@@ -882,34 +907,83 @@ struct Job: Identifiable, Hashable {
     let quoteId: String?
     let equipmentId: String?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "job_number", "jobNumber":
-            return jobNumber
-        case "customer_id", "customerId":
-            return customerId
-        case "job_address", "jobAddress":
-            return jobAddress
-        case "job_description", "jobDescription":
-            return jobDescription
-        case "assigned_tech_id", "assignedTechId":
-            return assignedTechId
-        case "status_note", "statusNote":
-            return statusNote
-        case "quote_id", "quoteId":
-            return quoteId
-        case "equipment_id", "equipmentId":
-            return equipmentId
-        default:
-            return nil
+    enum Field: String, Hashable, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case jobNumber
+        case customerId
+        case jobAddress
+        case jobDescription
+        case assignedTechId
+        case statusNote
+        case quoteId
+        case equipmentId
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .jobNumber: return "job_number"
+            case .customerId: return "customer_id"
+            case .jobAddress: return "job_address"
+            case .jobDescription: return "job_description"
+            case .assignedTechId: return "assigned_tech_id"
+            case .statusNote: return "status_note"
+            case .quoteId: return "quote_id"
+            case .equipmentId: return "equipment_id"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "job_number", "jobNumber":
+                return .jobNumber
+            case "customer_id", "customerId":
+                return .customerId
+            case "job_address", "jobAddress":
+                return .jobAddress
+            case "job_description", "jobDescription":
+                return .jobDescription
+            case "assigned_tech_id", "assignedTechId":
+                return .assignedTechId
+            case "status_note", "statusNote":
+                return .statusNote
+            case "quote_id", "quoteId":
+                return .quoteId
+            case "equipment_id", "equipmentId":
+                return .equipmentId
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .jobNumber: return jobNumber
+        case .customerId: return customerId
+        case .jobAddress: return jobAddress
+        case .jobDescription: return jobDescription
+        case .assignedTechId: return assignedTechId
+        case .statusNote: return statusNote
+        case .quoteId: return quoteId
+        case .equipmentId: return equipmentId
         }
     }
 }
@@ -919,16 +993,38 @@ struct Tenant: Identifiable, Hashable {
     let name: String
     let plan: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "name":
-            return name
-        case "plan":
-            return plan
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case name
+        case plan
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .name: return "name"
+            case .plan: return "plan"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "name":
+                return .name
+            case "plan":
+                return .plan
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .name: return name
+        case .plan: return plan
         }
     }
 }
@@ -942,24 +1038,58 @@ struct User: Identifiable, Hashable {
     let displayName: String
     let role: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "email":
-            return email
-        case "display_name", "displayName":
-            return displayName
-        case "role":
-            return role
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case email
+        case displayName
+        case role
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .email: return "email"
+            case .displayName: return "display_name"
+            case .role: return "role"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "email":
+                return .email
+            case "display_name", "displayName":
+                return .displayName
+            case "role":
+                return .role
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .email: return email
+        case .displayName: return displayName
+        case .role: return role
         }
     }
 }
@@ -973,24 +1103,58 @@ struct Customer: Identifiable, Hashable {
     let contact: ContactInfo?
     let address: Address?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "name":
-            return name
-        case "contact":
-            return contact
-        case "address":
-            return address
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case name
+        case contact
+        case address
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .name: return "name"
+            case .contact: return "contact"
+            case .address: return "address"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "name":
+                return .name
+            case "contact":
+                return .contact
+            case "address":
+                return .address
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .name: return name
+        case .contact: return contact
+        case .address: return address
         }
     }
 }
@@ -1007,30 +1171,73 @@ struct CalendarEvent: Identifiable, Hashable {
     let jobId: String?
     let userId: String?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "title":
-            return title
-        case "start_time", "startTime":
-            return startTime
-        case "end_time", "endTime":
-            return endTime
-        case "is_all_day", "isAllDay":
-            return isAllDay
-        case "job_id", "jobId":
-            return jobId
-        case "user_id", "userId":
-            return userId
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case title
+        case startTime
+        case endTime
+        case isAllDay
+        case jobId
+        case userId
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .title: return "title"
+            case .startTime: return "start_time"
+            case .endTime: return "end_time"
+            case .isAllDay: return "is_all_day"
+            case .jobId: return "job_id"
+            case .userId: return "user_id"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "title":
+                return .title
+            case "start_time", "startTime":
+                return .startTime
+            case "end_time", "endTime":
+                return .endTime
+            case "is_all_day", "isAllDay":
+                return .isAllDay
+            case "job_id", "jobId":
+                return .jobId
+            case "user_id", "userId":
+                return .userId
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .title: return title
+        case .startTime: return startTime
+        case .endTime: return endTime
+        case .isAllDay: return isAllDay
+        case .jobId: return jobId
+        case .userId: return userId
         }
     }
 }
@@ -1045,26 +1252,63 @@ struct Pricebook: Identifiable, Hashable {
     let isActive: Bool
     let currency: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "name":
-            return name
-        case "description":
-            return description
-        case "is_active", "isActive":
-            return isActive
-        case "currency":
-            return currency
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case name
+        case description
+        case isActive
+        case currency
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .name: return "name"
+            case .description: return "description"
+            case .isActive: return "is_active"
+            case .currency: return "currency"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "name":
+                return .name
+            case "description":
+                return .description
+            case "is_active", "isActive":
+                return .isActive
+            case "currency":
+                return .currency
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .name: return name
+        case .description: return description
+        case .isActive: return isActive
+        case .currency: return currency
         }
     }
 }
@@ -1079,26 +1323,63 @@ struct Product: Identifiable, Hashable {
     let productCode: String?
     let type: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "name":
-            return name
-        case "description":
-            return description
-        case "product_code", "productCode":
-            return productCode
-        case "type":
-            return type
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case name
+        case description
+        case productCode
+        case type
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .name: return "name"
+            case .description: return "description"
+            case .productCode: return "product_code"
+            case .type: return "type"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "name":
+                return .name
+            case "description":
+                return .description
+            case "product_code", "productCode":
+                return .productCode
+            case "type":
+                return .type
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .name: return name
+        case .description: return description
+        case .productCode: return productCode
+        case .type: return type
         }
     }
 }
@@ -1111,22 +1392,53 @@ struct Location: Identifiable, Hashable {
     let name: String
     let address: Address?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "name":
-            return name
-        case "address":
-            return address
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case name
+        case address
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .name: return "name"
+            case .address: return "address"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "name":
+                return .name
+            case "address":
+                return .address
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .name: return name
+        case .address: return address
         }
     }
 }
@@ -1140,24 +1452,58 @@ struct ProductItem: Identifiable, Hashable {
     let productId: String
     let locationId: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "quantity_on_hand", "quantityOnHand":
-            return quantityOnHand
-        case "product_id", "productId":
-            return productId
-        case "location_id", "locationId":
-            return locationId
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case quantityOnHand
+        case productId
+        case locationId
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .quantityOnHand: return "quantity_on_hand"
+            case .productId: return "product_id"
+            case .locationId: return "location_id"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "quantity_on_hand", "quantityOnHand":
+                return .quantityOnHand
+            case "product_id", "productId":
+                return .productId
+            case "location_id", "locationId":
+                return .locationId
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .quantityOnHand: return quantityOnHand
+        case .productId: return productId
+        case .locationId: return locationId
         }
     }
 }
@@ -1172,26 +1518,63 @@ struct PricebookEntry: Identifiable, Hashable {
     let pricebookId: String
     let productId: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "price":
-            return price
-        case "currency":
-            return currency
-        case "pricebook_id", "pricebookId":
-            return pricebookId
-        case "product_id", "productId":
-            return productId
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case price
+        case currency
+        case pricebookId
+        case productId
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .price: return "price"
+            case .currency: return "currency"
+            case .pricebookId: return "pricebook_id"
+            case .productId: return "product_id"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "price":
+                return .price
+            case "currency":
+                return .currency
+            case "pricebook_id", "pricebookId":
+                return .pricebookId
+            case "product_id", "productId":
+                return .productId
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .price: return price
+        case .currency: return currency
+        case .pricebookId: return pricebookId
+        case .productId: return productId
         }
     }
 }
@@ -1207,28 +1590,68 @@ struct JobLineItem: Identifiable, Hashable {
     let jobId: String
     let productId: String
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "quantity":
-            return quantity
-        case "price_at_time_of_sale", "priceAtTimeOfSale":
-            return priceAtTimeOfSale
-        case "description":
-            return description
-        case "job_id", "jobId":
-            return jobId
-        case "product_id", "productId":
-            return productId
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case quantity
+        case priceAtTimeOfSale
+        case description
+        case jobId
+        case productId
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .quantity: return "quantity"
+            case .priceAtTimeOfSale: return "price_at_time_of_sale"
+            case .description: return "description"
+            case .jobId: return "job_id"
+            case .productId: return "product_id"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "quantity":
+                return .quantity
+            case "price_at_time_of_sale", "priceAtTimeOfSale":
+                return .priceAtTimeOfSale
+            case "description":
+                return .description
+            case "job_id", "jobId":
+                return .jobId
+            case "product_id", "productId":
+                return .productId
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .quantity: return quantity
+        case .priceAtTimeOfSale: return priceAtTimeOfSale
+        case .description: return description
+        case .jobId: return jobId
+        case .productId: return productId
         }
     }
 }
@@ -1248,36 +1671,88 @@ struct Quote: Identifiable, Hashable {
     let preparedBy: String?
     let lineItemIds: [String]?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "quote_number", "quoteNumber":
-            return quoteNumber
-        case "customer_id", "customerId":
-            return customerId
-        case "pricebook_id", "pricebookId":
-            return pricebookId
-        case "total_amount", "totalAmount":
-            return totalAmount
-        case "currency":
-            return currency
-        case "quote_status", "quoteStatus":
-            return quoteStatus
-        case "notes":
-            return notes
-        case "prepared_by", "preparedBy":
-            return preparedBy
-        case "line_item_ids", "lineItemIds":
-            return lineItemIds
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case quoteNumber
+        case customerId
+        case pricebookId
+        case totalAmount
+        case currency
+        case quoteStatus
+        case notes
+        case preparedBy
+        case lineItemIds
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .quoteNumber: return "quote_number"
+            case .customerId: return "customer_id"
+            case .pricebookId: return "pricebook_id"
+            case .totalAmount: return "total_amount"
+            case .currency: return "currency"
+            case .quoteStatus: return "quote_status"
+            case .notes: return "notes"
+            case .preparedBy: return "prepared_by"
+            case .lineItemIds: return "line_item_ids"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "quote_number", "quoteNumber":
+                return .quoteNumber
+            case "customer_id", "customerId":
+                return .customerId
+            case "pricebook_id", "pricebookId":
+                return .pricebookId
+            case "total_amount", "totalAmount":
+                return .totalAmount
+            case "currency":
+                return .currency
+            case "quote_status", "quoteStatus":
+                return .quoteStatus
+            case "notes":
+                return .notes
+            case "prepared_by", "preparedBy":
+                return .preparedBy
+            case "line_item_ids", "lineItemIds":
+                return .lineItemIds
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .quoteNumber: return quoteNumber
+        case .customerId: return customerId
+        case .pricebookId: return pricebookId
+        case .totalAmount: return totalAmount
+        case .currency: return currency
+        case .quoteStatus: return quoteStatus
+        case .notes: return notes
+        case .preparedBy: return preparedBy
+        case .lineItemIds: return lineItemIds
         }
     }
 }
@@ -1294,30 +1769,73 @@ struct ObjectFeed: Identifiable, Hashable {
     let authorId: String?
     let attachmentIds: [String]?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "related_object_name", "relatedObjectName":
-            return relatedObjectName
-        case "related_record_id", "relatedRecordId":
-            return relatedRecordId
-        case "entry_type", "entryType":
-            return entryType
-        case "message":
-            return message
-        case "author_id", "authorId":
-            return authorId
-        case "attachment_ids", "attachmentIds":
-            return attachmentIds
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case relatedObjectName
+        case relatedRecordId
+        case entryType
+        case message
+        case authorId
+        case attachmentIds
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .relatedObjectName: return "related_object_name"
+            case .relatedRecordId: return "related_record_id"
+            case .entryType: return "entry_type"
+            case .message: return "message"
+            case .authorId: return "author_id"
+            case .attachmentIds: return "attachment_ids"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "related_object_name", "relatedObjectName":
+                return .relatedObjectName
+            case "related_record_id", "relatedRecordId":
+                return .relatedRecordId
+            case "entry_type", "entryType":
+                return .entryType
+            case "message":
+                return .message
+            case "author_id", "authorId":
+                return .authorId
+            case "attachment_ids", "attachmentIds":
+                return .attachmentIds
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .relatedObjectName: return relatedObjectName
+        case .relatedRecordId: return relatedRecordId
+        case .entryType: return entryType
+        case .message: return message
+        case .authorId: return authorId
+        case .attachmentIds: return attachmentIds
         }
     }
 }
@@ -1343,48 +1861,118 @@ struct Invoice: Identifiable, Hashable {
     let issuedBy: String?
     let lineItemIds: [String]?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "invoice_number", "invoiceNumber":
-            return invoiceNumber
-        case "customer_id", "customerId":
-            return customerId
-        case "job_id", "jobId":
-            return jobId
-        case "quote_id", "quoteId":
-            return quoteId
-        case "subtotal_amount", "subtotalAmount":
-            return subtotalAmount
-        case "tax_amount", "taxAmount":
-            return taxAmount
-        case "discount_amount", "discountAmount":
-            return discountAmount
-        case "total_amount", "totalAmount":
-            return totalAmount
-        case "currency":
-            return currency
-        case "issue_date", "issueDate":
-            return issueDate
-        case "due_date", "dueDate":
-            return dueDate
-        case "payment_status", "paymentStatus":
-            return paymentStatus
-        case "notes":
-            return notes
-        case "issued_by", "issuedBy":
-            return issuedBy
-        case "line_item_ids", "lineItemIds":
-            return lineItemIds
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case invoiceNumber
+        case customerId
+        case jobId
+        case quoteId
+        case subtotalAmount
+        case taxAmount
+        case discountAmount
+        case totalAmount
+        case currency
+        case issueDate
+        case dueDate
+        case paymentStatus
+        case notes
+        case issuedBy
+        case lineItemIds
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .invoiceNumber: return "invoice_number"
+            case .customerId: return "customer_id"
+            case .jobId: return "job_id"
+            case .quoteId: return "quote_id"
+            case .subtotalAmount: return "subtotal_amount"
+            case .taxAmount: return "tax_amount"
+            case .discountAmount: return "discount_amount"
+            case .totalAmount: return "total_amount"
+            case .currency: return "currency"
+            case .issueDate: return "issue_date"
+            case .dueDate: return "due_date"
+            case .paymentStatus: return "payment_status"
+            case .notes: return "notes"
+            case .issuedBy: return "issued_by"
+            case .lineItemIds: return "line_item_ids"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "invoice_number", "invoiceNumber":
+                return .invoiceNumber
+            case "customer_id", "customerId":
+                return .customerId
+            case "job_id", "jobId":
+                return .jobId
+            case "quote_id", "quoteId":
+                return .quoteId
+            case "subtotal_amount", "subtotalAmount":
+                return .subtotalAmount
+            case "tax_amount", "taxAmount":
+                return .taxAmount
+            case "discount_amount", "discountAmount":
+                return .discountAmount
+            case "total_amount", "totalAmount":
+                return .totalAmount
+            case "currency":
+                return .currency
+            case "issue_date", "issueDate":
+                return .issueDate
+            case "due_date", "dueDate":
+                return .dueDate
+            case "payment_status", "paymentStatus":
+                return .paymentStatus
+            case "notes":
+                return .notes
+            case "issued_by", "issuedBy":
+                return .issuedBy
+            case "line_item_ids", "lineItemIds":
+                return .lineItemIds
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .invoiceNumber: return invoiceNumber
+        case .customerId: return customerId
+        case .jobId: return jobId
+        case .quoteId: return quoteId
+        case .subtotalAmount: return subtotalAmount
+        case .taxAmount: return taxAmount
+        case .discountAmount: return discountAmount
+        case .totalAmount: return totalAmount
+        case .currency: return currency
+        case .issueDate: return issueDate
+        case .dueDate: return dueDate
+        case .paymentStatus: return paymentStatus
+        case .notes: return notes
+        case .issuedBy: return issuedBy
+        case .lineItemIds: return lineItemIds
         }
     }
 }
@@ -1402,32 +1990,78 @@ struct InvoiceLineItem: Identifiable, Hashable {
     let taxRate: Double?
     let discountAmount: Double?
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "quantity":
-            return quantity
-        case "price_at_time_of_invoice", "priceAtTimeOfInvoice":
-            return priceAtTimeOfInvoice
-        case "description":
-            return description
-        case "invoice_id", "invoiceId":
-            return invoiceId
-        case "product_id", "productId":
-            return productId
-        case "tax_rate", "taxRate":
-            return taxRate
-        case "discount_amount", "discountAmount":
-            return discountAmount
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case quantity
+        case priceAtTimeOfInvoice
+        case description
+        case invoiceId
+        case productId
+        case taxRate
+        case discountAmount
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .quantity: return "quantity"
+            case .priceAtTimeOfInvoice: return "price_at_time_of_invoice"
+            case .description: return "description"
+            case .invoiceId: return "invoice_id"
+            case .productId: return "product_id"
+            case .taxRate: return "tax_rate"
+            case .discountAmount: return "discount_amount"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "quantity":
+                return .quantity
+            case "price_at_time_of_invoice", "priceAtTimeOfInvoice":
+                return .priceAtTimeOfInvoice
+            case "description":
+                return .description
+            case "invoice_id", "invoiceId":
+                return .invoiceId
+            case "product_id", "productId":
+                return .productId
+            case "tax_rate", "taxRate":
+                return .taxRate
+            case "discount_amount", "discountAmount":
+                return .discountAmount
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .quantity: return quantity
+        case .priceAtTimeOfInvoice: return priceAtTimeOfInvoice
+        case .description: return description
+        case .invoiceId: return invoiceId
+        case .productId: return productId
+        case .taxRate: return taxRate
+        case .discountAmount: return discountAmount
         }
     }
 }
@@ -1437,16 +2071,38 @@ struct ObjectMetadata: Identifiable, Hashable {
     let objectName: String
     let fieldDefinitions: [FieldDefinition]
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "field_definitions", "fieldDefinitions":
-            return fieldDefinitions
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case fieldDefinitions
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .fieldDefinitions: return "field_definitions"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "field_definitions", "fieldDefinitions":
+                return .fieldDefinitions
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .fieldDefinitions: return fieldDefinitions
         }
     }
 }
@@ -1458,20 +2114,48 @@ struct LayoutDefinition: Identifiable, Hashable {
     let status: String
     let sections: [LayoutSection]
 
-    func value(for key: String) -> Any? {
-        switch key {
-        case "id":
-            return id
-        case "object_name", "objectName":
-            return objectName
-        case "object_type", "objectType":
-            return objectType
-        case "status":
-            return status
-        case "sections":
-            return sections
-        default:
-            return nil
+    enum Field: String, CaseIterable {
+        case id
+        case objectName
+        case objectType
+        case status
+        case sections
+
+        var key: String {
+            switch self {
+            case .id: return "id"
+            case .objectName: return "object_name"
+            case .objectType: return "object_type"
+            case .status: return "status"
+            case .sections: return "sections"
+            }
+        }
+
+        static func from(name: String) -> Field? {
+            switch name {
+            case "id":
+                return .id
+            case "object_name", "objectName":
+                return .objectName
+            case "object_type", "objectType":
+                return .objectType
+            case "status":
+                return .status
+            case "sections":
+                return .sections
+            default:
+                return nil
+            }
+        }
+    }
+
+    func value(for field: Field) -> Any? {
+        switch field {
+        case .id: return id
+        case .objectName: return objectName
+        case .objectType: return objectType
+        case .status: return status
+        case .sections: return sections
         }
     }
 }

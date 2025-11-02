@@ -46,11 +46,12 @@ struct JobDetailView: View {
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Button(isEditing ? "Done" : "Edit") {
+                    Button(isEditing ? "Save" : "Edit") {
                         if isEditing {
                             // TODO: viewModel.save(edits: edits)
-                            print("Saving edits: \(edits)")
-                            edits = [:]
+//                            print("Saving edits: \(edits)")
+//                            edits = [:]
+                            viewModel.saveChanges(edits)
                         }
                         isEditing.toggle()
                     }

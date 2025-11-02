@@ -52,7 +52,7 @@ function parsePropertyTags(prop: PropertySignature): { referenceTarget?: string;
   const tags = prop.getJsDocs().flatMap(d => d.getTags());
   for (const t of tags) {
     const anyTag = t as any;
-    const raw = anyTag.getTagNameNode?.()?.getText?.() ?? t.getName();
+    const raw = anyTag.getTagNameNode?.()?.getText?.() ?? t.getTagName();
     const comment = (anyTag.getCommentText?.() ?? t.getComment() ?? '').toString().trim();
     if (raw === 'reference') {
       referenceTarget = (comment.split(/\s+/)[0] || '').trim() || undefined;
@@ -254,13 +254,20 @@ function generateRecordModelMapper(intf: ResolvedInterface): string {
   const dataInner = dataProp.isSqlJson ? dataProp.type : undefined;
   if (!dataInner) return '';
 
+  const optionalArgs = ['id', 'object_name', 'object_type', 'status']
+    .filter(name => intf.properties.some(p => p.name === name))
+    .map(name => {
+      const camel = toCamelFromSnake(name);
+      return `${camel}: ${camel}`;
+    });
+
   const modelName = intf.name.replace(/Record$/, '');
   const fields = dataInner.getProperties().map(sym => {
     const nm = sym.getName();
     const camel = toCamelFromSnake(nm);
     return `${camel}: data.${camel}`;
   });
-  const args = ['id: id', ...fields].join(', ');
+  const args = [...optionalArgs, ...fields].join(', ');
   return [
     `    var model: ${modelName} {`,
     `        ${modelName}(${args})`,
@@ -286,14 +293,64 @@ function generateSwiftModels(resolved: ResolvedInterface[]): string {
       const t = decl?.getType?.() || sym.getDeclaredType();
       const swiftType = mapTsDataTypeToSwift(t as Type, name);
       const optional = !!(decl?.hasQuestionToken?.());
-      return { camel, swiftType, optional };
+      return { name, camel, swiftType, optional };
     });
 
+    const baseFieldNames = ['id', 'object_name', 'object_type', 'status'];
+    const optionalProps = baseFieldNames
+      .filter(name => intf.properties.some(p => p.name === name))
+      .map(name => ({ name, camel: toCamelFromSnake(name) }));
+    const optionalFieldLines = optionalProps.map(p => `    let ${p.camel}: String`);
+
     const modelName = intf.name.replace(/Record$/, '');
+    const allFields = [
+      ...optionalProps.map(p => ({ name: p.name, camel: p.camel })),
+      ...modelFields.map(f => ({ name: f.name, camel: f.camel })),
+    ];
+
+    const fieldEnumCases = allFields.map(f => `        case ${f.camel}`);
+    
+    const fromNameCases = allFields.map(f => {
+        const keys = f.camel === f.name ? [`\"${f.name}\"`] : [`\"${f.name}\"`, `\"${f.camel}\"`];
+        return `            case ${keys.join(', ')}:\n                return .${f.camel}`;
+    });
+
+    const fieldEnumLines = [
+      '',
+      '    enum Field: String, CaseIterable {',
+      ...fieldEnumCases,
+      '',
+      '        var key: String {',
+      '            switch self {',
+      ...allFields.map(f => `            case .${f.camel}: return "${f.name}"`),
+      '            }',
+      '        }',
+      '',
+      '        static func from(name: String) -> Field? {',
+      '            switch name {',
+      ...fromNameCases,
+      '            default:',
+      '                return nil',
+      '            }',
+      '        }',
+      '    }',
+    ];
+    
+    const valueForFieldLines = [
+        '',
+        '    func value(for field: Field) -> Any? {',
+        '        switch field {',
+        ...allFields.map(f => `        case .${f.camel}: return ${f.camel}`),
+        '        }',
+        '    }',
+    ];
+
     const lines = [
       `struct ${modelName}: Identifiable, Hashable {`,
-      `    let id: String`,
+      ...optionalFieldLines,
       ...modelFields.map(f => `    let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`),
+      ...fieldEnumLines,
+      ...valueForFieldLines,
       `}`,
     ];
     blocks.push(lines.join('\n'));
@@ -450,8 +507,8 @@ export const defaultMetadata: ObjectMetadataRecord[] = [`;
         metaType = 'bool';
       } else if (fieldType.isUnion()) {
         // Check for string literal unions (picklist)
-        const types = fieldType.getUnionTypes();
-        const allStringLiterals = types.every(t => t.isStringLiteral() || t.isUndefined());
+        const types: Type[] = fieldType.getUnionTypes();
+        const allStringLiterals = types.every((t: Type) => t.isStringLiteral() || t.isUndefined());
         if (allStringLiterals) {
           metaType = 'picklist';
         }
@@ -547,7 +604,7 @@ import GRDB
 
   const body = `
 // This extension is generated to provide sync-related database operations.
-extension AppDatabase {
+extension DefaultDatabaseService {
 
     /**
      Performs an "upsert" (insert or update) for all records in a \`SyncResponse\`.
@@ -649,7 +706,7 @@ function main() {
 
   // Swift Upsert extension output
   const swiftUpsert = generateSwiftUpsertExtension(sourceFile);
-  const OUTPUT_UPSERT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/AppDatabase+Sync.generated.swift');
+  const OUTPUT_UPSERT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/DefaultDatabaseService+Sync.generated.swift');
   try {
     writeFileSync(OUTPUT_UPSERT, swiftUpsert);
     console.log(`\n📝 Wrote Swift upsert extension to: ${OUTPUT_UPSERT}`);

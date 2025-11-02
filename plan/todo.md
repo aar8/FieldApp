@@ -77,6 +77,15 @@
 ## Backlog Ideas
 - [ ] Fix seed script tenant_id generation: generates new UUID every run, requires manual copy to iOS app
   - Options: hardcoded dev tenant_id, config file, or CLI flag
+- [ ] Implement changeset-based sync for real-time updates
+  - Server logs all changes to changes table with changeset IDs
+  - Clients can request "changes since changeset X" instead of full sync
+  - Foundation for WebSocket delta broadcasting
+  - More efficient than polling full sync
+- [ ] Changes table scaling: Implement retention window or archival strategy
+  - Problem: Unbounded growth as edit history accumulates
+  - Solution options: 30-day retention, partition by time, changeset compaction, or move server to Postgres
+  - When: Address when changes table hits 1M+ rows
 - [ ] Budgey: Personal finance app using the same kernel (has Plaid integration already working)
   - Note: On hold until FieldApp generates revenue
   - Would validate kernel works across domains
