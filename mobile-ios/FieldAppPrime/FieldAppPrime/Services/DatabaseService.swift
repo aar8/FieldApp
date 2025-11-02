@@ -12,11 +12,11 @@ protocol DatabaseService {
     /// Upserts all records from a sync response into the database in a single transaction.
     /// - Parameter syncResponse: The response from the server containing records to upsert.
     /// - Returns: A `Result` indicating success or failure.
-     func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
+    func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
     
-    /// Fetches all layout definitions from the database, sorted by object name.
-    /// - Returns: A `Result` containing an array of `LayoutDefinition` or an error.
     func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error>
+    func fetchObjectMetadata() -> Result<[ObjectMetadataRecord], Error>
+
 }
 
 // MARK: - Default Implementation
@@ -55,6 +55,17 @@ class DefaultDatabaseService: DatabaseService {
         do {
             let layouts = try dbQueue.read { db in
                 try LayoutDefinitionRecord.fetchAll(db)
+            }
+            return .success(layouts)
+        } catch {
+            return .failure(error)
+        }
+    }
+
+    func fetchObjectMetadata() -> Result<[ObjectMetadataRecord], Error> {
+        do {
+            let layouts = try dbQueue.read { db in
+                try ObjectMetadataRecord.fetchAll(db)
             }
             return .success(layouts)
         } catch {

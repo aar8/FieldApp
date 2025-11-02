@@ -40,7 +40,7 @@ struct JobRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: JobData
     static let databaseTableName = "jobs"
     var model: Job {
-        Job(id: id, jobNumber: data.jobNumber, customerId: data.customerId, jobAddress: data.jobAddress, jobDescription: data.jobDescription, assignedTechId: data.assignedTechId, statusNote: data.statusNote, quoteId: data.quoteId, equipmentId: data.equipmentId)
+        Job(id: id, objectName: objectName, objectType: objectType, status: status, jobNumber: data.jobNumber, customerId: data.customerId, jobAddress: data.jobAddress, jobDescription: data.jobDescription, assignedTechId: data.assignedTechId, statusNote: data.statusNote, quoteId: data.quoteId, equipmentId: data.equipmentId)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -82,7 +82,7 @@ struct UserRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: UserData
     static let databaseTableName = "users"
     var model: User {
-        User(id: id, email: data.email, displayName: data.displayName, role: data.role)
+        User(id: id, objectName: objectName, objectType: objectType, status: status, email: data.email, displayName: data.displayName, role: data.role)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -148,7 +148,7 @@ struct CustomerRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: CustomerData
     static let databaseTableName = "customers"
     var model: Customer {
-        Customer(id: id, name: data.name, contact: data.contact, address: data.address)
+        Customer(id: id, objectName: objectName, objectType: objectType, status: status, name: data.name, contact: data.contact, address: data.address)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -196,7 +196,7 @@ struct CalendarEventRecord: Codable, Hashable, FetchableRecord, PersistableRecor
     let data: CalendarEventData
     static let databaseTableName = "calendar_events"
     var model: CalendarEvent {
-        CalendarEvent(id: id, title: data.title, startTime: data.startTime, endTime: data.endTime, isAllDay: data.isAllDay, jobId: data.jobId, userId: data.userId)
+        CalendarEvent(id: id, objectName: objectName, objectType: objectType, status: status, title: data.title, startTime: data.startTime, endTime: data.endTime, isAllDay: data.isAllDay, jobId: data.jobId, userId: data.userId)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -240,7 +240,7 @@ struct PricebookRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: PricebookData
     static let databaseTableName = "pricebooks"
     var model: Pricebook {
-        Pricebook(id: id, name: data.name, description: data.description, isActive: data.isActive, currency: data.currency)
+        Pricebook(id: id, objectName: objectName, objectType: objectType, status: status, name: data.name, description: data.description, isActive: data.isActive, currency: data.currency)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -284,7 +284,7 @@ struct ProductRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: ProductData
     static let databaseTableName = "products"
     var model: Product {
-        Product(id: id, name: data.name, description: data.description, productCode: data.productCode, type: data.type)
+        Product(id: id, objectName: objectName, objectType: objectType, status: status, name: data.name, description: data.description, productCode: data.productCode, type: data.type)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -324,7 +324,7 @@ struct LocationRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: LocationData
     static let databaseTableName = "locations"
     var model: Location {
-        Location(id: id, name: data.name, address: data.address)
+        Location(id: id, objectName: objectName, objectType: objectType, status: status, name: data.name, address: data.address)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -366,7 +366,7 @@ struct ProductItemRecord: Codable, Hashable, FetchableRecord, PersistableRecord 
     let data: ProductItemData
     static let databaseTableName = "product_items"
     var model: ProductItem {
-        ProductItem(id: id, quantityOnHand: data.quantityOnHand, productId: data.productId, locationId: data.locationId)
+        ProductItem(id: id, objectName: objectName, objectType: objectType, status: status, quantityOnHand: data.quantityOnHand, productId: data.productId, locationId: data.locationId)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -410,7 +410,7 @@ struct PricebookEntryRecord: Codable, Hashable, FetchableRecord, PersistableReco
     let data: PricebookEntryData
     static let databaseTableName = "pricebook_entries"
     var model: PricebookEntry {
-        PricebookEntry(id: id, price: data.price, currency: data.currency, pricebookId: data.pricebookId, productId: data.productId)
+        PricebookEntry(id: id, objectName: objectName, objectType: objectType, status: status, price: data.price, currency: data.currency, pricebookId: data.pricebookId, productId: data.productId)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -456,7 +456,7 @@ struct JobLineItemRecord: Codable, Hashable, FetchableRecord, PersistableRecord 
     let data: JobLineItemData
     static let databaseTableName = "job_line_items"
     var model: JobLineItem {
-        JobLineItem(id: id, quantity: data.quantity, priceAtTimeOfSale: data.priceAtTimeOfSale, description: data.description, jobId: data.jobId, productId: data.productId)
+        JobLineItem(id: id, objectName: objectName, objectType: objectType, status: status, quantity: data.quantity, priceAtTimeOfSale: data.priceAtTimeOfSale, description: data.description, jobId: data.jobId, productId: data.productId)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -510,7 +510,7 @@ struct QuoteRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: QuoteData
     static let databaseTableName = "quotes"
     var model: Quote {
-        Quote(id: id, quoteNumber: data.quoteNumber, customerId: data.customerId, pricebookId: data.pricebookId, totalAmount: data.totalAmount, currency: data.currency, quoteStatus: data.quoteStatus, notes: data.notes, preparedBy: data.preparedBy, lineItemIds: data.lineItemIds)
+        Quote(id: id, objectName: objectName, objectType: objectType, status: status, quoteNumber: data.quoteNumber, customerId: data.customerId, pricebookId: data.pricebookId, totalAmount: data.totalAmount, currency: data.currency, quoteStatus: data.quoteStatus, notes: data.notes, preparedBy: data.preparedBy, lineItemIds: data.lineItemIds)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -558,7 +558,7 @@ struct ObjectFeedRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: ObjectFeedData
     static let databaseTableName = "object_feeds"
     var model: ObjectFeed {
-        ObjectFeed(id: id, relatedObjectName: data.relatedObjectName, relatedRecordId: data.relatedRecordId, entryType: data.entryType, message: data.message, authorId: data.authorId, attachmentIds: data.attachmentIds)
+        ObjectFeed(id: id, objectName: objectName, objectType: objectType, status: status, relatedObjectName: data.relatedObjectName, relatedRecordId: data.relatedRecordId, entryType: data.entryType, message: data.message, authorId: data.authorId, attachmentIds: data.attachmentIds)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -624,7 +624,7 @@ struct InvoiceRecord: Codable, Hashable, FetchableRecord, PersistableRecord {
     let data: InvoiceData
     static let databaseTableName = "invoices"
     var model: Invoice {
-        Invoice(id: id, invoiceNumber: data.invoiceNumber, customerId: data.customerId, jobId: data.jobId, quoteId: data.quoteId, subtotalAmount: data.subtotalAmount, taxAmount: data.taxAmount, discountAmount: data.discountAmount, totalAmount: data.totalAmount, currency: data.currency, issueDate: data.issueDate, dueDate: data.dueDate, paymentStatus: data.paymentStatus, notes: data.notes, issuedBy: data.issuedBy, lineItemIds: data.lineItemIds)
+        Invoice(id: id, objectName: objectName, objectType: objectType, status: status, invoiceNumber: data.invoiceNumber, customerId: data.customerId, jobId: data.jobId, quoteId: data.quoteId, subtotalAmount: data.subtotalAmount, taxAmount: data.taxAmount, discountAmount: data.discountAmount, totalAmount: data.totalAmount, currency: data.currency, issueDate: data.issueDate, dueDate: data.dueDate, paymentStatus: data.paymentStatus, notes: data.notes, issuedBy: data.issuedBy, lineItemIds: data.lineItemIds)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -674,7 +674,7 @@ struct InvoiceLineItemRecord: Codable, Hashable, FetchableRecord, PersistableRec
     let data: InvoiceLineItemData
     static let databaseTableName = "invoice_line_items"
     var model: InvoiceLineItem {
-        InvoiceLineItem(id: id, quantity: data.quantity, priceAtTimeOfInvoice: data.priceAtTimeOfInvoice, description: data.description, invoiceId: data.invoiceId, productId: data.productId, taxRate: data.taxRate, discountAmount: data.discountAmount)
+        InvoiceLineItem(id: id, objectName: objectName, objectType: objectType, status: status, quantity: data.quantity, priceAtTimeOfInvoice: data.priceAtTimeOfInvoice, description: data.description, invoiceId: data.invoiceId, productId: data.productId, taxRate: data.taxRate, discountAmount: data.discountAmount)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -729,7 +729,7 @@ struct ObjectMetadataRecord: Codable, Hashable, FetchableRecord, PersistableReco
     let updatedAt: String
     static let databaseTableName = "object_metadata"
     var model: ObjectMetadata {
-        ObjectMetadata(id: id, fieldDefinitions: data.fieldDefinitions)
+        ObjectMetadata(id: id, objectName: objectName, fieldDefinitions: data.fieldDefinitions)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -774,7 +774,7 @@ struct LayoutDefinitionRecord: Codable, Hashable, FetchableRecord, PersistableRe
     let updatedAt: String
     static let databaseTableName = "layout_definitions"
     var model: LayoutDefinition {
-        LayoutDefinition(id: id, sections: data.sections)
+        LayoutDefinition(id: id, objectName: objectName, objectType: objectType, status: status, sections: data.sections)
     }
     enum CodingKeys: String, CodingKey {
         case tenantId = "tenant_id"
@@ -848,10 +848,16 @@ struct ResponseData: Codable, Hashable {
 
 struct Base: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
 }
 
 struct Job: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let jobNumber: String
     let customerId: String
     let jobAddress: String?
@@ -870,6 +876,9 @@ struct Tenant: Identifiable, Hashable {
 
 struct User: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let email: String
     let displayName: String
     let role: String
@@ -877,6 +886,9 @@ struct User: Identifiable, Hashable {
 
 struct Customer: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let name: String
     let contact: ContactInfo?
     let address: Address?
@@ -884,6 +896,9 @@ struct Customer: Identifiable, Hashable {
 
 struct CalendarEvent: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let title: String
     let startTime: String
     let endTime: String
@@ -894,6 +909,9 @@ struct CalendarEvent: Identifiable, Hashable {
 
 struct Pricebook: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let name: String
     let description: String?
     let isActive: Bool
@@ -902,6 +920,9 @@ struct Pricebook: Identifiable, Hashable {
 
 struct Product: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let name: String
     let description: String?
     let productCode: String?
@@ -910,12 +931,18 @@ struct Product: Identifiable, Hashable {
 
 struct Location: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let name: String
     let address: Address?
 }
 
 struct ProductItem: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let quantityOnHand: Double
     let productId: String
     let locationId: String
@@ -923,6 +950,9 @@ struct ProductItem: Identifiable, Hashable {
 
 struct PricebookEntry: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let price: Double
     let currency: String
     let pricebookId: String
@@ -931,6 +961,9 @@ struct PricebookEntry: Identifiable, Hashable {
 
 struct JobLineItem: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let quantity: Double
     let priceAtTimeOfSale: Double
     let description: String?
@@ -940,6 +973,9 @@ struct JobLineItem: Identifiable, Hashable {
 
 struct Quote: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let quoteNumber: String
     let customerId: String
     let pricebookId: String?
@@ -953,6 +989,9 @@ struct Quote: Identifiable, Hashable {
 
 struct ObjectFeed: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let relatedObjectName: String
     let relatedRecordId: String
     let entryType: String
@@ -963,6 +1002,9 @@ struct ObjectFeed: Identifiable, Hashable {
 
 struct Invoice: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let invoiceNumber: String
     let customerId: String
     let jobId: String?
@@ -982,6 +1024,9 @@ struct Invoice: Identifiable, Hashable {
 
 struct InvoiceLineItem: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let quantity: Double
     let priceAtTimeOfInvoice: Double
     let description: String?
@@ -993,10 +1038,14 @@ struct InvoiceLineItem: Identifiable, Hashable {
 
 struct ObjectMetadata: Identifiable, Hashable {
     let id: String
+    let objectName: String
     let fieldDefinitions: [FieldDefinition]
 }
 
 struct LayoutDefinition: Identifiable, Hashable {
     let id: String
+    let objectName: String
+    let objectType: String
+    let status: String
     let sections: [LayoutSection]
 }
