@@ -6,7 +6,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 async function main() {
-  const scenarioFile = process.argv[2];
+  const args = process.argv.slice(2);
+  const scenarioFile = args.find(a => !a.startsWith('--'));
+  const useApi = !args.includes('--no-api'); // default to API seeding
 
   if (!scenarioFile) {
     console.error('Usage: npm run seed <scenario-file>');
@@ -19,8 +21,8 @@ async function main() {
 
   const dbPath = resolve(__dirname, '../../../../sqlite-data/fieldprime.db');
 
-  console.log(`📦 Seeding scenario: ${scenario.name}`);
-  await seedDatabase(dbPath, scenario);
+  console.log(`📦 Seeding scenario: ${scenario.name} (via API: ${useApi})`);
+  await seedDatabase(dbPath, scenario, { viaApi: useApi });
 }
 
 main().catch(err => {

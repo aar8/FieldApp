@@ -57,17 +57,40 @@ See `/Users/adrian/work/FieldApp/plan/specs/epic_1_mvp_scenario.md` for full sce
 
 **Key entities in scenario**: Job, Customer, User, Quote, CalendarEvent, ObjectFeed, Invoice
 
-## Current State (as of session start)
-- Just finished 3-day codegen build sprint
-- Ready to transition from codegen → iOS metadata-driven UI
-- **Next immediate goal**: Build metadata-driven detail/edit view in iOS
-  - Reads `layout_definitions` + `object_metadata` from local DB
-  - Renders dynamic form based on metadata
-  - Once this works, get edit views for ALL entities for free
+## Current State (as of 2025-01-07)
+- ✅ Metadata-driven detail/edit views working in iOS
+- ✅ iOS writes edits to local overlays table
+- ✅ Server can consume overlays and write to DAG change_log
+- ✅ First blockchain change_log entry successfully written
+- 📍 **Decision Made**: Migrating from Rust server → Swift server
+  - Only 5 hours invested in Rust (4 files)
+  - Swift shared across iOS, server, future Android/Web via WASM
+  - Share critical code: DAG logic, changeset verification, SQLite layer, view models, metadata parsers
+  - Simpler codegen: only generate Swift models (not Rust + Swift)
+  - Solo dev is ace at Swift, mediocre at Rust = 10x velocity gain
+  - **Timeline**: 2 weekends to reach feature parity with Rust implementation
+
+## Current Sprint: Swift Server Migration
+**Weekend 1 Goal**: Swift server serving sync endpoint, iOS pulling data
+**Weekend 2 Goal**: Overlay consumption + change_log write working
+
+See `/Users/adrian/work/FieldApp/plan/todo.md` for detailed task breakdown.
+
+## Real Constraints & Strategy
+- **Time**: Weekends only (full-time job + solo parenting 2 neurodivergent kids)
+- **Revenue Goal**: $200k/year to help friend in need
+- **Runway**: Secured 1 year of funding
+- **Risk Profile**: Obsessing over wrong details vs. pragmatic progress
+- **Strategic Bet**: Building multi-vertical platform with metadata-driven architecture, not single HVAC app
+  - Leverage = can pivot across verticals (HVAC, rental management, etc.) without rewriting
+  - Core moat = DAG blockchain sync engine with guaranteed correctness + real-time collaboration
+  - Targeting profitable markets with weak engineering (HCP, etc.)
+- **Customer Validation**: None yet (intentional - building core engine first, then vertical features)
+- **Go-to-Market Plan**: Clone competitor features, describe in metadata, codegen on top of platform, beat on price (50% off) and superior sync/offline
 
 ## Project Management Notes
 - Working solo, need help tracking tasks without cognitive overhead
-- Don't want code generation help - just project tracking and context persistence
+- Need PM to push back on non-pragmatic decisions and scope creep
 - Need granular task breakdown (15-min chunks), not epic-level views
 - Git repo at: `/Users/adrian/work/FieldApp/`
 - Codegen tool at: `/Users/adrian/work/FieldApp/tools/schema-codegen/`

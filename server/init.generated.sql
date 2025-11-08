@@ -232,3 +232,16 @@ CREATE TABLE layout_definitions (
   created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
   updated_at TEXT NOT NULL
 );
+
+CREATE TABLE change_logs (
+  sequence_id INTEGER NOT NULL,
+  id TEXT PRIMARY KEY NOT NULL,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id),
+  user_id TEXT NOT NULL REFERENCES users(id),
+  created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+  object_name TEXT NOT NULL,
+  record_id TEXT NOT NULL,
+  change_data JSON NOT NULL,
+  state_hash TEXT NOT NULL,
+  previous_state_hash TEXT NOT NULL
+);

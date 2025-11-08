@@ -42,7 +42,7 @@ export default scenario({
       data: {
         job_number: 'J-1024',
         customer_id: john.id,
-        job_address: '123 Main St, Austin, TX',
+        job_address: { street: '123 Main St', city: 'Austin', state: 'TX', zip_code: '78701' },
         job_description: 'Annual AC tuneup',
         assigned_tech_id: bob.id,
         status_note: 'Tech on site, inspecting unit'

@@ -7,7 +7,8 @@
     "build": "tsc",
     "generate": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "seed": "tsx src/seeding/cli.ts"
+    "seed": "tsx src/seeding/cli.ts",
+    "api-seed": "tsx src/seeding/api-seeder.ts"
   },
   "dependencies": {
     "@types/better-sqlite3": "^7.6.13",

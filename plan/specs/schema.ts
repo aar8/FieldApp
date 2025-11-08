@@ -857,6 +857,60 @@ interface LayoutDefinitionRecord {
   updated_at: string;
 }
 
+/**
+### `change_log`
+
+This table is an append-only log of all mutations (creations, updates, deletions) to the database records. It serves as the backbone for the synchronization engine and provides a complete history of changes. Each entry represents a single "delta" or change event.
+
+**Role in System**:
+1.  **Sync Engine**: The primary consumer. The server uses this log to calculate the set of changes a client needs to get up-to-date.
+2.  **Data Integrity**: The `state_hash` chain provides a cryptographic guarantee of data integrity, allowing clients to verify they are perfectly in sync.
+3.  **Auditing & History**: Provides a full audit trail of every change made to the data.
+4.  **Resilience**: Can be used to rebuild the state of the main data tables.
+
+This table is designed for high-throughput writes and is periodically pruned on the server once changes are safely distributed.
+*/
+
+/**
+ * Represents a single entry in the change log.
+ * @platform server
+ * @db only
+ */
+interface ChangeLogRecord {
+  /** A server-generated, unique, sequential identifier for the change event. This is the primary key for sorting. */
+  sequence_id: number;
+
+  /** The client-generated unique identifier for the change (e.g., a UUID). Used for idempotency. */
+  id: string;
+
+  /** The ID of the tenant this change belongs to. */
+  /** @reference TenantRecord */
+  tenant_id: string;
+
+  /** The ID of the user who initiated the change. */
+  /** @reference UserRecord */
+  user_id: string;
+
+  /** The timestamp of when the change was recorded on the server. */
+  created_at: IsoTimestamp;
+
+  /** The name of the table/object being changed (e.g., 'job', 'customer'). */
+  object_name: string;
+
+  /** The ID of the specific record that was changed. */
+  record_id: string;
+
+  /** The JSON object representing the change itself (the "delta"). The format can vary (e.g., a JSON Patch, or a partial object). */
+  /** @sqlJson */
+  change_data: any;
+
+  /** The hash of this change entry, combined with the previous state hash. `H_new = hash(hash(this_change) + previous_state_hash)`. */
+  state_hash: string;
+
+  /** The `state_hash` of the change log entry that immediately preceded this one. This creates the chain. */
+  previous_state_hash: string;
+}
+
 type IsoTimestamp = string;
 
 /**
@@ -898,6 +952,7 @@ interface ResponseData {
 }
 
 export type {
+  ChangeLogRecord,
   ObjectMetadataRecord,
   LayoutDefinitionRecord,
   TenantRecord,

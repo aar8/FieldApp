@@ -28,14 +28,33 @@
 - [x] sync down object metadata
 - [x] define layout format
 
-### Next: Local Edit & Save Flow
+### Completed: Local Edit & Save Flow
 - [x] Make one field editable (TextField for job_description)
 - [x] Add Save button to detail view
 - [x] Wire Save button to stub function (prints for now)
-- [ ] Design overlay table schema
-- [ ] Add overlay table to schema.ts and regenerate
-- [ ] Implement actual save to overlay table
-- [ ] Verify overlay changes persist after app restart
+- [x] Design overlay table schema
+- [x] Add overlay table to schema.ts and regenerate
+- [x] Implement actual save to overlay table
+- [x] Verify overlay changes persist after app restart
+- [x] iOS writes changes to local overlays table
+- [x] Server can consume overlays and write to DAG change_log
+- [x] First blockchain change_log entry successfully written via seeding script
+
+### CURRENT SPRINT: Swift Server Migration (Weekend 1 & 2)
+**Goal:** Convert Rust server to Swift to share codebase across all platforms
+
+**Weekend 1 Target:** Swift server serving sync endpoint, iOS pulling data
+- [ ] Convert Rust server to Swift - get basic HTTP server running
+- [ ] Update Swift codegen to generate shared models (remove Rust model generation)
+- [ ] Port SQLite query logic from Rust to Swift
+- [ ] Implement /sync endpoint in Swift server
+- [ ] Test iOS app can pull data from Swift server
+
+**Weekend 2 Target:** Overlay consumption + change_log write working
+- [ ] Port overlay consumption logic to Swift server
+- [ ] Port DAG change_log write logic to Swift server
+- [ ] Test full round-trip: iOS edit → Swift server → change_log entry
+- [ ] Verify change_log blockchain integrity in Swift implementation
 
 ### Future: Sync Upload Engine
 - [ ] Build change tracking system (detect modified records since last sync)
@@ -77,6 +96,11 @@
 ## Backlog Ideas
 - [ ] Fix seed script tenant_id generation: generates new UUID every run, requires manual copy to iOS app
   - Options: hardcoded dev tenant_id, config file, or CLI flag
+- [ ] **BUG: Codegen changeset application for all entity types**
+  - Current state: Server can only apply changesets to jobs table (hardcoded)
+  - Need: Codegen to generate changeset application logic for all entities
+  - When: After two-device sync test proves the pattern works
+  - Scope: Generate apply_changeset() for customers, users, invoices, etc.
 - [ ] Implement changeset-based sync for real-time updates
   - Server logs all changes to changes table with changeset IDs
   - Clients can request "changes since changeset X" instead of full sync
@@ -86,6 +110,12 @@
   - Problem: Unbounded growth as edit history accumulates
   - Solution options: 30-day retention, partition by time, changeset compaction, or move server to Postgres
   - When: Address when changes table hits 1M+ rows
+- [ ] **CRITICAL: Improve server error handling and responses**
+  - Current state: Errors are vague, non-deterministic, hard to debug
+  - Violates the "deterministic correctness" principle we built the changeset system for
+  - Need Result types, specific error codes, clear failure messages
+  - Should be able to tell exactly what went wrong from error response
+  - This is foundational for reliability - fix before shipping
 - [ ] Budgey: Personal finance app using the same kernel (has Plaid integration already working)
   - Note: On hold until FieldApp generates revenue
   - Would validate kernel works across domains

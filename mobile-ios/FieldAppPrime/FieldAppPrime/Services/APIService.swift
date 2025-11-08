@@ -21,12 +21,14 @@ extension Result where Failure == Swift.Error {
 enum APIError: Error {
     case invalidURL
     case networkError(Error)
+    case encodingError(Error)
     case decodingError(Error)
 }
 
 /// A protocol defining the interface for making network calls to the main server API.
 protocol APIService {
     func performResync(host: URL, tenantID: String, since: String?) async -> Result<SyncResponse, APIError>
+    func sendChanges(host: URL, userId: String, changes: [ChangeSetItem]) async -> Result<Bool, APIError>
 }
 
 /// The default implementation of APIService that uses URLSession to perform network requests.
@@ -39,6 +41,38 @@ class DefaultAPIService: APIService {
 
         return await fetchData(from: url)
             .flatMap(self.decodeSyncResponse)
+    }
+    
+    func sendChanges(host: URL, userId: String, changes: [ChangeSetItem]) async -> Result<Bool, APIError> {
+        let url = host.appendingPathComponent("sync")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(userId, forHTTPHeaderField: "X-User-ID")
+        
+        do {
+            let encoder = JSONEncoder()
+            request.httpBody = try encoder.encode(changes)
+        } catch {
+            return .failure(.encodingError(error))
+        }
+        
+        let result = await Result(catching: {
+            try await URLSession.shared.data(for: request)
+        })
+        
+        switch result {
+        case .success(let (_, response)):
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                return .success(true)
+            } else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 500
+                return .failure(.networkError(NSError(domain: "InvalidStatusCode", code: statusCode, userInfo: nil)))
+            }
+        case .failure(let error):
+            return .failure(.networkError(error))
+        }
     }
 
     private func makeSyncURL(host: URL, tenantID: String, since: String?) -> URL? {
