@@ -16,6 +16,7 @@
 /// 
 import Foundation
 import ReactiveSwift
+import Insieme
 
 enum ResyncError: Error {
     case missingURL

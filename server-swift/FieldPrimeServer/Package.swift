@@ -10,7 +10,7 @@ let package = Package(
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.118.0"),
         // 🗄 An ORM for SQLite databases.
-        .package(url: "https://github.com/groue/GRDB.swift.git", from: "6.0.0"),
+        .package(url: "https://github.com/groue/GRDB.swift.git", from: "7.8.0"),
         // Shared library
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.59.0"),
 

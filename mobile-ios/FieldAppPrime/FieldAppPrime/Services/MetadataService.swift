@@ -1,4 +1,5 @@
 import Foundation
+import Insieme
 
 protocol MetadataService {
     func getObjectMetadata(for objectName: String) -> ObjectMetadataRecord?

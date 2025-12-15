@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import ReactiveSwift
+import Insieme
 
 // MARK: - Database Service Protocol
 

@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A1F53202EE3AC0F001D5C96 /* Insieme in Frameworks */ = {isa = PBXBuildFile; productRef = 3A1F531F2EE3AC0F001D5C96 /* Insieme */; };
 		3A6FD5982E9B7F7400B67490 /* ReactiveSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3A6FD5972E9B7F7400B67490 /* ReactiveSwift */; };
 		3A6FD59A2E9B7F7400B67490 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3A6FD5992E9B7F7400B67490 /* GRDB */; };
+		3A9F22662EE3A90E009813B3 /* Insieme in Frameworks */ = {isa = PBXBuildFile; productRef = 3A9F22652EE3A90E009813B3 /* Insieme */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A9F22662EE3A90E009813B3 /* Insieme in Frameworks */,
+				3A1F53202EE3AC0F001D5C96 /* Insieme in Frameworks */,
 				3A6FD5982E9B7F7400B67490 /* ReactiveSwift in Frameworks */,
 				3A6FD59A2E9B7F7400B67490 /* GRDB in Frameworks */,
 			);
@@ -129,6 +133,8 @@
 			packageProductDependencies = (
 				3A6FD5972E9B7F7400B67490 /* ReactiveSwift */,
 				3A6FD5992E9B7F7400B67490 /* GRDB */,
+				3A9F22652EE3A90E009813B3 /* Insieme */,
+				3A1F531F2EE3AC0F001D5C96 /* Insieme */,
 			);
 			productName = FieldAppPrime;
 			productReference = 3A6FD5632E9B794900B67490 /* FieldAppPrime.app */;
@@ -216,6 +222,7 @@
 				3A6FD5902E9B79A400B67490 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				3A6FD5912E9B7BD800B67490 /* XCRemoteSwiftPackageReference "ReactiveSwift" */,
 				3A6FD5952E9B7F3200B67490 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				3A1F531E2EE3AC0F001D5C96 /* XCLocalSwiftPackageReference "../../shared" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3A6FD5642E9B794900B67490 /* Products */;
@@ -577,6 +584,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		3A1F531E2EE3AC0F001D5C96 /* XCLocalSwiftPackageReference "../../shared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../shared;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		3A6FD5902E9B79A400B67490 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -605,6 +619,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3A1F531F2EE3AC0F001D5C96 /* Insieme */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Insieme;
+		};
 		3A6FD5972E9B7F7400B67490 /* ReactiveSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3A6FD5912E9B7BD800B67490 /* XCRemoteSwiftPackageReference "ReactiveSwift" */;
@@ -614,6 +632,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A6FD5952E9B7F3200B67490 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
 			productName = GRDB;
+		};
+		3A9F22652EE3A90E009813B3 /* Insieme */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Insieme;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

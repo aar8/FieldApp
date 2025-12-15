@@ -1,4 +1,5 @@
 import Foundation
+import Insieme
 
 struct JobDataUpdates: Codable {
     var jobNumber: FieldUpdate<String> = .noUpdate

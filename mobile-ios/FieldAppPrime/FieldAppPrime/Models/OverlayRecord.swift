@@ -1,5 +1,6 @@
 import Foundation
 import GRDB
+import Insieme
 
 struct OverlayRecord: Codable, PersistableRecord, FetchableRecord {
     let id: String
@@ -18,5 +19,18 @@ struct OverlayRecord: Codable, PersistableRecord, FetchableRecord {
         case objectName = "object_name"
         case changes
         case createdAt = "created_at"
+    }
+}
+
+extension OverlayRecord {
+    func toPendingChange() -> PendingChange {
+        .init(
+            id: self.id,
+            tenantId: self.tenantId,
+            objectId: self.objectId,
+            objectName: self.objectName,
+            changes: self.changes,
+            createdAt: self.createdAt
+        )
     }
 }

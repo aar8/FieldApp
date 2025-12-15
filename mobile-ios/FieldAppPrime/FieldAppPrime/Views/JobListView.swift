@@ -1,4 +1,5 @@
 import SwiftUI
+import Insieme
 
 struct JobListView: View {
     let viewFactory: ViewFactory

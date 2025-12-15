@@ -1,5 +1,6 @@
 import XCTest
 @testable import FieldAppPrime
+import Insieme
 
 class SyncResponseTests: XCTestCase {
 

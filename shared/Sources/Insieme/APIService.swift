@@ -1,8 +1,11 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 // MARK: - Result+Async Initializer
 
-extension Result where Failure == Swift.Error {
+public extension Result where Failure == Swift.Error {
     /// Creates a new result by evaluating an async throwing closure,
     /// capturing the returned value as a success, or the thrown error as a failure.
     init(catching body: () async throws -> Success) async {
@@ -18,7 +21,7 @@ extension Result where Failure == Swift.Error {
 // MARK: - API Service
 
 /// Defines errors that can occur during API interactions.
-enum APIError: Error {
+public enum APIError: Error {
     case invalidURL
     case networkError(Error)
     case encodingError(Error)
@@ -26,15 +29,17 @@ enum APIError: Error {
 }
 
 /// A protocol defining the interface for making network calls to the main server API.
-protocol APIService {
+public protocol APIService {
     func performResync(host: URL, tenantID: String, since: String?) async -> Result<SyncResponse, APIError>
     func sendChanges(host: URL, userId: String, changes: [ChangeSetItem]) async -> Result<Bool, APIError>
 }
 
 /// The default implementation of APIService that uses URLSession to perform network requests.
-class DefaultAPIService: APIService {
+public class DefaultAPIService: APIService {
 
-    func performResync(host: URL, tenantID: String, since: String?) async -> Result<SyncResponse, APIError> {
+    public init() {}
+
+    public func performResync(host: URL, tenantID: String, since: String?) async -> Result<SyncResponse, APIError> {
         guard let url = makeSyncURL(host: host, tenantID: tenantID, since: since) else {
             return .failure(.invalidURL)
         }
@@ -43,7 +48,7 @@ class DefaultAPIService: APIService {
             .flatMap(self.decodeSyncResponse)
     }
     
-    func sendChanges(host: URL, userId: String, changes: [ChangeSetItem]) async -> Result<Bool, APIError> {
+    public func sendChanges(host: URL, userId: String, changes: [ChangeSetItem]) async -> Result<Bool, APIError> {
         let url = host.appendingPathComponent("sync")
         
         var request = URLRequest(url: url)
