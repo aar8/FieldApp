@@ -3,22 +3,7 @@ import Combine
 import ReactiveSwift
 import GRDB
 import Insieme
-
-enum FieldUpdate<T> {
-    case noUpdate
-    case updated(T)
-
-    func merged(with other: FieldUpdate<T>) -> FieldUpdate<T> {
-        switch other {
-        case .noUpdate:
-            return self
-        case .updated:
-            return other
-        }
-    }
-}
-
-
+import SyncClient
 
 class JobDetailViewModel: ObservableObject {
 
@@ -26,9 +11,9 @@ class JobDetailViewModel: ObservableObject {
     let layoutFields: [(key: String, label: String, value: String?)]
     var jobChanges = JobDataUpdates();
     let job: Job
-    private let databaseService: DatabaseService
+    private let databaseService: SyncClientDatabase
     
-    init(job: Job, databaseService: DatabaseService) {
+    init(job: Job, databaseService: SyncClientDatabase) {
         self.job = job
         self.databaseService = databaseService
         let metadataService = DefaultMetadataService(databaseService: databaseService)

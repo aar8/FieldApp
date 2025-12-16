@@ -1,22 +1,25 @@
 import Foundation
 import SwiftUI
 import Insieme
+import SyncClient
 
 class ViewFactory {
     
-    private let databaseService: DatabaseService
+    private let modelDataService: ModelDataService
+    private let databaseService: SyncClientDatabase
 
-    init(databaseService: DatabaseService) {
+    init(modelDataService: ModelDataService, databaseService: SyncClientDatabase) {
+        self.modelDataService = modelDataService
         self.databaseService = databaseService
     }
 
     @ViewBuilder
     func makeJobListView() -> some View {
-        let viewModel = JobListViewModel(databaseService: databaseService)
+        let viewModel = JobListViewModel(modelDataService: modelDataService)
         JobListView(viewModel: viewModel, viewFactory: self)
     }
 
-        @ViewBuilder
+    @ViewBuilder
     func makeJobDetailView(job: Job) -> some View {
         let viewModel = JobDetailViewModel(job: job, databaseService: databaseService)
         JobDetailView(viewModel: viewModel)

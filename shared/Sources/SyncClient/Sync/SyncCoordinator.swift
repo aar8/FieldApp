@@ -15,16 +15,15 @@
 ///     client-side circuit breaker.
 /// 
 import Foundation
-import ReactiveSwift
 import Insieme
 
-enum ResyncError: Error {
+public enum ResyncError: Error {
     case missingURL
     case missingTenantID
     case apiError(APIError)
     
 }
-enum SyncEffectError: Error {
+public enum SyncEffectError: Error {
     case readLastModifiedFailed
     case resyncFailed(ResyncError)
     case upsertDBFailed
@@ -33,7 +32,7 @@ enum SyncEffectError: Error {
     case closeWebSocketFailed
 }
 
-enum SyncEffect {
+public enum SyncEffect {
     case sleep(Int)
     case readLastModified
     case resync(String?)
@@ -44,7 +43,7 @@ enum SyncEffect {
     case nullEffect
 }
 
-enum SyncEffectResult {
+public enum SyncEffectResult {
     case sleepSuccessful
     case readLastModifiedSuccessful(String?)
     case resyncSuccessful(SyncResponse)
@@ -54,20 +53,20 @@ enum SyncEffectResult {
     case closeWebSocketSuccessful
 }
 
-enum SyncEvent {
+public enum SyncEvent {
     case foreground
     case background
     case effectResult(Result<SyncEffectResult, SyncEffectError>)
 }
 
-enum DisconnectedReason {
+public enum DisconnectedReason {
     case missedPing
     case initializing
     case webSocketConnectFailed
     case syncFailed
 }
 
-enum SyncState {
+public enum SyncState {
     case disconnected(DisconnectedReason)
     case resync(wait: Int)
     case upserting
@@ -76,28 +75,28 @@ enum SyncState {
     case disabled
 }
 
-class SyncCoordinator {
+public class SyncCoordinator {
     // TODO: Add server health heuristic to slow syncs if needed.
     // This state will persist across SyncState changes.
     var currentState: SyncState = .disconnected(.initializing)
     let effectHandler: SyncEffectHandler
 
-    init(effectHandler: SyncEffectHandler) {
+    public init(effectHandler: SyncEffectHandler) {
         self.effectHandler = effectHandler
-        effectHandler.effectCompleted { result in
-            self.send(event: .effectResult(result))
-        }
+        // effectHandler.effectCompleted { result in
+        //     self.send(event: .effectResult(result))
+        // }
     }
 
-    func foreground() {
-        send(event: .foreground)
+    public func foreground() async {
+        await send(event: .foreground)
     }
 
-    func background() {
-        send(event: .background)
+    public func background() async {
+        await send(event: .background)
     }
 
-    func send(event: SyncEvent) {
+    func send(event: SyncEvent) async {
         let syncState = self.currentState
         let (newState, newEffect) =
         switch (event) {
@@ -115,7 +114,7 @@ class SyncCoordinator {
         
 //        print("\(newState) - \(newEffect)")
         self.currentState = newState
-        self.effectHandler.runEffect(syncEffect: newEffect)
+        await self.effectHandler.runEffect(syncEffect: newEffect)
     }
 
     // Pure functions

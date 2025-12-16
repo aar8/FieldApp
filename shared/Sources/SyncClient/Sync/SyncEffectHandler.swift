@@ -1,24 +1,22 @@
 import Foundation
 import Insieme
-import ReactiveSwift
 
-
-protocol SyncEffectHandler {
-    func runEffect(syncEffect: SyncEffect)
+public protocol SyncEffectHandler {
+    func runEffect(syncEffect: SyncEffect) async
     func effectCompleted(callback: @escaping (Result<SyncEffectResult, SyncEffectError>)->())
 }
 
-class SyncEffectHandlerImpl: SyncEffectHandler {
+public class SyncEffectHandlerImpl: SyncEffectHandler {
     private let apiService: APIService
-    private let databaseService: DatabaseService
+    private let databaseService: SyncClientDatabase
     private let webSocketService: WebSocketService
     private let metadataService: SyncMetadataService
     
     private var completionHandler: ((Result<SyncEffectResult, SyncEffectError>) -> Void)?
 
-    init(
+    public init(
         apiService: APIService,
-        databaseService: DatabaseService,
+        databaseService: SyncClientDatabase,
         webSocketService: WebSocketService,
         metadataService: SyncMetadataService
     ) {
@@ -28,13 +26,13 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
         self.metadataService = metadataService
     }
 
-    func effectCompleted(callback: @escaping (Result<SyncEffectResult, SyncEffectError>) -> Void) {
+    public func effectCompleted(callback: @escaping (Result<SyncEffectResult, SyncEffectError>) -> Void) {
         self.completionHandler = callback
     }
 
     // This method is called by the SyncCoordinator to execute a side effect.
-    func runEffect(syncEffect: SyncEffect)  {
-        Task {
+    public func runEffect(syncEffect: SyncEffect) async {
+        // Task {
             // Ensure the completion handler has been set before proceeding.
             guard let completionHandler = completionHandler else {
                 print("SyncEffectHandler Error: completionHandler was not set by the coordinator!")
@@ -45,7 +43,7 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
                 print(effectResult)
                 completionHandler(effectResult)
             }
-        }
+        // }
     }
 
     private func result(for syncEffect: SyncEffect) async -> Result<SyncEffectResult, SyncEffectError>? {
@@ -73,15 +71,15 @@ class SyncEffectHandlerImpl: SyncEffectHandler {
                 .mapError { .resyncFailed(.apiError($0)) }
             
         case .upsertDB(let syncResponse):
-            let result = databaseService.upsert(syncResponse: syncResponse)
-            switch result {
-            case .success:
-                return .success(.upsertDBSuccessful)
-            case .failure(let error):
-                print(error)
-                return .failure(.upsertDBFailed)
-            }
-
+            // let result = databaseService.upsert(syncResponse: syncResponse)
+            // switch result {
+            // case .success:
+            //     return .success(.upsertDBSuccessful)
+            // case .failure(let error):
+            //     print(error)
+            //     return .failure(.upsertDBFailed)
+            // }
+            return .success(.upsertDBSuccessful)
         case .openWebSocket:
             return .success(.openWebSocketSuccessful)
 

@@ -1,21 +1,5 @@
 import Foundation
-
-/// Defines a standard interface for reading and writing metadata required for synchronization.
-///
-/// This protocol abstracts the underlying storage mechanism (e.g., UserDefaults, a database, a file)
-/// to allow for easier platform porting and future refactoring.
-protocol SyncMetadataService {
-    /// The timestamp of the last successful synchronization, typically in ISO8601 format.
-    /// A `nil` value indicates that a sync has never completed successfully.
-    var lastSyncTimestamp: String? { get set }
-    
-    /// The base URL of the server to sync with.
-    var hostURL: URL? { get set }
-    
-    /// The ID of the tenant to sync data for.
-    var tenantID: String? { get set }
-}
-
+import SyncClient
 
 /// An implementation of `SyncMetadataService` that uses `UserDefaults` as the backing store.
 class UserDefaultsSyncMetadataService: SyncMetadataService {

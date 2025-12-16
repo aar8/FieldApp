@@ -2,10 +2,11 @@ import Foundation
 import GRDB
 import ReactiveSwift
 import Insieme
+import SyncClient
 
 // MARK: - Database Service Protocol
 
-protocol DatabaseService {
+protocol ModelDataService {
     /// A property representing the list of jobs. 
     /// New subscribers immediately receive the current list of jobs and then all future updates.
     var jobs: Property<[Job]> { get }
@@ -13,17 +14,17 @@ protocol DatabaseService {
     /// Upserts all records from a sync response into the database in a single transaction.
     /// - Parameter syncResponse: The response from the server containing records to upsert.
     /// - Returns: A `Result` indicating success or failure.
-    func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
+    // func upsert(syncResponse: SyncResponse) -> Result<Void, Error>
     
-    func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error>
-    func fetchObjectMetadata() -> Result<[ObjectMetadataRecord], Error>
+    // func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error>
+    // func fetchObjectMetadata() -> Result<[ObjectMetadataRecord], Error>
 
-    func saveJobChanges(_ jobChanges: JobDataUpdates, for job: Job) -> Result<Void, Error>
+    // func saveJobChanges(_ jobChanges: JobDataUpdates, for job: Job) -> Result<Void, Error>
 }
 
 // MARK: - Default Implementation
 
-class DefaultDatabaseService: DatabaseService {
+class DefaultModelDataService: ModelDataService {
     let dbQueue: DatabasePool
     
     let jobs: Property<[Job]>
@@ -80,50 +81,5 @@ class DefaultDatabaseService: DatabaseService {
         }
         
         self.jobs = Property(initial: [], then: jobsProducer)
-    }
-    
-    func fetchLayoutDefinitions() -> Result<[LayoutDefinitionRecord], Error> {
-        do {
-            let layouts = try dbQueue.read { db in
-                try LayoutDefinitionRecord.fetchAll(db)
-            }
-            return .success(layouts)
-        } catch {
-            return .failure(error)
-        }
-    }
-
-    func fetchObjectMetadata() -> Result<[ObjectMetadataRecord], Error> {
-        do {
-            let layouts = try dbQueue.read { db in
-                try ObjectMetadataRecord.fetchAll(db)
-            }
-            return .success(layouts)
-        } catch {
-            return .failure(error)
-        }
-    }
-
-    func saveJobChanges(_ jobChanges: JobDataUpdates, for job: Job) -> Result<Void, Error> {
-        do {
-            let jsonData = try JSONEncoder().encode(jobChanges)
-            
-            let overlayRecord = OverlayRecord(
-                id: UUID().uuidString,
-                tenantId: "default",
-                objectId: job.id,
-                objectName: job.objectName,
-                changes: jsonData,
-                createdAt: Date()
-            )
-            
-            try dbQueue.write { db in
-                try overlayRecord.save(db)
-            }
-            
-            return .success(())
-        } catch {
-            return .failure(error)
-        }
     }
 }

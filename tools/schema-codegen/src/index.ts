@@ -9,7 +9,7 @@ const toSnake = (name: string) => name.replace(/([A-Z])/g, '_$1').replace(/^_/, 
 const toCamelFromSnake = (snake: string) => snake.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 
 const pluralize = (w: string) => {
-  const exceptions: Record<string, string> = { metadata: 'metadata', equipment: 'equipment' };
+  const exceptions: Record<string, string> = { metadata: 'metadata', equipment: 'equipment', log: 'log'};
   if (exceptions[w]) return exceptions[w];
   if (/[^aeiou]y$/.test(w)) return w.slice(0, -1) + 'ies';
   if (/(s|x|z|ch|sh)$/.test(w)) return w + 'es';
@@ -269,7 +269,7 @@ function generateRecordModelMapper(intf: ResolvedInterface): string {
   });
   const args = [...optionalArgs, ...fields].join(', ');
   return [
-    `    var model: ${modelName} {`,
+    `    public var model: ${modelName} {`,
     `        ${modelName}(${args})`,
     `    }`,
   ].join('\n');
@@ -299,34 +299,43 @@ function generateSwiftModels(resolved: ResolvedInterface[]): string {
     const baseFieldNames = ['id', 'object_name', 'object_type', 'status'];
     const optionalProps = baseFieldNames
       .filter(name => intf.properties.some(p => p.name === name))
-      .map(name => ({ name, camel: toCamelFromSnake(name) }));
-    const optionalFieldLines = optionalProps.map(p => `    let ${p.camel}: String`);
+      .map(name => ({ name, camel: toCamelFromSnake(name), swiftType: 'String', optional: false }));
+    const optionalFieldLines = optionalProps.map(p => `    public let ${p.camel}: String`);
 
     const modelName = intf.name.replace(/Record$/, '');
-    const allFields = [
+    const allFieldsForInit = [...optionalProps, ...modelFields];
+    const allFieldsForEnums = [
       ...optionalProps.map(p => ({ name: p.name, camel: p.camel })),
       ...modelFields.map(f => ({ name: f.name, camel: f.camel })),
     ];
 
-    const fieldEnumCases = allFields.map(f => `        case ${f.camel}`);
+    const initParams = allFieldsForInit.map(f => `${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`).join(', ');
+    const initBody = allFieldsForInit.map(f => `        self.${f.camel} = ${f.camel}`).join('\n');
+    const initLines = [
+        `    public init(${initParams}) {`,
+        initBody,
+        `    }`
+    ];
+
+    const fieldEnumCases = allFieldsForEnums.map(f => `        case ${f.camel}`);
     
-    const fromNameCases = allFields.map(f => {
+    const fromNameCases = allFieldsForEnums.map(f => {
         const keys = f.camel === f.name ? [`\"${f.name}\"`] : [`\"${f.name}\"`, `\"${f.camel}\"`];
         return `            case ${keys.join(', ')}:\n                return .${f.camel}`;
     });
 
     const fieldEnumLines = [
       '',
-      '    enum Field: String, CaseIterable {',
+      '    public enum Field: String, CaseIterable {',
       ...fieldEnumCases,
       '',
-      '        var key: String {',
+      '        public var key: String {',
       '            switch self {',
-      ...allFields.map(f => `            case .${f.camel}: return "${f.name}"`),
+      ...allFieldsForEnums.map(f => `            case .${f.camel}: return "${f.name}"`),
       '            }',
       '        }',
       '',
-      '        static func from(name: String) -> Field? {',
+      '        public static func from(name: String) -> Field? {',
       '            switch name {',
       ...fromNameCases,
       '            default:',
@@ -338,17 +347,19 @@ function generateSwiftModels(resolved: ResolvedInterface[]): string {
     
     const valueForFieldLines = [
         '',
-        '    func value(for field: Field) -> Any? {',
+        '    public func value(for field: Field) -> Any? {',
         '        switch field {',
-        ...allFields.map(f => `        case .${f.camel}: return ${f.camel}`),
+        ...allFieldsForEnums.map(f => `        case .${f.camel}: return ${f.camel}`),
         '        }',
         '    }',
     ];
 
     const lines = [
-      `struct ${modelName}: Identifiable, Hashable {`,
+      `public struct ${modelName}: Identifiable, Hashable {`,
       ...optionalFieldLines,
-      ...modelFields.map(f => `    let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`),
+      ...modelFields.map(f => `    public let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`),
+      '',
+      ...initLines,
       ...fieldEnumLines,
       ...valueForFieldLines,
       `}`,
@@ -379,7 +390,7 @@ import GRDB
       return { name, camel, swiftType, optional };
     });
 
-    const fieldLines = props.map(f => `    let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`);
+    const fieldLines = props.map(f => `    public let ${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`);
 
     const codingKeyLines = props
       .filter(f => f.camel !== f.name)
@@ -389,15 +400,31 @@ import GRDB
       ...props.filter(f => f.camel === f.name).map(f => `        case ${f.camel}`),
     ];
     const modelMapper = generateRecordModelMapper(intf);
+    
+    let conformances = "Codable, Hashable, Sendable";
+    if (intf.inDb) {
+        conformances += ", FetchableRecord, PersistableRecord";
+    }
+
+    const initParams = props.map(f => `${f.camel}: ${f.swiftType}${f.optional ? '?' : ''}`).join(', ');
+    const initBody = props.map(f => `        self.${f.camel} = ${f.camel}`).join('\n');
+    const initLines = [
+        `    public init(${initParams}) {`,
+        initBody,
+        `    }`
+    ];
+
     const block = [
-      `struct ${intf.name}: Codable, Hashable${intf.inDb ? ', FetchableRecord, PersistableRecord' : ''} {`,
+      `public struct ${intf.name}: ${conformances} {`,
       ...fieldLines,
-      intf.inDb ? `    static let databaseTableName = "${toTableName(intf.name)}"` : '',
+      intf.inDb ? `    public static let databaseTableName = "${toTableName(intf.name)}"` : '',
       modelMapper,
       '',
       ...(codingKeyLinesCombined.length
-        ? ['    enum CodingKeys: String, CodingKey {', ...codingKeyLinesCombined, '    }']
+        ? ['    public enum CodingKeys: String, CodingKey {', ...codingKeyLinesCombined, '    }']
         : []),
+      '',
+      ...initLines,
       '}',
     ].filter(Boolean).join('\n');
     dataStructs.push(block);
@@ -588,6 +615,7 @@ function generateSwiftUpsertExtension(sourceFile: SourceFile): string {
 
 import Foundation
 import GRDB
+import Insieme
 `;
 
   const responseDataInterface = sourceFile.getInterface("ResponseData");
@@ -604,7 +632,7 @@ import GRDB
 
   const body = `
 // This extension is generated to provide sync-related database operations.
-extension DefaultDatabaseService {
+extension SyncClientDatabaseService {
 
     /**
      Performs an "upsert" (insert or update) for all records in a \`SyncResponse\`.
@@ -631,6 +659,42 @@ ${upsertLines.join('\n')}
 }
 `;
   return header + body;
+}
+
+function generateSwiftDataResultFile(resolvedInterfaces: ResolvedInterface[]): string {
+    const responseData = resolvedInterfaces.find(i => i.name === 'ResponseData');
+    if (!responseData) {
+        throw new Error("Could not find ResponseData interface");
+    }
+    const header = `// GENERATED FILE — DO NOT EDIT
+// Run: npm run build && npm run generate
+
+import GRDB
+import Vapor
+import Insieme
+
+`;
+
+    const fetchFields = responseData.properties.map(p => {
+        const propName = toCamelFromSnake(p.name);
+        const recordType = getTypeName(p.type.getArrayElementTypeOrThrow());
+        return `        let ${propName} = try ${recordType}.filter(Column("updated_at") > since).fetchAll(db)`;
+    });
+
+    const responseDataArgs = responseData.properties.map(p => {
+        const propName = toCamelFromSnake(p.name);
+        return `            ${propName}: ${propName}`;
+    }).join(',\n');
+
+    const functionBody = `func getDataResult(db: Database, tenantId: String, since: String) throws -> ResponseData {
+${fetchFields.join('\n')}
+
+    return ResponseData(
+${responseDataArgs}
+    )
+}`;
+
+    return [header, functionBody].join('\n\n');
 }
 
 // --- Main Orchestration ---
@@ -662,18 +726,32 @@ function main() {
 
   // Swift output (SyncResponse wrappers)
   const swift = generateSwiftSyncResponse(sourceFile, resolvedInterfaces);
-  const OUTPUT_SWIFT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Models/SyncResponse.generated.swift');
+  const OUTPUT_SWIFT_SHARED = resolve(__dirname, '../../../shared/Sources/Insieme/SyncResponse.generated.swift');
   try {
-    writeFileSync(OUTPUT_SWIFT, swift);
+    writeFileSync(OUTPUT_SWIFT_SHARED, swift);
     console.log(`
-📝 Wrote Swift to: ${OUTPUT_SWIFT}`);
+📝 Wrote Swift to: ${OUTPUT_SWIFT_SHARED}`);
   } catch (err) {
     console.error('Failed to write Swift file:', err);
   }
 
+  // Swift data_result generation
+  const swiftDataResult = generateSwiftDataResultFile(resolvedInterfaces);
+  const OUTPUT_SWIFT_DATA_RESULT = resolve(
+    __dirname,
+    '../../../server-swift/FieldPrimeServer/Sources/App/Models/DataResult.generated.swift'
+  );
+  try {
+    writeFileSync(OUTPUT_SWIFT_DATA_RESULT, swiftDataResult);
+    console.log(`
+📝 Wrote Swift data_result to: ${OUTPUT_SWIFT_DATA_RESULT}`);
+  } catch (err) {
+    console.error('Failed to write Swift data_result file:', err);
+  }
+
   // Swift GRDB migrator output
   const swiftMigrator = generateSwiftMigrator(resolvedInterfaces);
-  const OUTPUT_MIGRATOR = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/SchemaMigrator.generated.swift');
+  const OUTPUT_MIGRATOR = resolve(__dirname, '../../../shared/Sources/SyncClient/SchemaMigrator.generated.swift');
   try {
     writeFileSync(OUTPUT_MIGRATOR, swiftMigrator);
     console.log(`
@@ -706,7 +784,9 @@ function main() {
 
   // Swift Upsert extension output
   const swiftUpsert = generateSwiftUpsertExtension(sourceFile);
-  const OUTPUT_UPSERT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/DefaultDatabaseService+Sync.generated.swift');
+  const OUTPUT_UPSERT = resolve(__dirname, '../../../shared/Sources/SyncClient/Services/Persistence/DefaultDatabaseService+Sync.generated.swift');
+
+  // const OUTPUT_UPSERT = resolve(__dirname, '../../../mobile-ios/FieldAppPrime/FieldAppPrime/Services/Persistence/DefaultDatabaseService+Sync.generated.swift');
   try {
     writeFileSync(OUTPUT_UPSERT, swiftUpsert);
     console.log(`\n📝 Wrote Swift upsert extension to: ${OUTPUT_UPSERT}`);

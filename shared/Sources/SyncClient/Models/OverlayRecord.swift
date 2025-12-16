@@ -2,17 +2,17 @@ import Foundation
 import GRDB
 import Insieme
 
-struct OverlayRecord: Codable, PersistableRecord, FetchableRecord {
-    let id: String
-    let tenantId: String
-    let objectId: String
-    let objectName: String
-    let changes: Data
-    let createdAt: Date
+public struct OverlayRecord: Codable, PersistableRecord, FetchableRecord {
+    public let id: String
+    public let tenantId: String
+    public let objectId: String
+    public let objectName: String
+    public let changes: Data
+    public let createdAt: Date
 
-    static let databaseTableName = "overlays"
+    public static let databaseTableName = "overlays"
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case tenantId = "tenant_id"
         case objectId = "object_id"

@@ -13,10 +13,10 @@ class JobListViewModel: ObservableObject {
 
     let (viewDidAppear, viewDidAppearObserver) = Signal<(), Never>.pipe()
 
-    init(databaseService: DatabaseService) {
-        self.jobs = databaseService.jobs
+    init(modelDataService: ModelDataService) {
+        self.jobs = modelDataService.jobs
         
-        databaseService.jobs.signal.combineLatest(with: self.viewDidAppear)
+        modelDataService.jobs.signal.combineLatest(with: self.viewDidAppear)
             .observe(on: UIScheduler())
             .observeValues { [weak self] _ in
                 self?.objectWillChange.send()

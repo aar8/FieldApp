@@ -5,3 +5,11 @@ server/target
 xcuserdata/
 
 node_modules
+
+# Codegen
+tools/schema-codegen/dist
+
+# Generated artifacts
+*.generated.*
+
+.DS_Store

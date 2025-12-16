@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3A1F53202EE3AC0F001D5C96 /* Insieme in Frameworks */ = {isa = PBXBuildFile; productRef = 3A1F531F2EE3AC0F001D5C96 /* Insieme */; };
+		3A1F53242EF0CC3C001D5C96 /* Insieme in Frameworks */ = {isa = PBXBuildFile; productRef = 3A1F53232EF0CC3C001D5C96 /* Insieme */; };
+		3A1F53262EF0CC3C001D5C96 /* SyncClient in Frameworks */ = {isa = PBXBuildFile; productRef = 3A1F53252EF0CC3C001D5C96 /* SyncClient */; };
 		3A6FD5982E9B7F7400B67490 /* ReactiveSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3A6FD5972E9B7F7400B67490 /* ReactiveSwift */; };
 		3A6FD59A2E9B7F7400B67490 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3A6FD5992E9B7F7400B67490 /* GRDB */; };
 		3A9F22662EE3A90E009813B3 /* Insieme in Frameworks */ = {isa = PBXBuildFile; productRef = 3A9F22652EE3A90E009813B3 /* Insieme */; };
@@ -59,6 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A1F53262EF0CC3C001D5C96 /* SyncClient in Frameworks */,
+				3A1F53242EF0CC3C001D5C96 /* Insieme in Frameworks */,
 				3A9F22662EE3A90E009813B3 /* Insieme in Frameworks */,
 				3A1F53202EE3AC0F001D5C96 /* Insieme in Frameworks */,
 				3A6FD5982E9B7F7400B67490 /* ReactiveSwift in Frameworks */,
@@ -135,6 +139,8 @@
 				3A6FD5992E9B7F7400B67490 /* GRDB */,
 				3A9F22652EE3A90E009813B3 /* Insieme */,
 				3A1F531F2EE3AC0F001D5C96 /* Insieme */,
+				3A1F53232EF0CC3C001D5C96 /* Insieme */,
+				3A1F53252EF0CC3C001D5C96 /* SyncClient */,
 			);
 			productName = FieldAppPrime;
 			productReference = 3A6FD5632E9B794900B67490 /* FieldAppPrime.app */;
@@ -622,6 +628,14 @@
 		3A1F531F2EE3AC0F001D5C96 /* Insieme */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Insieme;
+		};
+		3A1F53232EF0CC3C001D5C96 /* Insieme */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Insieme;
+		};
+		3A1F53252EF0CC3C001D5C96 /* SyncClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SyncClient;
 		};
 		3A6FD5972E9B7F7400B67490 /* ReactiveSwift */ = {
 			isa = XCSwiftPackageProductDependency;

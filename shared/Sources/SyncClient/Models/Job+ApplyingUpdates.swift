@@ -1,15 +1,15 @@
 import Foundation
 import Insieme
 
-struct JobDataUpdates: Codable {
-    var jobNumber: FieldUpdate<String> = .noUpdate
-    var customerId: FieldUpdate<String> = .noUpdate
-    var jobAddress: FieldUpdate<Address?> = .noUpdate
-    var jobDescription: FieldUpdate<String?> = .noUpdate
-    var assignedTechId: FieldUpdate<String?> = .noUpdate
-    var statusNote: FieldUpdate<String?> = .noUpdate
-    var quoteId: FieldUpdate<String?> = .noUpdate
-    var equipmentId: FieldUpdate<String?> = .noUpdate
+public struct JobDataUpdates: Codable {
+    public var jobNumber: FieldUpdate<String> = .noUpdate
+    public var customerId: FieldUpdate<String> = .noUpdate
+    public var jobAddress: FieldUpdate<Address?> = .noUpdate
+    public var jobDescription: FieldUpdate<String?> = .noUpdate
+    public var assignedTechId: FieldUpdate<String?> = .noUpdate
+    public var statusNote: FieldUpdate<String?> = .noUpdate
+    public var quoteId: FieldUpdate<String?> = .noUpdate
+    public var equipmentId: FieldUpdate<String?> = .noUpdate
 
     enum CodingKeys: String, CodingKey {
         case jobNumber = "job_number"
@@ -22,9 +22,9 @@ struct JobDataUpdates: Codable {
         case equipmentId = "equipment_id"
     }
     
-    init() { }
+    public init() { }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         if container.contains(.jobNumber) {
@@ -61,7 +61,7 @@ struct JobDataUpdates: Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         if case .updated(let value) = jobNumber {
@@ -90,7 +90,7 @@ struct JobDataUpdates: Codable {
         }
     }
 
-    static func from(overlays: [OverlayRecord]) -> JobDataUpdates {
+    public static func from(overlays: [OverlayRecord]) -> JobDataUpdates {
         let sortedOverlays = overlays.sorted { $0.createdAt < $1.createdAt }
         
         let finalUpdates = sortedOverlays.reduce(into: JobDataUpdates()) { acc, overlay in
@@ -110,7 +110,7 @@ struct JobDataUpdates: Codable {
 }
 
 extension Job {
-    func applying(updates: JobDataUpdates) -> Job {
+    public func applying(updates: JobDataUpdates) -> Job {
         var newJobNumber = self.jobNumber
         var newCustomerId = self.customerId
         var newJobAddress = self.jobAddress

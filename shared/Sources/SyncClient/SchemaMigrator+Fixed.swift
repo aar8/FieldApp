@@ -6,7 +6,7 @@ import GRDB
 // Keep generated code and hand-written migrations separate.
 
 extension SchemaMigrator {
-    static func migratorWithFixedTables() -> DatabaseMigrator {
+    public static func migratorWithFixedTables() -> DatabaseMigrator {
         var migrator = migrator() // start with the generated migrations
         migrator.registerMigration("fixed") { db in
             try db.create(table: "overlays") { t in

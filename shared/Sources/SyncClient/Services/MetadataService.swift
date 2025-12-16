@@ -1,19 +1,19 @@
 import Foundation
 import Insieme
 
-protocol MetadataService {
+public protocol MetadataService {
     func getObjectMetadata(for objectName: String) -> ObjectMetadataRecord?
     func getLayoutDefinition(for objectName: String, type layoutType: String, status layoutStatus: String) -> LayoutDefinitionRecord?
 }
 
-class DefaultMetadataService: MetadataService {
-    private let databaseService: DatabaseService
+public class DefaultMetadataService: MetadataService {
+    private let databaseService: SyncClientDatabase
     
-    init(databaseService: DatabaseService) {
+    public init(databaseService: SyncClientDatabase) {
         self.databaseService = databaseService
     }
     
-    func getObjectMetadata(for objectName: String) -> ObjectMetadataRecord? {
+    public func getObjectMetadata(for objectName: String) -> ObjectMetadataRecord? {
         guard case .success(let metadata) = databaseService.fetchObjectMetadata() else {
             return nil
         }
@@ -24,7 +24,7 @@ class DefaultMetadataService: MetadataService {
         }
     }
     
-    func getLayoutDefinition(for objectName: String, type objectType: String, status layoutStatus: String) -> LayoutDefinitionRecord? {
+    public func getLayoutDefinition(for objectName: String, type objectType: String, status layoutStatus: String) -> LayoutDefinitionRecord? {
         guard case .success(let layouts) = databaseService.fetchLayoutDefinitions() else {
             return nil
         }

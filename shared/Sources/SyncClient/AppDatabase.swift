@@ -2,21 +2,21 @@ import Foundation
 import GRDB
 
 /// Defines specific errors that can occur during database setup.
-enum DatabaseError: Error {
+public enum DatabaseError: Error {
     case failedToAccessApplicationSupport(underlyingError: Error)
     case failedToCreateDatabaseQueue(underlyingError: Error)
     case migrationFailed(underlyingError: Error)
 }
 
 /// The protocol for the AppDatabase, allowing for mock/fake implementations for testing.
-protocol AppDatabaseProtocol {
+public protocol AppDatabaseProtocol {
     var dbQueue: DatabasePool { get }
 }
 
 /// `AppDatabase` is responsible for setting up the database connection and managing schema migrations.
-final class AppDatabase: AppDatabaseProtocol {
+public final class AppDatabase: AppDatabaseProtocol {
     
-    let dbQueue: DatabasePool
+    public let dbQueue: DatabasePool
     
     private init(dbQueue: DatabasePool) {
         self.dbQueue = dbQueue
@@ -25,7 +25,7 @@ final class AppDatabase: AppDatabaseProtocol {
     /// Factory method to create and set up the database.
     ///
     /// - Returns: A `Result` containing a fully initialized `AppDatabase` on success, or a specific `DatabaseError` on failure.
-    static func create() -> Result<AppDatabase, DatabaseError> {
+    public static func create() -> Result<AppDatabase, DatabaseError> {
         do {
             let fileManager = FileManager.default
             let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -48,3 +48,4 @@ final class AppDatabase: AppDatabaseProtocol {
         SchemaMigrator.migratorWithFixedTables()
     }
 }
+

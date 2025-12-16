@@ -23,11 +23,11 @@ services:
         exec tail -f /dev/null
     restart: unless-stopped
 
-  server:
+  server-swift:
     build:
-      context: ./server
+      context: ./server-swift/FieldPrimeServer
       dockerfile: Dockerfile
-    container_name: fieldprime-server
+    container_name: fieldprime-server-swift
     environment:
       - PORT=8080
       - SQLITE_PATH=/app/data/fieldprime.db
@@ -38,29 +38,6 @@ services:
       - "8080:8080"
     depends_on:
       - sqlite
-    restart: unless-stopped
-
-  web:
-    image: node:20-alpine
-    container_name: fieldprime-web
-    working_dir: /app
-    command: ["sh", "-c", "npm install && npm run dev"]
-    volumes:
-      - ./web:/app
-    depends_on:
-      - server
-    restart: unless-stopped
-
-  nginx:
-    image: nginx:1.25-alpine
-    container_name: fieldprime-nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - "80:80"
-    depends_on:
-      - server
-      - web
     restart: unless-stopped
 
 volumes:
